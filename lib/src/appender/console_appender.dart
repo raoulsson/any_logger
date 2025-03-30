@@ -46,7 +46,7 @@ class ConsoleAppender extends Appender {
       );
     } else {
       print(LogRecordFormatter.format(logRecord, format,
-          dateFormat: dateFormat, brackets: brackets));
+          dateFormat: dateFormat));
     }
 
     var tabs = '\t';

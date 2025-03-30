@@ -11,7 +11,7 @@ void main() {
       'appenders': [
         {
           'type': 'FILE',
-          'format': '%d %t %l %m',
+          'format': '[%d][%i][%t][%l][%c] %m [%f]',
           'level': 'INFO',
           'filePattern': 'unittest',
           'fileExtension': 'txt',
@@ -54,7 +54,7 @@ void main() {
       'appenders': [
         {
           'type': 'FILE',
-          'format': '%d %t %l %m',
+          'format': '[%d][%i][%t][%l][%c] %m [%f]',
           'level': 'INFO',
           'filePattern': 'unittest',
           'fileExtension': 'txt',
@@ -99,7 +99,7 @@ void main() {
       'appenders': [
         {
           'type': 'FILE',
-          'format': '%d %t %l %m',
+          'format': '[%d][%i][%t][%l][%c] %m [%f]',
           'level': 'INFO',
           'filePattern': 'unittest',
           'fileExtension': 'txt',
@@ -143,7 +143,7 @@ void main() {
       'appenders': [
         {
           'type': 'FILE',
-          'format': '%d %t %l %m',
+          'format': '[%d][%i][%t][%l][%c] %m [%f]',
           'level': 'INFO',
           'filePattern': 'unittest',
           'fileExtension': 'txt',

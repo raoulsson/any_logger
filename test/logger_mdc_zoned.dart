@@ -13,7 +13,6 @@ const kAnyLogDartConfigWithMDC = {
           '%d%i%X{logging.device-hash}%X{logging.session-hash}%t%l%c %m %f',
       'level': 'TRACE',
       'dateFormat': 'yyyy-MM-dd HH:mm:ss.SSS',
-      'brackets': true
     },
   ]
 };

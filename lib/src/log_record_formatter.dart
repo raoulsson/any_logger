@@ -8,15 +8,10 @@ import '../any_logger_lib.dart';
 
 class LogRecordFormatter {
   static String format(LogRecord logRecord, String format,
-      {String? dateFormat = kDefaultDateFormat, bool brackets = false}) {
+      {String? dateFormat = kDefaultDateFormat}) {
     var open = '';
     var close = ' ';
     var fill = '';
-    if (brackets) {
-      open = kOpen;
-      close = kClose;
-      fill = ' ' * ('ERROR'.length - logRecord.level.name.length);
-    }
 
     if (format.contains('\%d')) {
       var date = DateFormat(dateFormat).format(logRecord.time);

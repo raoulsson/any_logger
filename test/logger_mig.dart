@@ -5,10 +5,9 @@ const kAnyLogConfig = {
   'appenders': [
     {
       'type': 'CONSOLE',
-      'format': '%d%i%t%l%c %m %f',
+      'format': '[%d][%i][%t][%l][%c] %m [%f]',
       'level': 'TRACE',
       'dateFormat': 'yyyy-MM-dd HH:mm:ss.SSS',
-      'brackets': true,
       'mode': 'stdout', // see ConsoleLoggerMode
     },
   ]

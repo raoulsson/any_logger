@@ -7,8 +7,6 @@ abstract class Appender {
 
   static const String defaultDateFormat = 'yyyy-MM-dd HH:mm:ss';
 
-  bool brackets = false;
-
   late DateTime created;
 
   Level level = Level.INFO;
@@ -38,7 +36,6 @@ abstract class Appender {
     created = date ?? DateTime.now();
     format = config['format'] ?? defaultFormat;
     dateFormat = config['dateFormat'] ?? defaultDateFormat;
-    brackets = config['brackets'] ?? false;
 
     final levelStr = config['level'] as String?;
     if (levelStr != null) {
