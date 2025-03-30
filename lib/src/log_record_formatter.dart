@@ -57,12 +57,12 @@ class LogRecordFormatter {
       format.split('%X').forEach((element) {
         if (element.startsWith('{')) {
           var mdcKey = element.substring(1, element.indexOf('}'));
-          List<dynamic> values = Zone.current[mdcKey];
+          List<dynamic> values = Zone.current[mdcKey] as List<dynamic>? ?? [];
           if (values.isNotEmpty) {
             format = format.replaceAll(
                 '%X{$mdcKey}', values[0].toString());
           } else {
-            format = format.replaceAll('%X{$mdcKey}', '');
+            format = format.replaceAll('%X{$mdcKey}', 'n/a');
           }
         }
       });
