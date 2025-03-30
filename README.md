@@ -1,4 +1,4 @@
-# Log 4 Dart 3
+# Any Logger
 
 Forked from https://github.com/Ephenodrom/Dart-Log-4-Dart-2
 
@@ -133,7 +133,7 @@ class LoggingIdentifiers {
 }
 ```
 
-For more information see: [https://logging.apache.org/log4j/2.x/manual/thread-context.html]
+For more information see: https://logging.apache.org/log4j/2.x/manual/thread-context.html
 
 
 ## Copyright And License
