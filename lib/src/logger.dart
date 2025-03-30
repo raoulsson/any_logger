@@ -54,9 +54,8 @@ class Logger {
       final appenderTypeString = app['type'].toString().toUpperCase();
       try {
         final appenderType = AppenderType.values.firstWhere(
-          (type) => type.toString() == 'AppenderType.$appenderTypeString',
-          orElse: () =>
-              throw FormatException('Unknown appender type: ${app['type']}'),
+              (type) => type.name == appenderTypeString,
+          orElse: () => throw FormatException('Unknown appender type: ${app['type']}'),
         );
 
         Appender appender =
