@@ -9,32 +9,30 @@ import '../any_logger_lib.dart';
 class LogRecordFormatter {
   static String format(LogRecord logRecord, String format,
       {String? dateFormat = kDefaultDateFormat}) {
-    var open = '';
-    var close = ' ';
     var fill = '';
 
     if (format.contains('\%d')) {
       var date = DateFormat(dateFormat).format(logRecord.time);
-      format = format.replaceAll('\%d', open + date + close);
+      format = format.replaceAll('\%d', date);
     }
     if (format.contains('\%t')) {
       if (!StringUtils.isNullOrEmpty(logRecord.tag)) {
-        format = format.replaceAll('\%t', open + logRecord.tag! + close);
+        format = format.replaceAll('\%t', logRecord.tag!);
       } else {
-        format = format.replaceAll('\%t', open + '' + close);
+        format = format.replaceAll('\%t', '');
       }
     }
 
     if (format.contains('\%i')) {
       if (StringUtils.isNullOrEmpty(logRecord.loggerName)) {
-        format = format.replaceAll('\%i', open + '' + close);
+        format = format.replaceAll('\%i', '');
       } else {
-        format = format.replaceAll('\%i', open + logRecord.loggerName! + close);
+        format = format.replaceAll('\%i', logRecord.loggerName!);
       }
     }
     if (format.contains('\%l')) {
       format = format.replaceAll(
-          '\%l', (open + logRecord.level.name + fill + close).trim());
+          '\%l', (logRecord.level.name + fill).trim());
     }
 
     if (format.contains('\%m')) {
@@ -43,14 +41,14 @@ class LogRecordFormatter {
 
     if (format.contains('\%c')) {
       var fn = logRecord.functionNameAndLine();
-      format = format.replaceAll('\%c', open + fn + close);
+      format = format.replaceAll('\%c', fn);
     }
     if (format.contains('\%f')) {
       var ifl = logRecord.inFileLocation();
       if (ifl != null) {
-        format = format.replaceAll('\%f', open + ifl + close);
+        format = format.replaceAll('\%f', ifl);
       } else {
-        format = format.replaceAll('\%f', open + '' + close);
+        format = format.replaceAll('\%f', '');
       }
     }
 
@@ -62,9 +60,9 @@ class LogRecordFormatter {
           List<dynamic> values = Zone.current[mdcKey];
           if (values.isNotEmpty) {
             format = format.replaceAll(
-                '%X{$mdcKey}', open + values[0].toString() + close);
+                '%X{$mdcKey}', values[0].toString());
           } else {
-            format = format.replaceAll('%X{$mdcKey}', open + close);
+            format = format.replaceAll('%X{$mdcKey}', '');
           }
         }
       });
