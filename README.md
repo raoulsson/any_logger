@@ -19,8 +19,9 @@ The format in the log string pattern is `%X{key}`. The key is the name of the va
 
 Here we configure two keys: 
 
-- %X{logging.device-hash}
-- %X{logging.session-hash}
+- logging.device-hash
+- logging.session-hash
+
 
 ```dart
 const kLog4DartConfig = {
@@ -36,7 +37,7 @@ const kLog4DartConfig = {
 };
 ```
 
-The logger will find the pattern `%X{logging.device-hash}` and `[%X{logging.session-hash}]` in the 
+The logger will find the pattern: `%X{logging.device-hash}` and `[%X{logging.session-hash}]` in the 
 format string and replace it with the values stored in the zone.
 
 Thus you need to set the values in the zone before logging. 
@@ -132,32 +133,7 @@ class LoggingIdentifiers {
 }
 ```
 
-For more information see: (https://logging.apache.org/log4j/2.x/manual/thread-context.html)[https://logging.apache.org/log4j/2.x/manual/thread-context.html]
-
-
-## Copyright And License (Previous)
-
-MIT License
-
-Copyright (c) 2020 Ephenodrom
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+For more information see: [https://logging.apache.org/log4j/2.x/manual/thread-context.html]
 
 
 ## Copyright And License
@@ -181,3 +157,5 @@ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
+
+### Previous: Copyright And License: [MIT License by Ephenodrom](https://github.com/Ephenodrom/Dart-Log-4-Dart-2/blob/master/LICENSE)
