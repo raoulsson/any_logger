@@ -35,6 +35,7 @@ const kLog4DartConfig = {
   ],
 };
 ```
+
 The logger will find the pattern `%X{logging.device-hash}` and `[%X{logging.session-hash}]` in the 
 format string and replace it with the values stored in the zone.
 
@@ -51,29 +52,42 @@ Thus you need to set the values in the zone before logging.
         },
     );
 ```
-You have to generate the desired values for yourself or implement something along these lines:
+
+This will output something like this:
+
+```
+[18:33:17.042][919d15][700442][DEBUG][LightController.fireColorChangeEvent:335] Color changed event: LightColor{red: 255, green: 255, blue: 255} [package:gemma_app/model/light_controller.dart(335:5)]
+[18:33:17.043][919d15][700442][DEBUG][Light.fireSwitchChangeEvent:83] On/Off changed event: true [package:gemma_app/model/light.dart(83:5)]
+```
+
+You have to generate the desired hash values for yourself or implement something along these lines:
 
 ```dart
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+
+import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart'; // You'll need to add this package
 
 class LoggingIdentifiers {
+  static const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   // Cache the values so they remain consistent during app runtime
   static String? _deviceHash;
   static String? _sessionHash;
 
   /// Generates or returns a cached device fingerprint hash (8 digits)
-  static Future<String> getDeviceHash() async {
+  static Future<String> getDeviceHash(int length) async {
     if (_deviceHash != null) return _deviceHash!;
 
-    final deviceInfo = DeviceInfoPlugin();
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     String deviceData = '';
 
     try {
       if (Platform.isAndroid) {
         final androidInfo = await deviceInfo.androidInfo;
-        deviceData = '${androidInfo.model}-${androidInfo.id}-${androidInfo.brand}';
+        deviceData =
+        '${androidInfo.model}-${androidInfo.id}-${androidInfo.brand}';
       } else if (Platform.isIOS) {
         final iosInfo = await deviceInfo.iosInfo;
         deviceData = '${iosInfo.model}-${iosInfo.identifierForVendor}';
@@ -91,46 +105,29 @@ class LoggingIdentifiers {
         deviceData = '${Platform.operatingSystem}-${Platform.localHostname}';
       }
     } catch (e) {
-      // Fallback if device_info fails
-      deviceData = '${Platform.operatingSystem}-${DateTime.now().millisecondsSinceEpoch}';
+      // Handle any exceptions that may occur while retrieving device info
+      print('Error retrieving device info: $e');
+      deviceData = 'UnknownDevice or Simulator';
     }
 
     // Generate an 8-digit hash from the device data
-    _deviceHash = _generateHash(deviceData, 8);
+    _deviceHash = _generateMd5(deviceData, length);
     return _deviceHash!;
   }
 
   /// Generates or returns a cached random session hash (8 digits)
-  static String getSessionHash() {
+  static String getSessionHash(int length) {
     if (_sessionHash != null) return _sessionHash!;
 
-    // Generate a random session hash
-    _sessionHash = _generateRandomHash(8);
+    final rnd = Random();
+    final randomString = String.fromCharCodes(Iterable.generate(length * 5, (_) => LoggingIdentifiers._chars.codeUnitAt(rnd.nextInt(LoggingIdentifiers._chars.length))));
+    _sessionHash = _generateMd5(randomString, length);
     return _sessionHash!;
   }
 
   /// Generates a deterministic hash of specified length from input
-  static String _generateHash(String input, int length) {
-    // Simple hash function - you could use a more sophisticated one if needed
-    int hash = 0;
-    for (int i = 0; i < input.length; i++) {
-      hash = (hash + input.codeUnitAt(i)) % 100000000; // Keep it to 8 digits max
-    }
-
-    // Ensure it's exactly the right length by padding with zeros
-    return hash.toString().padLeft(length, '0').substring(0, length);
-  }
-
-  /// Generates a random hash of specified length
-  static String _generateRandomHash(int length) {
-    final random = Random();
-    final buffer = StringBuffer();
-
-    for (int i = 0; i < length; i++) {
-      buffer.write(random.nextInt(10)); // Add random digit (0-9)
-    }
-
-    return buffer.toString();
+  static String _generateMd5(String input, int length) {
+    return md5.convert(utf8.encode(input)).toString().substring(0, length);
   }
 }
 ```
