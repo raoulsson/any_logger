@@ -47,8 +47,8 @@ Thus you need to set the values in the zone before logging.
         runApp(multiProvider);
         ...
         zoneValues: {
-          'logging.device-hash': [LoggingIdentifiers.getDeviceHash()],
-          'logging.session-hash': [LoggingIdentifiers.getSessionHash()],
+            'logging.device-hash': [await LoggingIdentifiers.getDeviceHash(kLogHashLength)],
+            'logging.session-hash': [await LoggingIdentifiers.getSessionHash(kLogHashLength)],
         },
     );
 ```
