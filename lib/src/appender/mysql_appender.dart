@@ -103,7 +103,7 @@ class MySqlAppender extends Appender {
   }
 
   @override
-  AppenderType getType() {
-    return AppenderType.MYSQL;
+  String getType() {
+    return AppenderType.MYSQL.name;
   }
 }

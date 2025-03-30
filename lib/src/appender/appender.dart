@@ -25,7 +25,10 @@ abstract class Appender {
     created = customDate ?? DateTime.now();
   }
 
-  AppenderType getType();
+  String getType() {
+    // This will be implemented by subclasses
+    throw UnimplementedError('getType() must be implemented by subclasses');
+  }
 
   void append(LogRecord logRecord);
 

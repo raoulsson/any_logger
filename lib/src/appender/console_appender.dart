@@ -65,7 +65,7 @@ class ConsoleAppender extends Appender {
   }
 
   @override
-  AppenderType getType() {
-    return AppenderType.CONSOLE;
+  String getType() {
+    return AppenderType.CONSOLE.name;
   }
 }

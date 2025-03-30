@@ -43,7 +43,7 @@ class HttpAppender extends Appender {
   }
 
   @override
-  AppenderType getType() {
-    return AppenderType.HTTP;
+  String getType() {
+    return AppenderType.HTTP.name;
   }
 }

@@ -154,7 +154,7 @@ class FileAppender extends Appender {
   }
 
   @override
-  AppenderType getType() {
-    return AppenderType.FILE;
+  String getType() {
+    return AppenderType.FILE.name;
   }
 }

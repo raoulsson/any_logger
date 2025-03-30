@@ -144,7 +144,7 @@ class EmailAppender extends Appender {
   }
 
   @override
-  AppenderType getType() {
-    return AppenderType.EMAIL;
+  String getType() {
+    return AppenderType.EMAIL.name;
   }
 }
