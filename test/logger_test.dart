@@ -49,7 +49,7 @@ void main() {
     Logger.instance.registerAllAppender([
       ConsoleAppender(),
       FileAppender(),
-      HttpAppender(),
+      JsonHttpAppender(),
       EmailAppender(),
       MySqlAppender()
     ]);
@@ -85,9 +85,9 @@ void main() {
     expect(email.toCC!.length, 2);
     expect(email.toBCC!.length, 2);
 
-    var http = Logger.instance.appenders.elementAt(3) as HttpAppender;
+    var http = Logger.instance.appenders.elementAt(3) as JsonHttpAppender;
 
-    expect(http.getType(), AppenderType.HTTP);
+    expect(http.getType(), AppenderType.JSON_HTTP);
     expect(http.level, Level.INFO);
     expect(http.url, 'api.example.com');
     expect(http.headers.length, 1);

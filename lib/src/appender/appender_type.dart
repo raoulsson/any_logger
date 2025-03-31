@@ -3,7 +3,7 @@ import '../../any_logger_lib.dart';
 enum AppenderType {
   CONSOLE,
   FILE,
-  HTTP,
+  JSON_HTTP,
   EMAIL,
   MYSQL;
 
@@ -13,8 +13,8 @@ enum AppenderType {
         return ConsoleAppender();
       case AppenderType.FILE:
         return FileAppender();
-      case AppenderType.HTTP:
-        return HttpAppender();
+      case AppenderType.JSON_HTTP:
+        return JsonHttpAppender();
       case AppenderType.EMAIL:
         return EmailAppender();
       case AppenderType.MYSQL:
@@ -29,8 +29,8 @@ enum AppenderType {
         return ConsoleAppender.fromConfig(config, test: test, date: date);
       case AppenderType.FILE:
         return FileAppender.fromConfig(config, test: test, date: date);
-      case AppenderType.HTTP:
-        return HttpAppender.fromConfig(config, test: test, date: date);
+      case AppenderType.JSON_HTTP:
+        return JsonHttpAppender.fromConfig(config, test: test, date: date);
       case AppenderType.EMAIL:
         return EmailAppender.fromConfig(config, test: test, date: date);
       case AppenderType.MYSQL:

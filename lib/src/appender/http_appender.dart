@@ -3,14 +3,14 @@ import 'package:basic_utils/basic_utils.dart';
 import '../../any_logger_lib.dart';
 import '../log_record_formatter.dart';
 
-class HttpAppender extends Appender {
+class JsonHttpAppender extends Appender {
   String? url;
 
   Map<String, String> headers = {};
 
-  HttpAppender() : super();
+  JsonHttpAppender() : super();
 
-  HttpAppender.fromConfig(Map<String, dynamic> config,
+  JsonHttpAppender.fromConfig(Map<String, dynamic> config,
       {bool test = false, DateTime? date})
       : super(customDate: date) {
     initializeCommonProperties(config, test: test, date: date);
@@ -18,7 +18,7 @@ class HttpAppender extends Appender {
     if (config.containsKey('url')) {
       url = config['url'];
     } else {
-      throw ArgumentError('Missing url argument for HttpAppender');
+      throw ArgumentError('Missing url argument for JsonHttpAppender');
     }
 
     if (config.containsKey('headers')) {
@@ -44,6 +44,6 @@ class HttpAppender extends Appender {
 
   @override
   String getType() {
-    return AppenderType.HTTP.name;
+    return AppenderType.JSON_HTTP.name;
   }
 }
