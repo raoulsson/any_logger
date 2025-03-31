@@ -7,7 +7,7 @@ mixin AnyLogger {
   String get loggerName => 'ROOT';
 
   /// Get the logger for this class
-  Logger get _logger => LoggerFactory.getLogger(loggerName);
+  Logger get logger => LoggerFactory.getLogger(loggerName);
 
   String getActiveLoggerName() {
     return loggerName;
@@ -18,7 +18,7 @@ mixin AnyLogger {
       Object? exception,
       StackTrace? stackTrace,
       Object? object}) {
-    _logger.logTrace(message,
+    logger.logTrace(message,
         tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
@@ -27,7 +27,7 @@ mixin AnyLogger {
       Object? exception,
       StackTrace? stackTrace,
       Object? object}) {
-    _logger.logDebug(message,
+    logger.logDebug(message,
         tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
@@ -36,7 +36,7 @@ mixin AnyLogger {
       Object? exception,
       StackTrace? stackTrace,
       Object? object}) {
-    _logger.logInfo(message,
+    logger.logInfo(message,
         tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
@@ -45,7 +45,7 @@ mixin AnyLogger {
       Object? exception,
       StackTrace? stackTrace,
       Object? object}) {
-    _logger.logWarn(message,
+    logger.logWarn(message,
         tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
@@ -54,7 +54,7 @@ mixin AnyLogger {
       Object? exception,
       StackTrace? stackTrace,
       Object? object}) {
-    _logger.logError(message,
+    logger.logError(message,
         tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
@@ -63,7 +63,7 @@ mixin AnyLogger {
       Object? exception,
       StackTrace? stackTrace,
       Object? object}) {
-    _logger.logFatal(message,
+    logger.logFatal(message,
         tag: tag, exception: exception, stackTrace: stackTrace);
   }
 }
