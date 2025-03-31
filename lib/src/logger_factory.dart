@@ -9,6 +9,7 @@ class LoggerFactory {
   static Logger? _rootLogger;
   static Logger? _selfLogger;
   static bool _selfDebugEnabled = false;
+  static Level _selfLogLevel = Level.INFO;
 
   /// Get the library's self-logging logger
   static Logger? get selfLogger => _selfLogger;
@@ -21,8 +22,9 @@ class LoggerFactory {
       {bool test = false,
       DateTime? date,
       int clientProxyCallDepthOffset = 0,
-      bool selfDebug = false}) async {
+      bool selfDebug = false, Level selfLogLevel = Level.INFO}) async {
     _selfDebugEnabled = selfDebug;
+    _selfLogLevel = selfLogLevel;
 
     if (config == null || config.isEmpty) {
       _rootLogger = Logger.empty();
@@ -53,11 +55,11 @@ class LoggerFactory {
         activeAppenders.add(appender);
 
         if (selfDebug) {
-          _selfDebug('Initialized appender: ${appenderType.name}');
+          _selfLog('Initialized appender: ${appenderType.name}');
         }
       } on FormatException catch (e) {
         if (selfDebug) {
-          _selfDebug('Error creating appender: ${e.message}',
+          _selfLog('Error creating appender: ${e.message}',
               level: Level.ERROR);
         }
         throw ArgumentError(e.message);
@@ -75,7 +77,7 @@ class LoggerFactory {
 
     if (selfDebug) {
       _setupSelfLogger();
-      _selfDebug(
+      _selfLog(
           'Logging system initialized with ${activeAppenders.length} active appenders');
     }
 
@@ -88,12 +90,13 @@ class LoggerFactory {
 
     const selfLoggerName = 'ANY_DEBUG_LOGGER';
     _selfLogger = Logger.fromExisting(_rootLogger!, name: selfLoggerName);
+    _selfLogger?.setLevelAll(_selfLogLevel);
     _loggers[selfLoggerName] = _selfLogger!;
-    _selfDebug('Self-debugging enabled');
+    _selfLog('Self-debugging enabled');
   }
 
   /// Log a message using the self logger
-  static void _selfDebug(String message, {Level level = Level.DEBUG}) {
+  static void _selfLog(String message, {Level level = Level.DEBUG}) {
     if (!_selfDebugEnabled || _selfLogger == null) return;
 
     switch (level) {
@@ -144,7 +147,7 @@ class LoggerFactory {
       _loggers[name] = Logger.fromExisting(_rootLogger!, name: name);
 
       if (_selfDebugEnabled) {
-        _selfDebug('Created new logger: $name');
+        _selfLog('Created new logger: $name');
       }
     }
     return _loggers[name]!;
@@ -166,10 +169,11 @@ class LoggerFactory {
 
   /// Reset all loggers (for testing)
   static void resetAll() {
-    _selfDebug('Resetting all loggers');
+    _selfLog('Resetting all loggers');
     _loggers.clear();
     _rootLogger = null;
     _selfLogger = null;
     _selfDebugEnabled = false;
+    _selfLogLevel = Level.INFO;
   }
 }

@@ -205,6 +205,10 @@ class JsonHttpAppender extends Appender {
   Future<void> flush() async {
     if (_logBuffer.isEmpty) return;
 
+    Logger.getSelfLogger()?.logTrace(
+        'Flushing logs to $url. Buffer size: ${_logBuffer.length}',
+        tag: 'JsonHttpAppender');
+
     // Create a copy of the current buffer and clear it
     final logs = List<Map<String, dynamic>>.from(_logBuffer);
     _logBuffer.clear();
@@ -249,6 +253,9 @@ class JsonHttpAppender extends Appender {
     // Format the complete payload
     String payload = _formatFullPayload(logs);
 
+    Logger.getSelfLogger()?.logTrace('Sending logs to $url: $payload. Payload: $payload',
+        tag: 'JsonHttpAppender');
+
     // Prepare headers
     Map<String, String> requestHeaders = Map.from(headers);
     if (username != null && password != null) {
@@ -261,6 +268,7 @@ class JsonHttpAppender extends Appender {
 
     if (enableCompression) {
       // Compress the payload
+      Logger.getSelfLogger()?.logTrace('Compressing payload for $url', tag: 'JsonHttpAppender');
       List<int> compressedPayload = gzip.encode(utf8.encode(payload));
       requestHeaders['Content-Encoding'] = 'gzip';
 
