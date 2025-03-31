@@ -85,7 +85,6 @@ class Logger {
     var record = LogRecord(logLevel, message, tag, contextInfo,
         error: error,
         stackTrace: stackTrace,
-        object: object,
         loggerName: loggerName);
     for (var app in appenders) {
       if (logLevel >= app.level) {

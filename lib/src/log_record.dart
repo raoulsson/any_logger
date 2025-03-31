@@ -4,23 +4,28 @@ import 'level.dart';
 import 'logger_stack_trace.dart';
 
 class LogRecord {
+  String? loggerName;
+  final String? dateFormat;
+
+  DateTime time;
+  final String? tag;
   final Level level;
   final String message;
-  final Object? object;
-  String? loggerName;
-  DateTime time;
   final Object? error;
   final StackTrace? stackTrace;
-  final String? tag;
-  final String? dateFormat;
   final LoggerStackTrace contextInfo;
+  final String? className;
+  final String? methodName;
+  final int? lineNumber;
 
   LogRecord(this.level, this.message, this.tag, this.contextInfo,
       {this.error,
       this.stackTrace,
-      this.object,
       this.loggerName,
-      this.dateFormat})
+      this.dateFormat,
+      this.className,
+      this.methodName,
+      this.lineNumber})
       : time = DateTime.now();
 
   @override
