@@ -114,6 +114,7 @@ class JsonHttpAppender extends Appender {
 
     // Send the request
     try {
+      print('Sending log to HTTP endpoint: $url. Payload: $formattedLog');
       await HttpUtils.postForFullResponse(url!,
           body: formattedLog,
           headers: requestHeaders);
