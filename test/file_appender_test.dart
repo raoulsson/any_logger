@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:any_logger/src/logger_factory.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:any_logger/any_logger_lib.dart';
@@ -24,9 +25,9 @@ void main() {
     var now = DateTime.now();
     var yesterdayAsString = DateFormat('yyyy-MM-dd').format(yesterday);
     var nowAsString = DateFormat('yyyy-MM-dd').format(now);
-    await Logger.init(null);
-    Logger.instance.registerAllAppender([FileAppender()]);
-    await Logger.init(config, date: yesterday);
+    await LoggerFactory.init(null);
+    LoggerFactory.getRootLogger().registerAllAppender([FileAppender()]);
+    await LoggerFactory.init(config, date: yesterday);
     if (FileSystemEntity.typeSync('unittest_$yesterdayAsString.txt') ==
         FileSystemEntityType.notFound) {
       fail('Initial file not found!');
@@ -70,8 +71,8 @@ void main() {
         DateUtils.getCalendarWeek(lastWeek).toString();
     var nowAsString =
         now.year.toString() + '-CW' + DateUtils.getCalendarWeek(now).toString();
-    Logger.instance.registerAllAppender([FileAppender()]);
-    await Logger.init(config, date: lastWeek);
+    LoggerFactory.getRootLogger().registerAllAppender([FileAppender()]);
+    await LoggerFactory.init(config, date: lastWeek);
     if (FileSystemEntity.typeSync('unittest_$lastWeekAsString.txt') ==
         FileSystemEntityType.notFound) {
       fail('Initial file not found!');
@@ -114,8 +115,8 @@ void main() {
         now.year, now.month - 1, now.day, now.hour, now.minute, now.second);
     var lastMonthAsString = DateFormat('yyyy-MM').format(lastMonth);
     var nowAsString = DateFormat('yyyy-MM').format(now);
-    Logger.instance.registerAllAppender([FileAppender()]);
-    await Logger.init(config, date: lastMonth);
+    LoggerFactory.getRootLogger().registerAllAppender([FileAppender()]);
+    await LoggerFactory.init(config, date: lastMonth);
     if (FileSystemEntity.typeSync('unittest_$lastMonthAsString.txt') ==
         FileSystemEntityType.notFound) {
       fail('Initial file not found!');
@@ -158,8 +159,8 @@ void main() {
         now.year - 1, now.month, now.day, now.hour, now.minute, now.second);
     var lastYearAsString = DateFormat('yyyy').format(lastYear);
     var nowAsString = DateFormat('yyyy').format(now);
-    Logger.instance.registerAllAppender([FileAppender()]);
-    await Logger.init(config, date: lastYear);
+    LoggerFactory.getRootLogger().registerAllAppender([FileAppender()]);
+    await LoggerFactory.init(config, date: lastYear);
     if (FileSystemEntity.typeSync('unittest_$lastYearAsString.txt') ==
         FileSystemEntityType.notFound) {
       fail('Initial file not found!');

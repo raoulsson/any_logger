@@ -1,4 +1,5 @@
 import 'package:any_logger/any_logger_lib.dart';
+import 'package:any_logger/src/logger_factory.dart';
 
 void main() {
   var config = {
@@ -6,7 +7,7 @@ void main() {
       {'type': 'CONSOLE', 'format': '%d %t %l %m', 'level': 'INFO'},
     ]
   };
-  Logger.init(config);
+  LoggerFactory.init(config);
   ExampleClass.doSomething();
 }
 

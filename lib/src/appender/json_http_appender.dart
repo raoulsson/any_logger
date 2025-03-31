@@ -20,7 +20,7 @@ class JsonHttpAppender extends Appender {
   final List<Map<String, dynamic>> _logBuffer = [];
   int bufferSize = 100; // Default buffer size
   Timer? _flushTimer;
-  Duration flushInterval = Duration(minutes: 5); // Default flush interval
+  Duration flushInterval = Duration(minutes: 1); // Default flush interval
 
   // Default payload pattern for identification part
   String payloadPatternIdPart = '''

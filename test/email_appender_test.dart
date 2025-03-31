@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:any_logger/any_logger_lib.dart';
+import 'package:any_logger/src/logger_factory.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -40,10 +41,10 @@ void main() {
     file.writeAsStringSync(
         'This log entry was created on %d from class %t from thread %i. It has the level %l and the message %m',
         mode: FileMode.append);
-    await Logger.init(null);
-    Logger.instance.registerAllAppender([EmailAppender()]);
-    await Logger.init(config, test: true);
-    var appender = Logger.instance.appenders.elementAt(0) as EmailAppender;
+    await LoggerFactory.init(null);
+    LoggerFactory.getRootLogger().registerAllAppender([EmailAppender()]);
+    await LoggerFactory.init(config, test: true);
+    var appender = LoggerFactory.getRootLogger().appenders.elementAt(0) as EmailAppender;
     expect(appender.templateFile, templateFile);
     expect(appender.template, templateText);
 

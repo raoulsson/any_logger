@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:any_logger/src/logger_factory.dart';
 import 'package:crypto/crypto.dart';
 import 'package:any_logger/any_logger_lib.dart';
 import 'package:test/test.dart';
@@ -49,7 +50,7 @@ class MyApp {
   MyApp();
 
   Future<void> runMDC() async {
-    await Logger.init(kAnyLogDartConfigWithMDC);
+    await LoggerFactory.init(kAnyLogDartConfigWithMDC);
 
     // We define values to zone as 3rd param: zoneValues
     // This cannot run within the test callback, for the moment this works directly or further down the line...

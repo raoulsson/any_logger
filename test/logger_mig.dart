@@ -1,4 +1,5 @@
 import 'package:any_logger/any_logger_lib.dart';
+import 'package:any_logger/src/logger_factory.dart';
 import 'package:test/test.dart';
 
 const kAnyLogConfig = {
@@ -15,7 +16,7 @@ const kAnyLogConfig = {
 
 void main() {
   test('Demo', () async {
-    await Logger.init(kAnyLogConfig);
+    await LoggerFactory.init(kAnyLogConfig);
     var plainClient = PlainClient();
     plainClient.doStuff();
     var clientWith = ClientWith();

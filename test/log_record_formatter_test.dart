@@ -14,11 +14,11 @@ void main() {
     record.time = now;
     var formatted = LogRecordFormatter.format(record, '%d %i %t %l %m');
     expect(formatted,
-        '${DateFormat('yyyy-MM-dd HH:mm:ss').format(now)} uuid TestClass INFO Lorem Ipsum');
+        '${DateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(now)} uuid TestClass INFO Lorem Ipsum');
 
     formatted = LogRecordFormatter.format(record, '%d %i %t %l: %m');
     expect(formatted,
-        '${DateFormat('yyyy-MM-dd HH:mm:ss').format(now)} uuid TestClass INFO: Lorem Ipsum');
+        '${DateFormat('yyyy-MM-dd HH:mm:ss.SSS').format(now)} uuid TestClass INFO: Lorem Ipsum');
 
     formatted = LogRecordFormatter.format(record, '%d %i %t %l: %m',
         dateFormat: 'yyyy-MM-dd');

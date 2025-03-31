@@ -1,4 +1,5 @@
 import 'package:any_logger/any_logger_lib.dart';
+import 'package:any_logger/src/logger_factory.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -14,14 +15,14 @@ void main() {
   };
 
   test('Test', () async {
-    await Logger.init(kAnyLogConfig);
+    await LoggerFactory.init(kAnyLogConfig);
     ClientWithLogEx().logStuff('this is the message with log ex');
     ClientWithLogEx().logException();
 
     ClientWithDirectLogger()
         .logStuff('this is the message with original logger');
 
-    await Logger.init(kAnyLogConfig, clientProxyCallDepthOffset: 1);
+    await LoggerFactory.init(kAnyLogConfig, clientProxyCallDepthOffset: 1);
     ClientBehindOwnProxy().logStuff('this is the message through proxy');
   });
 }
