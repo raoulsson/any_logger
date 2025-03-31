@@ -5,7 +5,7 @@ export 'src/appender/appender_type.dart';
 export 'src/appender/console_appender.dart';
 export 'src/appender/email_appender.dart';
 export 'src/appender/file_appender.dart';
-export 'src/appender/http_appender.dart';
+export 'src/appender/json_http_appender.dart';
 export 'src/appender/mysql_appender.dart';
 export 'src/appender/rotation_cycle.dart';
 export 'src/constants.dart';
