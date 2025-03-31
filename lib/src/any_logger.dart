@@ -1,10 +1,9 @@
 import '../any_logger_lib.dart';
-import 'logger_factory.dart';
 
 /// Mixin for logging capabilities that can be customized with a logger name
 mixin AnyLogger {
   /// Override this in your class to use a specific named logger
-  String get loggerName => 'ROOT';
+  String get loggerName => LoggerFactory.ROOT_LOGGER;
 
   /// Get the logger for this class
   Logger get logger => LoggerFactory.getLogger(loggerName);

@@ -4,6 +4,7 @@ import 'dart:io';
 import '../any_logger_lib.dart';
 
 class LoggerFactory {
+  static const String ROOT_LOGGER = 'ROOT_LOGGER';
   static final Map<String, Logger> _loggers = {};
   static Logger? _rootLogger;
   static Logger? _selfLogger;
@@ -69,8 +70,8 @@ class LoggerFactory {
     _rootLogger = Logger.defaultLogger(definedAppenders, activeAppenders,
         clientDepthOffset: clientProxyCallDepthOffset);
 
-    // Add the root logger to the map with the ROOT name
-    _loggers['ROOT'] = _rootLogger!;
+    // Add the root logger to the map with the ROOT_LOGGER name
+    _loggers[ROOT_LOGGER] = _rootLogger!;
 
     if (selfDebug) {
       _setupSelfLogger();
@@ -139,7 +140,7 @@ class LoggerFactory {
         throw StateError(
             'Logger has not been initialized yet. Call await LoggerFactory.init() first.');
       }
-      // Create a new logger based on the root one but with a different name
+      // Create a new logger based on the ROOT_LOGGER one but with a different name
       _loggers[name] = Logger.fromExisting(_rootLogger!, name: name);
 
       if (_selfDebugEnabled) {
@@ -149,7 +150,7 @@ class LoggerFactory {
     return _loggers[name]!;
   }
 
-  /// Get the root logger instance
+  /// Get the ROOT_LOGGER logger instance
   static Logger getRootLogger() {
     if (_rootLogger == null) {
       throw StateError(

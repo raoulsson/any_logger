@@ -1,5 +1,4 @@
 import '../any_logger_lib.dart';
-import 'logger_factory.dart';
 
 class Logger {
   List<Appender> appenders = [];
@@ -11,7 +10,7 @@ class Logger {
   Logger.defaultLogger(
       List<Appender> definedAppenders, List<Appender> activeAppenders,
       {int clientDepthOffset = 0, String? name})
-      : this.name = name ?? 'ROOT' {
+      : this.name = name ?? LoggerFactory.ROOT_LOGGER {
     getSelfLogger()
         ?.logInternalState('Creating default logger with name: $name');
     registeredAppenders = definedAppenders;
@@ -60,7 +59,7 @@ class Logger {
     tag = other.tag;
   }
 
-  Logger.empty() : name = 'ROOT';
+  Logger.empty() : name = LoggerFactory.ROOT_LOGGER;
 
   void setFormatAll(String format) {
     getSelfLogger()
