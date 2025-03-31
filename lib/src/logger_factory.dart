@@ -22,7 +22,8 @@ class LoggerFactory {
       {bool test = false,
       DateTime? date,
       int clientProxyCallDepthOffset = 0,
-      bool selfDebug = false, Level selfLogLevel = Level.INFO}) async {
+      bool selfDebug = false,
+      Level selfLogLevel = Level.INFO}) async {
     _selfDebugEnabled = selfDebug;
     _selfLogLevel = selfLogLevel;
 
@@ -59,8 +60,7 @@ class LoggerFactory {
         }
       } on FormatException catch (e) {
         if (selfDebug) {
-          _selfLog('Error creating appender: ${e.message}',
-              level: Level.ERROR);
+          _selfLog('Error creating appender: ${e.message}', level: Level.ERROR);
         }
         throw ArgumentError(e.message);
       }
