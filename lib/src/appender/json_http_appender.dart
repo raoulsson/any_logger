@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -164,13 +165,15 @@ class JsonHttpAppender extends Appender {
     String entry = logEntryPattern;
 
     // Format timestamp
-    entry = entry.replaceAll('%d', DateFormat(dateFormat).format(logRecord.time));
+    entry =
+        entry.replaceAll('%d', DateFormat(dateFormat).format(logRecord.time));
 
     // Format level
     entry = entry.replaceAll('%l', logRecord.level.name);
 
     // Format message (escape JSON special characters)
-    entry = entry.replaceAll('%m', _escapeJsonString(LogRecordFormatter.eval(logRecord.message)));
+    entry = entry.replaceAll(
+        '%m', _escapeJsonString(LogRecordFormatter.eval(logRecord.message)));
 
     // Format tag
     entry = entry.replaceAll('%t', logRecord.tag ?? '');
@@ -249,7 +252,8 @@ class JsonHttpAppender extends Appender {
     // Prepare headers
     Map<String, String> requestHeaders = Map.from(headers);
     if (username != null && password != null) {
-      final basicAuth = 'Basic ${base64Encode(utf8.encode('$username:$password'))}';
+      final basicAuth =
+          'Basic ${base64Encode(utf8.encode('$username:$password'))}';
       requestHeaders['Authorization'] = basicAuth;
     }
 
@@ -277,7 +281,8 @@ class JsonHttpAppender extends Appender {
 
     // Check for successful response
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw HttpException('HTTP error: ${response.statusCode} ${response.reasonPhrase}');
+      throw HttpException(
+          'HTTP error: ${response.statusCode} ${response.reasonPhrase}');
     }
   }
 
@@ -293,7 +298,8 @@ class JsonHttpAppender extends Appender {
     }
 
     if (payload.contains('%X{logging.session-hash}')) {
-      final sessionHash = _getMdcValue('logging.session-hash', 'unknown-session');
+      final sessionHash =
+          _getMdcValue('logging.session-hash', 'unknown-session');
       payload = payload.replaceAll('%X{logging.session-hash}', sessionHash);
     }
 
@@ -302,7 +308,8 @@ class JsonHttpAppender extends Appender {
 
     // Add logs array part
     String logsJsonArray = json.encode(logs);
-    String logsPartWithArray = payloadPatternLogsPart.replaceAll('%LOGS_ARRAY%', logsJsonArray);
+    String logsPartWithArray =
+        payloadPatternLogsPart.replaceAll('%LOGS_ARRAY%', logsJsonArray);
 
     // Combine the parts
     payload += logsPartWithArray;
@@ -336,7 +343,7 @@ class JsonHttpAppender extends Appender {
 
   @override
   String toString() {
-    return '${getType()} $url $level (buffer: ${_logBuffer.length}/$bufferSize)';
+    return super.toString();
   }
 
   @override
@@ -351,5 +358,6 @@ class JsonHttpAppender extends Appender {
   }
 
   int get bufferCount => _logBuffer.length;
+
   bool get isBufferFull => _logBuffer.length >= bufferSize;
 }

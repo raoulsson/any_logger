@@ -45,8 +45,8 @@ class ConsoleAppender extends Appender {
         stackTrace: logRecord.stackTrace,
       );
     } else {
-      print(LogRecordFormatter.format(logRecord, format,
-          dateFormat: dateFormat));
+      print(
+          LogRecordFormatter.format(logRecord, format, dateFormat: dateFormat));
     }
 
     var tabs = '\t';
@@ -61,7 +61,7 @@ class ConsoleAppender extends Appender {
 
   @override
   String toString() {
-    return '${getType()} $format $level $lineInfo';
+    return super.toString();
   }
 
   @override

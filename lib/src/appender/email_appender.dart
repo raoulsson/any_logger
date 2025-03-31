@@ -140,7 +140,7 @@ class EmailAppender extends Appender {
 
   @override
   String toString() {
-    return '${getType()} $host $port $user $level';
+    return super.toString();
   }
 
   @override

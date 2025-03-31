@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:any_logger/any_logger_lib.dart';
 import 'package:any_logger/src/logger_factory.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:intl/intl.dart';
-import 'package:any_logger/any_logger_lib.dart';
 import 'package:test/test.dart';
 
 void main() {

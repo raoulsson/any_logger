@@ -1,6 +1,6 @@
-import 'package:intl/intl.dart';
 import 'package:any_logger/any_logger_lib.dart';
 import 'package:any_logger/src/log_record_formatter.dart';
+import 'package:intl/intl.dart';
 import 'package:test/test.dart';
 
 void main() {

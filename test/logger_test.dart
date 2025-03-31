@@ -58,12 +58,14 @@ void main() {
 
     expect(LoggerFactory.getRootLogger().appenders.length, 5);
 
-    var console = LoggerFactory.getRootLogger().appenders.elementAt(0) as ConsoleAppender;
+    var console =
+        LoggerFactory.getRootLogger().appenders.elementAt(0) as ConsoleAppender;
     expect(console.getType(), AppenderType.CONSOLE.name);
     expect(console.format, '%d %t %l %m');
     expect(console.level, Level.INFO);
 
-    var file = LoggerFactory.getRootLogger().appenders.elementAt(1) as FileAppender;
+    var file =
+        LoggerFactory.getRootLogger().appenders.elementAt(1) as FileAppender;
 
     expect(file.getType(), AppenderType.FILE.name);
     expect(file.format, '%d %t %l %m');
@@ -72,7 +74,8 @@ void main() {
     expect(file.rotationCycle, RotationCycle.NEVER);
     expect(file.path, '/path/to/');
 
-    var email = LoggerFactory.getRootLogger().appenders.elementAt(2) as EmailAppender;
+    var email =
+        LoggerFactory.getRootLogger().appenders.elementAt(2) as EmailAppender;
 
     expect(email.getType(), AppenderType.EMAIL.name);
     expect(email.level, Level.INFO);
@@ -86,7 +89,8 @@ void main() {
     expect(email.toCC!.length, 2);
     expect(email.toBCC!.length, 2);
 
-    var http = LoggerFactory.getRootLogger().appenders.elementAt(3) as JsonHttpAppender;
+    var http = LoggerFactory.getRootLogger().appenders.elementAt(3)
+        as JsonHttpAppender;
 
     expect(http.getType(), AppenderType.JSON_HTTP.name);
     expect(http.level, Level.INFO);
@@ -94,7 +98,8 @@ void main() {
     expect(http.headers.length, 1);
     expect(http.headers['Content-Type'], 'application/json');
 
-    var mysql = LoggerFactory.getRootLogger().appenders.elementAt(4) as MySqlAppender;
+    var mysql =
+        LoggerFactory.getRootLogger().appenders.elementAt(4) as MySqlAppender;
 
     expect(mysql.getType(), AppenderType.MYSQL.name);
     expect(mysql.level, Level.INFO);

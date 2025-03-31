@@ -1,13 +1,13 @@
 import 'package:any_logger/any_logger_lib.dart';
 import 'package:any_logger/src/logger_factory.dart';
 
-void main() {
+Future<void> main() async {
   var config = {
     'appenders': [
       {'type': 'CONSOLE', 'format': '%d %t %l %m', 'level': 'INFO'},
     ]
   };
-  LoggerFactory.init(config);
+  await LoggerFactory.init(config);
   ExampleClass.doSomething();
 }
 

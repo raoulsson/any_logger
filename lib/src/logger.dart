@@ -1,4 +1,3 @@
-
 import '../any_logger_lib.dart';
 import 'logger_factory.dart';
 
@@ -9,9 +8,12 @@ class Logger {
   String? tag;
   String name;
 
-  Logger.defaultLogger(List<Appender> definedAppenders, List<Appender> activeAppenders,
+  Logger.defaultLogger(
+      List<Appender> definedAppenders, List<Appender> activeAppenders,
       {int clientDepthOffset = 0, String? name})
       : this.name = name ?? 'ROOT' {
+    getSelfLogger()
+        ?.logInternalState('Creating default logger with name: $name');
     registeredAppenders = definedAppenders;
     appenders = activeAppenders;
     this.clientDepthOffset = clientDepthOffset;
@@ -21,25 +23,140 @@ class Logger {
   Logger.fromExisting(Logger other, {required String name})
       : this.name = name,
         clientDepthOffset = other.clientDepthOffset {
-    appenders = List.from(other.appenders);
-    registeredAppenders = List.from(other.registeredAppenders);
+    getSelfLogger()?.logInternalState(
+        'Creating new logger named $name from existing logger: ${other.name}');
+    // Create deep copies of appenders so each logger has independent instances
+    appenders = other.appenders.map((appender) {
+      // Create a new appender of the same type
+      Appender newAppender = AppenderType.values
+          .firstWhere((type) => type.name == appender.getType())
+          .createAppender();
+
+      // Copy configuration from the original appender
+      newAppender.level = appender.level;
+      newAppender.format = appender.format;
+      newAppender.initialFormat = appender.initialFormat;
+      newAppender.dateFormat = appender.dateFormat;
+      newAppender.initialDateFormat = appender.initialDateFormat;
+      newAppender.clientDepthOffset = appender.clientDepthOffset;
+
+      return newAppender;
+    }).toList();
+
+    // Same for registered appenders
+    registeredAppenders = other.registeredAppenders.map((appender) {
+      Appender newAppender = AppenderType.values
+          .firstWhere((type) => type.name == appender.getType())
+          .createAppender();
+
+      newAppender.level = appender.level;
+      newAppender.format = appender.format;
+      newAppender.dateFormat = appender.dateFormat;
+      newAppender.clientDepthOffset = appender.clientDepthOffset;
+
+      return newAppender;
+    }).toList();
+
     tag = other.tag;
   }
 
   Logger.empty() : name = 'ROOT';
 
+  void setFormatAll(String format) {
+    getSelfLogger()
+        ?.logInternalState('Setting format for all appenders to $format');
+    for (var appender in appenders) {
+      appender.format = format;
+    }
+  }
+
+  void setFormat(AppenderType appenderType, String format) {
+    for (var appender in appenders) {
+      if (appender.getType() == appenderType.name) {
+        getSelfLogger()?.logInternalState(
+            'Setting format for appender ${appender.getType()} to $format');
+        appender.format = format;
+      }
+    }
+  }
+
+  void resetFormatToInitialConfig() {
+    getSelfLogger()?.logInternalState(
+        'Resetting format for all appenders to initial config');
+    for (var appender in appenders) {
+      appender.format = appender.initialFormat;
+    }
+  }
+
+  void setLevelAll(Level level) {
+    getSelfLogger()
+        ?.logInternalState('Setting level for all appenders to $level');
+    for (var appender in appenders) {
+      appender.level = level;
+    }
+  }
+
+  void setLevel(AppenderType appenderType, Level level) {
+    for (var appender in appenders) {
+      if (appender.getType() == appenderType.name) {
+        getSelfLogger()?.logInternalState(
+            'Setting level for appender ${appender.getType()} to $level');
+        appender.level = level;
+      }
+    }
+  }
+
+  void setDateTimeFormatAll(String dateTimeFormat) {
+    getSelfLogger()?.logInternalState(
+        'Setting date format for all appenders to $dateTimeFormat');
+    for (var appender in appenders) {
+      appender.dateFormat = dateTimeFormat;
+    }
+  }
+
+  void setDateTimeFormat(AppenderType appenderType, String dateTimeFormat) {
+    for (var appender in appenders) {
+      if (appender.getType() == appenderType.name) {
+        getSelfLogger()?.logInternalState(
+            'Setting date format for appender ${appender.getType()} to $dateTimeFormat');
+        appender.dateFormat = dateTimeFormat;
+      }
+    }
+  }
+
+  void resetDateTimeFormatToInitialConfig() {
+    getSelfLogger()?.logInternalState(
+        'Resetting date format for all appenders to initial config');
+    for (var appender in appenders) {
+      appender.dateFormat = appender.initialDateFormat;
+    }
+  }
+
+  void setClientDepthOffsetAll(int offset) {
+    getSelfLogger()?.logInternalState(
+        'Setting client depth offset for all appenders to $offset');
+    for (var appender in appenders) {
+      appender.clientDepthOffset = offset;
+    }
+  }
+
+  void setClientDepthOffset(AppenderType appenderType, int offset) {
+    for (var appender in appenders) {
+      if (appender.getType() == appenderType.name) {
+        getSelfLogger()?.logInternalState(
+            'Setting client depth offset for appender ${appender.getType()} to $offset');
+        appender.clientDepthOffset = offset;
+      }
+    }
+  }
+
   void log(Level logLevel, String message, String? tag,
-      [Object? error,
-        StackTrace? stackTrace,
-        Object? object,
-        int depthOffset = 0]) {
+      [Object? error, StackTrace? stackTrace, int depthOffset = 0]) {
     var totalDepthOffset = clientDepthOffset + depthOffset;
     var contextInfo = LoggerStackTrace.from(StackTrace.current,
         depthOffset: totalDepthOffset);
     var record = LogRecord(logLevel, message, tag, contextInfo,
-        error: error,
-        stackTrace: stackTrace,
-        loggerName: name);
+        error: error, stackTrace: stackTrace, loggerName: name);
     for (var app in appenders) {
       if (logLevel >= app.level) {
         app.append(record);
@@ -47,134 +164,136 @@ class Logger {
     }
   }
 
-  void logTrace(String message,
-      {String? tag,
-        Object? exception,
-        StackTrace? stackTrace,
-        Object? object}) {
-    tag ??= '';
-    log(Level.TRACE, message, tag, exception?.toString(),
-        stackTrace, object, kStackDepthOffset);
+  /// Log a message about the logger's state
+  void logInternalState(String message) {
+    logInfo('Logger State: $message', tag: 'LoggerState');
   }
 
-  void logDebug(String message,
-      {String? tag,
-        Object? exception,
-        StackTrace? stackTrace,
-        Object? object}) {
-    tag ??= '';
-    log(Level.DEBUG, message, tag, exception?.toString(),
-        stackTrace, object, kStackDepthOffset);
-  }
-
-  void logInfo(String message,
-      {String? tag,
-        Object? exception,
-        StackTrace? stackTrace,
-        Object? object}) {
-    tag ??= '';
-    log(Level.INFO, message, tag, exception?.toString(),
-        stackTrace, object, kStackDepthOffset);
-  }
-
-  void logWarn(String message,
-      {String? tag,
-        Object? exception,
-        StackTrace? stackTrace,
-        Object? object}) {
-    tag ??= '';
-    log(Level.WARN, message, tag, exception?.toString(),
-        stackTrace, object, kStackDepthOffset);
-  }
-
-  void logError(String message,
-      {String? tag,
-        Object? exception,
-        StackTrace? stackTrace,
-        Object? object}) {
-    tag ??= '';
-    log(Level.ERROR, message, tag, exception?.toString(),
-        stackTrace, object, kStackDepthOffset);
-  }
-
-  void logFatal(String message,
-      {String? tag,
-        Object? exception,
-        StackTrace? stackTrace,
-        Object? object}) {
-    tag ??= '';
-    log(Level.FATAL, message, tag, exception?.toString(),
-        stackTrace, object, kStackDepthOffset);
+  /// Get information about this logger's configuration
+  Map<String, dynamic> getLoggerInfo() {
+    return {
+      'name': name,
+      'appenders': appenders.map((appender) => appender.getType()).toList(),
+      'registeredAppenders':
+          registeredAppenders.map((appender) => appender.getType()).toList(),
+      'clientDepthOffset': clientDepthOffset,
+    };
   }
 
   void addCustomAppender(Appender appender) {
+    getSelfLogger()
+        ?.logInternalState('Adding custom appender: ${appender.getType()}');
     appenders.add(appender);
   }
 
   void reset() {
+    getSelfLogger()?.logInternalState('Resetting logger: $name');
     appenders.clear();
   }
 
   void registerAppender(Appender appender) {
+    getSelfLogger()
+        ?.logInternalState('Registering appender: ${appender.getType()}');
     registeredAppenders.add(appender);
   }
 
   void registerAllAppender(List<Appender> appender) {
+    getSelfLogger()?.logInternalState(
+        'Registering all appenders: ${appender.map((a) => a.getType()).toList()}');
     registeredAppenders.addAll(appender);
+  }
+
+  @override
+  String toString() {
+    return 'Logger(name: $name, appenders: ${appenders.map((a) => a.getType())}, registeredAppenders: ${registeredAppenders.map((a) => a.getType())}, clientDepthOffset: $clientDepthOffset)';
+  }
+
+  void logTrace(String message,
+      {String? tag, Object? exception, StackTrace? stackTrace}) {
+    tag ??= '';
+    log(Level.TRACE, message, tag, exception?.toString(), stackTrace,
+        kStackDepthOffset);
+  }
+
+  void logDebug(String message,
+      {String? tag, Object? exception, StackTrace? stackTrace}) {
+    tag ??= '';
+    log(Level.DEBUG, message, tag, exception?.toString(), stackTrace,
+        kStackDepthOffset);
+  }
+
+  void logInfo(String message,
+      {String? tag, Object? exception, StackTrace? stackTrace}) {
+    tag ??= '';
+    log(Level.INFO, message, tag, exception?.toString(), stackTrace,
+        kStackDepthOffset);
+  }
+
+  void logWarn(String message,
+      {String? tag, Object? exception, StackTrace? stackTrace}) {
+    tag ??= '';
+    log(Level.WARN, message, tag, exception?.toString(), stackTrace,
+        kStackDepthOffset);
+  }
+
+  void logError(String message,
+      {String? tag, Object? exception, StackTrace? stackTrace}) {
+    tag ??= '';
+    log(Level.ERROR, message, tag, exception?.toString(), stackTrace,
+        kStackDepthOffset);
+  }
+
+  void logFatal(String message,
+      {String? tag, Object? exception, StackTrace? stackTrace}) {
+    tag ??= '';
+    log(Level.FATAL, message, tag, exception?.toString(), stackTrace,
+        kStackDepthOffset);
   }
 
   /// For backward compatibility with the static methods
   static void trace(String message,
-      {String? tag,
-        Object? exception,
-        StackTrace? stackTrace,
-        Object? object}) {
+      {String? tag, Object? exception, StackTrace? stackTrace}) {
     LoggerFactory.getRootLogger().logTrace(message,
-        tag: tag, exception: exception, stackTrace: stackTrace, object: object);
+        tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   static void debug(String message,
-      {String? tag,
-        Object? exception,
-        StackTrace? stackTrace,
-        Object? object}) {
+      {String? tag, Object? exception, StackTrace? stackTrace}) {
     LoggerFactory.getRootLogger().logDebug(message,
-        tag: tag, exception: exception, stackTrace: stackTrace, object: object);
+        tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   static void info(String message,
-      {String? tag,
-        Object? exception,
-        StackTrace? stackTrace,
-        Object? object}) {
+      {String? tag, Object? exception, StackTrace? stackTrace}) {
     LoggerFactory.getRootLogger().logInfo(message,
-        tag: tag, exception: exception, stackTrace: stackTrace, object: object);
+        tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   static void warn(String message,
-      {String? tag,
-        Object? exception,
-        StackTrace? stackTrace,
-        Object? object}) {
+      {String? tag, Object? exception, StackTrace? stackTrace}) {
     LoggerFactory.getRootLogger().logWarn(message,
-        tag: tag, exception: exception, stackTrace: stackTrace, object: object);
+        tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   static void error(String message,
-      {String? tag,
-        Object? exception,
-        StackTrace? stackTrace,
-        Object? object}) {
+      {String? tag, Object? exception, StackTrace? stackTrace}) {
     LoggerFactory.getRootLogger().logError(message,
-        tag: tag, exception: exception, stackTrace: stackTrace, object: object);
+        tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   static void fatal(String message,
-      {String? tag,
-        Object? exception,
-        StackTrace? stackTrace,
-        Object? object}) {
+      {String? tag, Object? exception, StackTrace? stackTrace}) {
     LoggerFactory.getRootLogger().logFatal(message,
-        tag: tag, exception: exception, stackTrace: stackTrace, object: object);
+        tag: tag, exception: exception, stackTrace: stackTrace);
+  }
+
+  /// For the self-debugging system to access internal details
+  static Logger? getSelfLogger() {
+    return LoggerFactory.selfLogger;
+  }
+
+  /// Check if self-debugging is enabled
+  static bool isSelfDebugEnabled() {
+    return LoggerFactory.selfDebugEnabled;
   }
 }

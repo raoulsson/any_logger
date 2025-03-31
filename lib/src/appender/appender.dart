@@ -4,29 +4,21 @@ import '../../any_logger_lib.dart';
 
 abstract class Appender {
   static const String defaultFormat = '%d %t %l %m %f';
-
   static const String defaultDateFormat = 'yyyy-MM-dd HH:mm:ss';
-
   late DateTime created;
-
   Level level = Level.INFO;
-
   int? clientDepthOffset;
-
-  String? lineInfo;
-
   String format = defaultFormat;
-
   String dateFormat = defaultDateFormat;
+  String? lineInfo;
+  String initialFormat = defaultFormat;
+  String initialDateFormat = defaultDateFormat;
 
   Appender({DateTime? customDate}) {
     created = customDate ?? DateTime.now();
   }
 
-  String getType() {
-    // This will be implemented by subclasses
-    throw UnimplementedError('getType() must be implemented by subclasses');
-  }
+  String getType();
 
   void append(LogRecord logRecord);
 
@@ -35,7 +27,9 @@ abstract class Appender {
       {bool test = false, DateTime? date}) {
     created = date ?? DateTime.now();
     format = config['format'] ?? defaultFormat;
+    initialFormat = format;
     dateFormat = config['dateFormat'] ?? defaultDateFormat;
+    initialDateFormat = dateFormat;
 
     final levelStr = config['level'] as String?;
     if (levelStr != null) {
@@ -45,5 +39,10 @@ abstract class Appender {
     if (config.containsKey('depthOffset')) {
       clientDepthOffset = config['depthOffset'];
     }
+  }
+
+  @override
+  String toString() {
+    return 'Appender{type: ${getType()}, level: $level, format: $format, dateFormat: $dateFormat}';
   }
 }

@@ -26,7 +26,7 @@ enum Level {
     final upperString = s.toUpperCase();
     try {
       return Level.values.firstWhere(
-            (level) => level.name == upperString,
+        (level) => level.name == upperString,
         orElse: () => throw FormatException('Unknown level: $s'),
       );
     } on FormatException {

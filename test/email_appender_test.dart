@@ -44,7 +44,8 @@ void main() {
     await LoggerFactory.init(null);
     LoggerFactory.getRootLogger().registerAllAppender([EmailAppender()]);
     await LoggerFactory.init(config, test: true);
-    var appender = LoggerFactory.getRootLogger().appenders.elementAt(0) as EmailAppender;
+    var appender =
+        LoggerFactory.getRootLogger().appenders.elementAt(0) as EmailAppender;
     expect(appender.templateFile, templateFile);
     expect(appender.template, templateText);
 

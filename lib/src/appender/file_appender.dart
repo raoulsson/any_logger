@@ -154,6 +154,11 @@ class FileAppender extends Appender {
   }
 
   @override
+  String toString() {
+    return super.toString();
+  }
+
+  @override
   String getType() {
     return AppenderType.FILE.name;
   }

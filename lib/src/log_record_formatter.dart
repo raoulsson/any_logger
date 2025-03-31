@@ -31,8 +31,7 @@ class LogRecordFormatter {
       }
     }
     if (format.contains('\%l')) {
-      format = format.replaceAll(
-          '\%l', (logRecord.level.name + fill).trim());
+      format = format.replaceAll('\%l', (logRecord.level.name + fill).trim());
     }
 
     if (format.contains('\%m')) {
@@ -59,8 +58,7 @@ class LogRecordFormatter {
           var mdcKey = element.substring(1, element.indexOf('}'));
           List<dynamic> values = Zone.current[mdcKey] as List<dynamic>? ?? [];
           if (values.isNotEmpty) {
-            format = format.replaceAll(
-                '%X{$mdcKey}', values[0].toString());
+            format = format.replaceAll('%X{$mdcKey}', values[0].toString());
           } else {
             format = format.replaceAll('%X{$mdcKey}', 'n/a');
           }
