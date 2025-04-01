@@ -162,4 +162,14 @@ class FileAppender extends Appender {
   String getType() {
     return AppenderType.FILE.name;
   }
+
+  @override
+  Future<void> dispose() async {
+    // tbd
+  }
+
+  @override
+  Future<void> flush() async {
+    // tbd
+  }
 }

@@ -68,4 +68,15 @@ class ConsoleAppender extends Appender {
   String getType() {
     return AppenderType.CONSOLE.name;
   }
+
+  @override
+  Future<void> dispose() async {
+    // No resources to dispose of for ConsoleAppender
+  }
+
+  @override
+  Future<void> flush() async {
+    // No resources to flush for ConsoleAppender
+  }
+
 }

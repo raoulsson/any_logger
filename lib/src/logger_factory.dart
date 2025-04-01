@@ -89,10 +89,22 @@ class LoggerFactory {
     if (_rootLogger == null) return;
 
     const selfLoggerName = 'ANY_DEBUG_LOGGER';
-    _selfLogger = Logger.fromExisting(_rootLogger!, name: selfLoggerName);
+    _selfLogger = Logger.fromExisting(_rootLogger!, name: selfLoggerName, consoleOnly: true);
     _selfLogger?.setLevelAll(_selfLogLevel);
     _loggers[selfLoggerName] = _selfLogger!;
     _selfLog('Self-debugging enabled');
+  }
+
+  static Future<void> dispose() async {
+    _selfLog('Disposing logger factory');
+    for(var logger in _loggers.values) {
+      logger.dispose();
+    }
+    _loggers.clear();
+    _rootLogger = null;
+    _selfLogger = null;
+    _selfDebugEnabled = false;
+    _selfLogLevel = Level.INFO;
   }
 
   /// Log a message using the self logger
@@ -167,13 +179,10 @@ class LoggerFactory {
     return _loggers.keys.toList();
   }
 
-  /// Reset all loggers (for testing)
-  static void resetAll() {
-    _selfLog('Resetting all loggers');
-    _loggers.clear();
-    _rootLogger = null;
-    _selfLogger = null;
-    _selfDebugEnabled = false;
-    _selfLogLevel = Level.INFO;
+  static flushAll() {
+    for (var logger in _loggers.values) {
+      logger.flush();
+    }
   }
+
 }

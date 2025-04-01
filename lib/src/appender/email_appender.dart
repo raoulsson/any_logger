@@ -147,4 +147,14 @@ class EmailAppender extends Appender {
   String getType() {
     return AppenderType.EMAIL.name;
   }
+
+  @override
+  Future<void> dispose() async {
+    // tbd
+  }
+
+  @override
+  Future<void> flush() async {
+    // tbd
+  }
 }

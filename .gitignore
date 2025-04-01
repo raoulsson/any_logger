@@ -13,3 +13,5 @@ doc/api/
 # SDK directories
 .idea
 .DS_Store
+
+http_endpoint_credentials.txt

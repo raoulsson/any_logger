@@ -8,18 +8,19 @@ class Logger {
   String name;
 
   Logger.defaultLogger(
-      List<Appender> definedAppenders, List<Appender> activeAppenders,
-      {int clientDepthOffset = 0, String? name})
-      : this.name = name ?? LoggerFactory.ROOT_LOGGER {
-    getSelfLogger()
-        ?.logInternalState('Creating default logger with name: $name');
+      List<Appender> definedAppenders,
+      List<Appender> activeAppenders, {
+      int clientDepthOffset = 0,
+      String? name}
+      ) : this.name = name ?? LoggerFactory.ROOT_LOGGER {
+    getSelfLogger()?.logInternalState('Creating default logger with name: $name');
     registeredAppenders = definedAppenders;
     appenders = activeAppenders;
     this.clientDepthOffset = clientDepthOffset;
   }
 
   /// Create a new logger from an existing one, but with a different name
-  Logger.fromExisting(Logger other, {required String name})
+  Logger.fromExisting(Logger other, {required String name, bool consoleOnly = false})
       : this.name = name,
         clientDepthOffset = other.clientDepthOffset {
     getSelfLogger()?.logInternalState(
@@ -42,6 +43,10 @@ class Logger {
       return newAppender;
     }).toList();
 
+    if(consoleOnly) {
+      appenders.removeWhere((appender) => appender.getType() != AppenderType.CONSOLE.name);
+    }
+
     // Same for registered appenders
     registeredAppenders = other.registeredAppenders.map((appender) {
       Appender newAppender = AppenderType.values
@@ -56,10 +61,38 @@ class Logger {
       return newAppender;
     }).toList();
 
+    if(consoleOnly) {
+      registeredAppenders.removeWhere((appender) => appender.getType() != AppenderType.CONSOLE.name);
+    }
+
     tag = other.tag;
   }
 
   Logger.empty() : name = LoggerFactory.ROOT_LOGGER;
+
+  Future<void> dispose() async {
+    getSelfLogger()?.logInternalState('Disposing logger: $name');
+    for (var appender in appenders) {
+      await appender.dispose();
+    }
+    for (var appender in registeredAppenders) {
+      await appender.dispose();
+    }
+    appenders.clear();
+    registeredAppenders.clear();
+  }
+
+  Future<void> flush() async {
+    getSelfLogger()?.logInternalState('Flushing logger: $name');
+    for (var appender in appenders) {
+      print(appender);
+      await appender.flush();
+    }
+    for (var appender in registeredAppenders) {
+      print(appender);
+      await appender.flush();
+    }
+  }
 
   void setFormatAll(String format) {
     getSelfLogger()
@@ -295,4 +328,6 @@ class Logger {
   static bool isSelfDebugEnabled() {
     return LoggerFactory.selfDebugEnabled;
   }
+
+
 }

@@ -106,4 +106,14 @@ class MySqlAppender extends Appender {
   String getType() {
     return AppenderType.MYSQL.name;
   }
+
+  @override
+  Future<void> dispose() async {
+    // tbd
+  }
+
+  @override
+  Future<void> flush() async {
+    // tbd
+  }
 }

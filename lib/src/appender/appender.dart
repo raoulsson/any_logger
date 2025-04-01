@@ -20,6 +20,10 @@ abstract class Appender {
 
   String getType();
 
+  Future<void> dispose();
+
+  Future<void> flush();
+
   void append(LogRecord logRecord);
 
   @protected

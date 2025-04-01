@@ -58,12 +58,6 @@ class JsonHttpAppender extends Appender {
       : super(customDate: date) {
     initializeCommonProperties(config, test: test, date: date);
 
-    if (config.containsKey('url')) {
-      url = config['url'];
-    } else {
-      throw ArgumentError('Missing url argument for JsonHttpAppender');
-    }
-
     if (config.containsKey('headers')) {
       List<String> h = config['headers'];
       for (var s in h) {
@@ -75,18 +69,10 @@ class JsonHttpAppender extends Appender {
       headers.putIfAbsent('Content-Type', () => 'application/json');
     }
 
-    if (config.containsKey('appVersion')) {
-      appVersion = config['appVersion'];
+    if (config.containsKey('url')) {
+      url = config['url'];
     } else {
-      appVersion = '1.0.0'; // Fallback version
-    }
-
-    if (config.containsKey('enableCompression')) {
-      enableCompression = config['enableCompression'];
-    }
-
-    if (config.containsKey('maxRetries')) {
-      maxRetries = config['maxRetries'];
+      throw ArgumentError('Missing url argument for JsonHttpAppender');
     }
 
     if (config.containsKey('username')) {
@@ -202,7 +188,9 @@ class JsonHttpAppender extends Appender {
   }
 
   /// Flushes the log buffer, sending all accumulated logs
+  @override
   Future<void> flush() async {
+    Logger.getSelfLogger()?.logTrace('Flushing logs to $url', tag: 'JsonHttpAppender');
     if (_logBuffer.isEmpty) return;
 
     Logger.getSelfLogger()?.logTrace(
@@ -227,11 +215,17 @@ class JsonHttpAppender extends Appender {
     int retryCount = 0;
     Duration retryDelay = Duration(seconds: 1);
 
+    Logger.getSelfLogger()?.logTrace(
+        'Attempting to send logs to $url. Retry count: $retryCount',
+        tag: 'JsonHttpAppender');
+    return false;
+
     while (retryCount <= maxRetries) {
       try {
         await _sendLogs(logs);
         return true; // Success
       } catch (e) {
+        throw e; // Rethrow the error for logging
         retryCount++;
         if (retryCount > maxRetries) {
           print('Failed to send logs after $maxRetries retries: $e');
@@ -251,6 +245,9 @@ class JsonHttpAppender extends Appender {
   /// Actually sends the logs (without retry logic)
   Future<void> _sendLogs(List<Map<String, dynamic>> logs) async {
     // Format the complete payload
+    Logger.getSelfLogger()?.logTrace(
+        'Preparing to send logs to $url. Buffer size: ${_logBuffer.length}',
+        tag: 'JsonHttpAppender');
     String payload = _formatFullPayload(logs);
 
     Logger.getSelfLogger()?.logTrace('Sending logs to $url: $payload. Payload: $payload',
@@ -299,11 +296,15 @@ class JsonHttpAppender extends Appender {
     // Start with the ID part of the payload
     String payload = payloadPatternIdPart;
 
+    Logger.getSelfLogger()?.logTrace('Payload ID part: $payload');
+
     // Replace MDC values
     if (payload.contains('%X{logging.device-hash}')) {
       final deviceHash = _getMdcValue('logging.device-hash', 'unknown-device');
       payload = payload.replaceAll('%X{logging.device-hash}', deviceHash);
     }
+
+    Logger.getSelfLogger()?.logTrace('Payload after device hash: $payload');
 
     if (payload.contains('%X{logging.session-hash}')) {
       final sessionHash =
@@ -311,16 +312,27 @@ class JsonHttpAppender extends Appender {
       payload = payload.replaceAll('%X{logging.session-hash}', sessionHash);
     }
 
+    Logger.getSelfLogger()?.logTrace('Payload after session hash: $payload');
+
     // Replace app version
     payload = payload.replaceAll('%APP-VERSION', appVersion ?? '1.0.0');
 
+    Logger.getSelfLogger()?.logTrace('Payload after app version: $payload');
+
     // Add logs array part
     String logsJsonArray = json.encode(logs);
+
+    Logger.getSelfLogger()?.logTrace('Logs JSON array: $logsJsonArray');
+
     String logsPartWithArray =
         payloadPatternLogsPart.replaceAll('%LOGS_ARRAY%', logsJsonArray);
 
+    Logger.getSelfLogger()?.logTrace('Logs part with array: $logsPartWithArray');
+
     // Combine the parts
     payload += logsPartWithArray;
+
+    Logger.getSelfLogger()?.logTrace('Final payload: $payload');
 
     return payload;
   }
@@ -360,9 +372,9 @@ class JsonHttpAppender extends Appender {
   }
 
   /// Disposes resources used by this appender
-  void dispose() {
+  Future<void> dispose() async {
     _flushTimer?.cancel();
-    flush(); // Flush any remaining logs
+    await flush(); // Flush any remaining logs
   }
 
   int get bufferCount => _logBuffer.length;
