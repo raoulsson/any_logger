@@ -59,6 +59,8 @@ void main() {
 
     client.doStuff();
 
+    LoggerFactory.logLogger2AppendersInfo();
+
     await LoggerFactory.flushAll();
 
     //await LoggerFactory.dispose();

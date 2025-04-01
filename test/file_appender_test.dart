@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:any_logger/any_logger_lib.dart';
-import 'package:any_logger/src/logger_factory.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:test/test.dart';
@@ -26,7 +25,7 @@ void main() {
     var yesterdayAsString = DateFormat('yyyy-MM-dd').format(yesterday);
     var nowAsString = DateFormat('yyyy-MM-dd').format(now);
     await LoggerFactory.init(null);
-    LoggerFactory.getRootLogger().registerAllAppender([FileAppender()]);
+    LoggerFactory.getRootLogger().registerCustomAppender(FileAppender());
     await LoggerFactory.init(config, date: yesterday);
     if (FileSystemEntity.typeSync('unittest_$yesterdayAsString.txt') ==
         FileSystemEntityType.notFound) {
@@ -71,7 +70,7 @@ void main() {
         DateUtils.getCalendarWeek(lastWeek).toString();
     var nowAsString =
         now.year.toString() + '-CW' + DateUtils.getCalendarWeek(now).toString();
-    LoggerFactory.getRootLogger().registerAllAppender([FileAppender()]);
+    LoggerFactory.getRootLogger().registerCustomAppender(FileAppender());
     await LoggerFactory.init(config, date: lastWeek);
     if (FileSystemEntity.typeSync('unittest_$lastWeekAsString.txt') ==
         FileSystemEntityType.notFound) {
@@ -115,7 +114,7 @@ void main() {
         now.year, now.month - 1, now.day, now.hour, now.minute, now.second);
     var lastMonthAsString = DateFormat('yyyy-MM').format(lastMonth);
     var nowAsString = DateFormat('yyyy-MM').format(now);
-    LoggerFactory.getRootLogger().registerAllAppender([FileAppender()]);
+    LoggerFactory.getRootLogger().registerCustomAppender(FileAppender());
     await LoggerFactory.init(config, date: lastMonth);
     if (FileSystemEntity.typeSync('unittest_$lastMonthAsString.txt') ==
         FileSystemEntityType.notFound) {
@@ -159,7 +158,7 @@ void main() {
         now.year - 1, now.month, now.day, now.hour, now.minute, now.second);
     var lastYearAsString = DateFormat('yyyy').format(lastYear);
     var nowAsString = DateFormat('yyyy').format(now);
-    LoggerFactory.getRootLogger().registerAllAppender([FileAppender()]);
+    LoggerFactory.getRootLogger().registerCustomAppender(FileAppender());
     await LoggerFactory.init(config, date: lastYear);
     if (FileSystemEntity.typeSync('unittest_$lastYearAsString.txt') ==
         FileSystemEntityType.notFound) {

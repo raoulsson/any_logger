@@ -42,7 +42,7 @@ void main() {
         'This log entry was created on %d from class %t from thread %i. It has the level %l and the message %m',
         mode: FileMode.append);
     await LoggerFactory.init(null);
-    LoggerFactory.getRootLogger().registerAllAppender([EmailAppender()]);
+    LoggerFactory.getRootLogger().registerCustomAppender(EmailAppender());
     await LoggerFactory.init(config, test: true);
     var appender =
         LoggerFactory.getRootLogger().appenders.elementAt(0) as EmailAppender;

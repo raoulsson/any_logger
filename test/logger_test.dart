@@ -47,13 +47,11 @@ void main() {
       ],
     };
     await LoggerFactory.init(null);
-    LoggerFactory.getRootLogger().registerAllAppender([
-      ConsoleAppender(),
-      FileAppender(),
-      JsonHttpAppender(),
-      EmailAppender(),
-      MySqlAppender()
-    ]);
+    LoggerFactory.getRootLogger().registerCustomAppender(ConsoleAppender());
+    LoggerFactory.getRootLogger().registerCustomAppender(FileAppender());
+    LoggerFactory.getRootLogger().registerCustomAppender(JsonHttpAppender());
+    LoggerFactory.getRootLogger().registerCustomAppender(EmailAppender());
+    LoggerFactory.getRootLogger().registerCustomAppender(MySqlAppender());
     await LoggerFactory.init(config, test: true);
 
     expect(LoggerFactory.getRootLogger().appenders.length, 5);

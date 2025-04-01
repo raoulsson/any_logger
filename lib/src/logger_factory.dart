@@ -37,7 +37,7 @@ class LoggerFactory {
       return true;
     }
 
-    var activeAppenders = <Appender>[];
+    var appendersFromConfig = <Appender>[];
     for (Map<String, dynamic> app in config['appenders']) {
       if (!app.containsKey('type')) {
         throw ArgumentError('Missing type for appender');
@@ -53,7 +53,7 @@ class LoggerFactory {
 
         Appender appender =
             await appenderType.createFromConfig(app, test: test, date: date);
-        activeAppenders.add(appender);
+        appendersFromConfig.add(appender);
 
         if (selfDebug) {
           _selfLog('Initialized appender: ${appenderType.name}');
@@ -66,10 +66,7 @@ class LoggerFactory {
       }
     }
 
-    var definedAppenders =
-        AppenderType.values.map((type) => type.createAppender()).toList();
-
-    _rootLogger = Logger.defaultLogger(definedAppenders, activeAppenders,
+    _rootLogger = Logger.defaultLogger(appendersFromConfig,
         clientDepthOffset: clientProxyCallDepthOffset);
 
     // Add the root logger to the map with the ROOT_LOGGER name
@@ -78,7 +75,7 @@ class LoggerFactory {
     if (selfDebug) {
       _setupSelfLogger();
       _selfLog(
-          'Logging system initialized with ${activeAppenders.length} active appenders');
+          'Logging system initialized with ${appendersFromConfig.length} active appenders');
     }
 
     return true;
@@ -177,6 +174,14 @@ class LoggerFactory {
   /// Get a list of all logger names
   static List<String> getAllLoggerNames() {
     return _loggers.keys.toList();
+  }
+
+  static void logLogger2AppendersInfo() {
+    for (var logger in _loggers.values) {
+      for (var appender in logger.appenders) {
+        print('Logger: ${logger.name}, Appender: ${appender.getType()}, Level: ${appender.level}, Format: ${appender.format}, DateFormat: ${appender.dateFormat}');
+      }
+    }
   }
 
   static flushAll() {

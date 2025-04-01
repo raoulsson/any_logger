@@ -2,20 +2,18 @@ import '../any_logger_lib.dart';
 
 class Logger {
   List<Appender> appenders = [];
-  List<Appender> registeredAppenders = [];
+  List<Appender> customAppenders = [];
   int clientDepthOffset = 0;
   String? tag;
   String name;
 
   Logger.defaultLogger(
-      List<Appender> definedAppenders,
-      List<Appender> activeAppenders, {
+      List<Appender> appendersFromConfig, {
       int clientDepthOffset = 0,
       String? name}
       ) : this.name = name ?? LoggerFactory.ROOT_LOGGER {
     getSelfLogger()?.logInternalState('Creating default logger with name: $name');
-    registeredAppenders = definedAppenders;
-    appenders = activeAppenders;
+    appenders = appendersFromConfig;
     this.clientDepthOffset = clientDepthOffset;
   }
 
@@ -48,7 +46,7 @@ class Logger {
     }
 
     // Same for registered appenders
-    registeredAppenders = other.registeredAppenders.map((appender) {
+    customAppenders = other.customAppenders.map((appender) {
       Appender newAppender = AppenderType.values
           .firstWhere((type) => type.name == appender.getType())
           .createAppender();
@@ -62,7 +60,7 @@ class Logger {
     }).toList();
 
     if(consoleOnly) {
-      registeredAppenders.removeWhere((appender) => appender.getType() != AppenderType.CONSOLE.name);
+      customAppenders.removeWhere((appender) => appender.getType() != AppenderType.CONSOLE.name);
     }
 
     tag = other.tag;
@@ -75,21 +73,19 @@ class Logger {
     for (var appender in appenders) {
       await appender.dispose();
     }
-    for (var appender in registeredAppenders) {
+    for (var appender in customAppenders) {
       await appender.dispose();
     }
     appenders.clear();
-    registeredAppenders.clear();
+    customAppenders.clear();
   }
 
   Future<void> flush() async {
     getSelfLogger()?.logInternalState('Flushing logger: $name');
     for (var appender in appenders) {
-      print(appender);
       await appender.flush();
     }
-    for (var appender in registeredAppenders) {
-      print(appender);
+    for (var appender in customAppenders) {
       await appender.flush();
     }
   }
@@ -206,8 +202,8 @@ class Logger {
     return {
       'name': name,
       'appenders': appenders.map((appender) => appender.getType()).toList(),
-      'registeredAppenders':
-          registeredAppenders.map((appender) => appender.getType()).toList(),
+      // 'registeredAppenders':
+      //     registeredAppenders.map((appender) => appender.getType()).toList(),
       'clientDepthOffset': clientDepthOffset,
     };
   }
@@ -223,21 +219,15 @@ class Logger {
     appenders.clear();
   }
 
-  void registerAppender(Appender appender) {
+  void registerCustomAppender(Appender appender) {
     getSelfLogger()
         ?.logInternalState('Registering appender: ${appender.getType()}');
-    registeredAppenders.add(appender);
-  }
-
-  void registerAllAppender(List<Appender> appender) {
-    getSelfLogger()?.logInternalState(
-        'Registering all appenders: ${appender.map((a) => a.getType()).toList()}');
-    registeredAppenders.addAll(appender);
+    customAppenders.add(appender);
   }
 
   @override
   String toString() {
-    return 'Logger(name: $name, appenders: ${appenders.map((a) => a.getType())}, registeredAppenders: ${registeredAppenders.map((a) => a.getType())}, clientDepthOffset: $clientDepthOffset)';
+    return 'Logger(name: $name, appenders: ${appenders.map((a) => a.getType())}, customAppenders: ${customAppenders.map((a) => a.getType())}, clientDepthOffset: $clientDepthOffset)';
   }
 
   void logTrace(String message,
@@ -328,6 +318,4 @@ class Logger {
   static bool isSelfDebugEnabled() {
     return LoggerFactory.selfDebugEnabled;
   }
-
-
 }
