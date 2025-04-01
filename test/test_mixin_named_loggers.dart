@@ -104,8 +104,6 @@ void main() {
 }
 
 class ClientWithAnyLoggerMixin with AnyLogger {
-  @override
-  String get loggerName => 'ROOT';
 
   void doStuff() {
     logDebug('Doing DEBUG stuff');

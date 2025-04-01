@@ -38,7 +38,7 @@ void main() {
           'type': 'MYSQL',
           'level': 'INFO',
           'host': 'database.example.com',
-          'user': 'root',
+          'user': 'admin',
           'password': 'test',
           'port': 1,
           'database': 'mydatabase',
@@ -104,7 +104,7 @@ void main() {
     expect(mysql.getType(), AppenderType.MYSQL.name);
     expect(mysql.level, Level.INFO);
     expect(mysql.host, 'database.example.com');
-    expect(mysql.user, 'root');
+    expect(mysql.user, 'admin');
     expect(mysql.password, 'test');
     expect(mysql.port, 1);
     expect(mysql.database, 'mydatabase');
