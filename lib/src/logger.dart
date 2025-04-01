@@ -7,18 +7,18 @@ class Logger {
   String? tag;
   String name;
 
-  Logger.defaultLogger(
-      List<Appender> appendersFromConfig, {
-      int clientDepthOffset = 0,
-      String? name}
-      ) : this.name = name ?? LoggerFactory.ROOT_LOGGER {
-    getSelfLogger()?.logInternalState('Creating default logger with name: $name');
+  Logger.defaultLogger(List<Appender> appendersFromConfig,
+      {int clientDepthOffset = 0, String? name})
+      : this.name = name ?? LoggerFactory.ROOT_LOGGER {
+    getSelfLogger()
+        ?.logInternalState('Creating default logger with name: $name');
     appenders = appendersFromConfig;
     this.clientDepthOffset = clientDepthOffset;
   }
 
   /// Create a new logger from an existing one, but with a different name
-  Logger.fromExisting(Logger other, {required String name, bool consoleOnly = false})
+  Logger.fromExisting(Logger other,
+      {required String name, bool consoleOnly = false})
       : this.name = name,
         clientDepthOffset = other.clientDepthOffset {
     getSelfLogger()?.logInternalState(
@@ -41,8 +41,9 @@ class Logger {
       return newAppender;
     }).toList();
 
-    if(consoleOnly) {
-      appenders.removeWhere((appender) => appender.getType() != AppenderType.CONSOLE.name);
+    if (consoleOnly) {
+      appenders.removeWhere(
+          (appender) => appender.getType() != AppenderType.CONSOLE.name);
     }
 
     // Same for registered appenders
@@ -59,8 +60,9 @@ class Logger {
       return newAppender;
     }).toList();
 
-    if(consoleOnly) {
-      customAppenders.removeWhere((appender) => appender.getType() != AppenderType.CONSOLE.name);
+    if (consoleOnly) {
+      customAppenders.removeWhere(
+          (appender) => appender.getType() != AppenderType.CONSOLE.name);
     }
 
     tag = other.tag;
@@ -83,13 +85,13 @@ class Logger {
   Future<void> flush() async {
     getSelfLogger()?.logInternalState('Flushing logger: $name');
     for (var appender in appenders) {
-      getSelfLogger()?.logInternalState(
-          'Flushing appender: ${appender.getType()}');
+      getSelfLogger()
+          ?.logInternalState('Flushing appender: ${appender.getType()}');
       await appender.flush();
     }
     for (var appender in customAppenders) {
-      getSelfLogger()?.logInternalState(
-          'Flushing custom appender: ${appender.getType()}');
+      getSelfLogger()
+          ?.logInternalState('Flushing custom appender: ${appender.getType()}');
       await appender.flush();
     }
   }

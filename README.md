@@ -4,24 +4,26 @@ Forked from https://github.com/Ephenodrom/Dart-Log-4-Dart-2
 
 ## MDC
 
-MDC (Mapped Diagnostic Context) is a mechanism that allows you to add contextual information to your 
+MDC (Mapped Diagnostic Context) is a mechanism that allows you to add contextual information to your
 log messages. This can be useful for tracking the state of your application at the time of logging.
 
-To use it, you can set values in the MDC before logging a message. For example, you can set a user ID or session ID
-to help identify the source of the log message. You can also use MDC to add other contextual information, such as
+To use it, you can set values in the MDC before logging a message. For example, you can set a user
+ID or session ID
+to help identify the source of the log message. You can also use MDC to add other contextual
+information, such as
 the current request ID or transaction ID.
 
-You have to setup a zone and store the values in the zone. The MDC can then be accessed by the logger.
+You have to setup a zone and store the values in the zone. The MDC can then be accessed by the
+logger.
 
 The format in the log string pattern is `%X{key}`. The key is the name of the value you want to log.
 
 ### Example
 
-Here we configure two keys: 
+Here we configure two keys:
 
 - logging.device-hash
 - logging.session-hash
-
 
 ```dart
 const kLog4DartConfig = {
@@ -37,10 +39,10 @@ const kLog4DartConfig = {
 };
 ```
 
-The logger will find the pattern: `%X{logging.device-hash}` and `[%X{logging.session-hash}]` in the 
+The logger will find the pattern: `%X{logging.device-hash}` and `[%X{logging.session-hash}]` in the
 format string and replace it with the values stored in the zone.
 
-Thus you need to set the values in the zone before logging. 
+Thus you need to set the values in the zone before logging.
 
 ```dart
   runZonedGuarded(
@@ -134,7 +136,6 @@ class LoggingIdentifiers {
 ```
 
 For more information see: https://logging.apache.org/log4j/2.x/manual/thread-context.html
-
 
 ## Copyright And License
 

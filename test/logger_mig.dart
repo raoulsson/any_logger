@@ -1,5 +1,4 @@
 import 'package:any_logger/any_logger_lib.dart';
-import 'package:any_logger/src/logger_factory.dart';
 import 'package:test/test.dart';
 
 const kAnyLogConfig = {

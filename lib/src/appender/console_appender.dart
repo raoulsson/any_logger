@@ -78,5 +78,4 @@ class ConsoleAppender extends Appender {
   Future<void> flush() async {
     // No resources to flush for ConsoleAppender
   }
-
 }

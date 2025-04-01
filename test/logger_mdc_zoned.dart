@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:any_logger/any_logger_lib.dart';
-import 'package:any_logger/src/logger_factory.dart';
 import 'package:crypto/crypto.dart';
 import 'package:test/test.dart';
 

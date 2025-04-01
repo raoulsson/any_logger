@@ -16,8 +16,9 @@ class LoggerFactory {
   static bool _selfDebugEnabled = false;
   static Level _selfLogLevel = Level.INFO;
 
-  static String deviceId = 'na';
-  static String sessionId = 'na';
+  static String? _deviceId = null;
+  static String? _sessionId = null;
+  static String? _appVersion = null;
 
   /// Get the library's self-logging logger
   static Logger? get selfLogger => _selfLogger;
@@ -25,19 +26,35 @@ class LoggerFactory {
   /// Whether self-debugging is enabled
   static bool get selfDebugEnabled => _selfDebugEnabled;
 
+  static String? getDeviceId() {
+    return _deviceId;
+  }
+
+  static String? getSessionId() {
+    return _sessionId;
+  }
+
+  static String? getAppVersion() {
+    return _appVersion;
+  }
+
   /// Initialize the logging system with a configuration
-  static Future<bool> init(Map<String, dynamic>? config,
-      {bool test = false,
-      DateTime? date,
-      int clientProxyCallDepthOffset = 0,
-      bool selfDebug = false,
-      Level selfLogLevel = Level.INFO,
-      String deviceId = 'na',
-      String sessionId = 'na'}) async {
+  static Future<bool> init(
+    Map<String, dynamic>? config, {
+    bool test = false,
+    DateTime? date,
+    int clientProxyCallDepthOffset = 0,
+    bool selfDebug = false,
+    Level selfLogLevel = Level.INFO,
+    String? deviceId = null,
+    String? sessionId = null,
+    String? appVersion = null,
+  }) async {
     _selfDebugEnabled = selfDebug;
     _selfLogLevel = selfLogLevel;
-    deviceId = deviceId;
-    sessionId = sessionId;
+    _deviceId = deviceId;
+    _sessionId = sessionId;
+    _appVersion = appVersion;
 
     if (config == null || config.isEmpty) {
       _rootLogger = Logger.empty();

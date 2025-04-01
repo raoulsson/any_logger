@@ -13,7 +13,6 @@ class JsonHttpAppender extends Appender {
   String? username;
   String? password;
   Map<String, String> headers = {};
-  String? appVersion;
   bool enableCompression = false;
   int maxRetries = 3;
 
@@ -105,9 +104,6 @@ class JsonHttpAppender extends Appender {
       flushInterval = Duration(seconds: config['flushIntervalSeconds']);
     }
 
-    // Initialize app version
-    _initAppVersion();
-
     // Start the timer for periodic flushes
     if (!test) {
       _startFlushTimer();
@@ -116,13 +112,19 @@ class JsonHttpAppender extends Appender {
 
   void _startFlushTimer() {
     _flushTimer?.cancel();
-    _flushTimer = Timer.periodic(flushInterval, (_) => flush());
+    _flushTimer = Timer.periodic(flushInterval, (_) {
+      Logger.getSelfLogger()?.logInternalState(
+          'Periodic flush triggered after ${flushInterval.inSeconds} seconds. Buffer size: ${_logBuffer.length}');
+      flush();
+    });
   }
 
   // Initialize app version from package info
-  Future<void> _initAppVersion() async {
-    if (appVersion != null) return;
-    appVersion = '1.0.0'; // Fallback version
+  String _getAppVersion() {
+    if (LoggerFactory.getAppVersion() != null) {
+      return LoggerFactory.getAppVersion()!;
+    }
+    return '1.0.0'; // Fallback version
   }
 
   @override
@@ -135,13 +137,10 @@ class JsonHttpAppender extends Appender {
     // Add to buffer
     _logBuffer.add(formattedLogEntry);
 
-    Logger.getSelfLogger()?.logInternalState(
-        'Buffered log entry: ${formattedLogEntry.toString()}');
-
     // If buffer is full, send the logs
     if (_logBuffer.length >= bufferSize) {
-      Logger.getSelfLogger()?.logInternalState(
-          'Buffer full, flushing logs to $url. Buffer size: ${_logBuffer.length}');
+      Logger.getSelfLogger()
+          ?.logInternalState('Buffer full: ${_logBuffer.length}');
       await flush();
     }
   }
@@ -213,18 +212,15 @@ class JsonHttpAppender extends Appender {
     int retryCount = 0;
     Duration retryDelay = Duration(seconds: 1);
 
-    Logger.getSelfLogger()?.logInternalState(
-        'Attempting to send logs to $url. Retry count: $retryCount');
-
     while (retryCount <= maxRetries) {
       try {
         await _sendLogs(logs);
-        Logger.getSelfLogger()?.logInternalState('Successfully sent logs to $url');
+        Logger.getSelfLogger()
+            ?.logInternalState('Successfully sent logs to $url');
         return true; // Success
       } catch (e) {
         // Log the error but don't rethrow it
-        Logger.getSelfLogger()?.logError(
-            'Error sending logs to $url: $e',
+        Logger.getSelfLogger()?.logError('Error sending logs to $url: $e',
             tag: 'JsonHttpAppender');
 
         retryCount++;
@@ -249,7 +245,7 @@ class JsonHttpAppender extends Appender {
 
   /**
    * curl -X POST https://url \
-      -u username:password! \
+      -u username:password \
       -H "Content-Type: application/json" \
       -d '{
       "deviceId": "device-1800",
@@ -278,7 +274,8 @@ class JsonHttpAppender extends Appender {
     // Prepare headers
     Map<String, String> requestHeaders = Map.from(headers);
     if (username != null && password != null) {
-      final basicAuth = 'Basic ${base64Encode(utf8.encode('$username:$password'))}';
+      final basicAuth =
+          'Basic ${base64Encode(utf8.encode('$username:$password'))}';
       requestHeaders['Authorization'] = basicAuth;
     }
 
@@ -290,8 +287,10 @@ class JsonHttpAppender extends Appender {
         List<int> compressedPayload = gzip.encode(utf8.encode(payload));
         requestHeaders['Content-Encoding'] = 'gzip';
 
-        Logger.getSelfLogger()?.logInternalState('Request headers: $requestHeaders');
-        Logger.getSelfLogger()?.logInternalState('Sending compressed payload: ${compressedPayload.length} bytes');
+        Logger.getSelfLogger()
+            ?.logInternalState('Request headers: $requestHeaders');
+        Logger.getSelfLogger()?.logInternalState(
+            'Sending compressed payload: ${compressedPayload.length} bytes');
 
         // Send using http package directly
         response = await http.post(
@@ -300,8 +299,10 @@ class JsonHttpAppender extends Appender {
           body: compressedPayload,
         );
       } else {
-        Logger.getSelfLogger()?.logInternalState('Request headers: $requestHeaders');
-        Logger.getSelfLogger()?.logInternalState('Sending uncompressed payload: ${payload.length} bytes');
+        Logger.getSelfLogger()
+            ?.logInternalState('Request headers: $requestHeaders');
+        Logger.getSelfLogger()?.logInternalState(
+            'Sending uncompressed payload: ${payload.length} bytes');
         // Send uncompressed payload
         response = await http.post(
           Uri.parse(url!),
@@ -311,7 +312,7 @@ class JsonHttpAppender extends Appender {
       }
 
       Logger.getSelfLogger()?.logInternalState(
-          'Received response from $url: ${response.statusCode} ${response.reasonPhrase}');
+          'HTTP response code: ${response.statusCode} ${response.reasonPhrase}');
       Logger.getSelfLogger()?.logInternalState(
           'Response body: ${response.body.substring(0, response.body.length.clamp(0, 500))}...');
 
@@ -324,8 +325,7 @@ class JsonHttpAppender extends Appender {
         LoggerFactory.onHttpComplete!();
       }
     } catch (e) {
-      Logger.getSelfLogger()?.logError(
-          'Exception sending logs to $url: $e',
+      Logger.getSelfLogger()?.logError('Exception sending logs to $url: $e',
           tag: 'JsonHttpAppender');
       throw e; // Rethrow for the retry mechanism
     }
@@ -338,26 +338,25 @@ class JsonHttpAppender extends Appender {
 
     // Replace MDC values
     if (payload.contains('%X{logging.device-hash}')) {
-      final deviceHash = _getMdcValue('logging.device-hash', LoggerFactory.deviceId);
+      final deviceHash = _getMdcValue('logging.device-hash',
+          LoggerFactory.getDeviceId() ?? 'device-id-not-set');
       payload = payload.replaceAll('%X{logging.device-hash}', deviceHash);
     }
 
     if (payload.contains('%X{logging.session-hash}')) {
-      final sessionHash =
-          _getMdcValue('logging.session-hash', LoggerFactory.sessionId);
+      final sessionHash = _getMdcValue('logging.session-hash',
+          LoggerFactory.getSessionId() ?? 'session-id-not-set');
       payload = payload.replaceAll('%X{logging.session-hash}', sessionHash);
     }
 
     // Replace app version
-    payload = payload.replaceAll('%APP-VERSION', appVersion ?? '1.0.0');
+    payload = payload.replaceAll('%APP-VERSION', _getAppVersion());
 
     // Add logs array part
     String logsJsonArray = json.encode(logs);
 
     String logsPartWithArray =
         payloadPatternLogsPart.replaceAll('%LOGS_ARRAY%', logsJsonArray);
-
-    Logger.getSelfLogger()?.logInternalState('Logs part with array: $logsPartWithArray');
 
     // Combine the parts
     payload += logsPartWithArray;

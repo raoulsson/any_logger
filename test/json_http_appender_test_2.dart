@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:any_logger/any_logger_lib.dart';
 import 'package:test/test.dart';
 
+/**
+ * Flush buffer when size = 5
+ */
 void main() {
   String url = "undefined";
   String username = "undefined";
@@ -40,13 +43,12 @@ void main() {
         'url': url,
         'username': username,
         'password': password,
-        'bufferSize': 1,
-        'maxRetries': 1,
+        'bufferSize': 5,
+        'maxRetries': 3,
         'enableCompression': false,
         'dateFormat': 'yyyy-MM-dd HH:mm:ss.SSS',
         'headers': ['Content-Type:application/json'],
-        'flushIntervalSeconds': 10,
-        // Longer interval to ensure our manual flush happens
+        'flushIntervalSeconds': 300,
       }
     ]
   };
@@ -55,7 +57,8 @@ void main() {
     await LoggerFactory.init(kAnyLogDartConfig,
         selfDebug: true,
         deviceId: 'test_device_id',
-        sessionId: 'test_session_id');
+        sessionId: 'test-2',
+        appVersion: '3.1.12');
 
     // Create a completer to signal when the HTTP operation is done
     final completer = Completer<void>();
@@ -69,6 +72,10 @@ void main() {
 
     // Log a message
     ClientWithAnyLoggerMixin client = ClientWithAnyLoggerMixin();
+    client.doStuff();
+    client.doStuff();
+    client.doStuff();
+    client.doStuff();
     client.doStuff();
 
     // Wait for HTTP completion with timeout

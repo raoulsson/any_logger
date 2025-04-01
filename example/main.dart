@@ -1,5 +1,4 @@
 import 'package:any_logger/any_logger_lib.dart';
-import 'package:any_logger/src/logger_factory.dart';
 
 Future<void> main() async {
   var config = {

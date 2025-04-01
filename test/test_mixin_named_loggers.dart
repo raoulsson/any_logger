@@ -1,5 +1,4 @@
 import 'package:any_logger/any_logger_lib.dart';
-import 'package:any_logger/src/logger_factory.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -104,7 +103,6 @@ void main() {
 }
 
 class ClientWithAnyLoggerMixin with AnyLogger {
-
   void doStuff() {
     logDebug('Doing DEBUG stuff');
     logInfo('Doing INFO stuff');
