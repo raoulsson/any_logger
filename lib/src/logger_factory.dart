@@ -14,7 +14,7 @@ class LoggerFactory {
   static Logger? _rootLogger;
   static Logger? _selfLogger;
   static bool _selfDebugEnabled = false;
-  static Level _selfLogLevel = Level.INFO;
+  static Level _selfLogLevel = Level.DEBUG;
 
   static String? _deviceId = null;
   static String? _sessionId = null;
@@ -34,8 +34,20 @@ class LoggerFactory {
     return _sessionId;
   }
 
+  static void setDeviceId(String deviceId) {
+    _deviceId = deviceId;
+  }
+
+  static void setSessionId(String sessionId) {
+    _sessionId = sessionId;
+  }
+
   static String? getAppVersion() {
     return _appVersion;
+  }
+
+  static void setAppVersion(String appVersion) {
+    _appVersion = appVersion;
   }
 
   /// Initialize the logging system with a configuration
@@ -135,8 +147,12 @@ class LoggerFactory {
   }
 
   /// Log a message using the self logger
-  static void _selfLog(String message, {Level level = Level.DEBUG}) {
+  static void _selfLog(String message, {Level? level = null}) {
     if (!_selfDebugEnabled || _selfLogger == null) return;
+
+    if (level == null) {
+      level = _selfLogLevel;
+    }
 
     switch (level) {
       case Level.TRACE:
