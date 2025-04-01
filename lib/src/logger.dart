@@ -83,9 +83,13 @@ class Logger {
   Future<void> flush() async {
     getSelfLogger()?.logInternalState('Flushing logger: $name');
     for (var appender in appenders) {
+      getSelfLogger()?.logInternalState(
+          'Flushing appender: ${appender.getType()}');
       await appender.flush();
     }
     for (var appender in customAppenders) {
+      getSelfLogger()?.logInternalState(
+          'Flushing custom appender: ${appender.getType()}');
       await appender.flush();
     }
   }

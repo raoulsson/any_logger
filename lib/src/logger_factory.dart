@@ -3,13 +3,21 @@ import 'dart:io';
 
 import '../any_logger_lib.dart';
 
+typedef HttpCompleteCallback = void Function();
+
 class LoggerFactory {
+  /// Callback for when HTTP operations are completed
+  static HttpCompleteCallback? onHttpComplete;
+
   static const String ROOT_LOGGER = 'ROOT_LOGGER';
   static final Map<String, Logger> _loggers = {};
   static Logger? _rootLogger;
   static Logger? _selfLogger;
   static bool _selfDebugEnabled = false;
   static Level _selfLogLevel = Level.INFO;
+
+  static String deviceId = 'na';
+  static String sessionId = 'na';
 
   /// Get the library's self-logging logger
   static Logger? get selfLogger => _selfLogger;
@@ -23,9 +31,13 @@ class LoggerFactory {
       DateTime? date,
       int clientProxyCallDepthOffset = 0,
       bool selfDebug = false,
-      Level selfLogLevel = Level.INFO}) async {
+      Level selfLogLevel = Level.INFO,
+      String deviceId = 'na',
+      String sessionId = 'na'}) async {
     _selfDebugEnabled = selfDebug;
     _selfLogLevel = selfLogLevel;
+    deviceId = deviceId;
+    sessionId = sessionId;
 
     if (config == null || config.isEmpty) {
       _rootLogger = Logger.empty();
@@ -86,7 +98,8 @@ class LoggerFactory {
     if (_rootLogger == null) return;
 
     const selfLoggerName = 'ANY_DEBUG_LOGGER';
-    _selfLogger = Logger.fromExisting(_rootLogger!, name: selfLoggerName, consoleOnly: true);
+    _selfLogger = Logger.fromExisting(_rootLogger!,
+        name: selfLoggerName, consoleOnly: true);
     _selfLogger?.setLevelAll(_selfLogLevel);
     _loggers[selfLoggerName] = _selfLogger!;
     _selfLog('Self-debugging enabled');
@@ -94,7 +107,7 @@ class LoggerFactory {
 
   static Future<void> dispose() async {
     _selfLog('Disposing logger factory');
-    for(var logger in _loggers.values) {
+    for (var logger in _loggers.values) {
       logger.dispose();
     }
     _loggers.clear();
@@ -179,7 +192,8 @@ class LoggerFactory {
   static void logLogger2AppendersInfo() {
     for (var logger in _loggers.values) {
       for (var appender in logger.appenders) {
-        print('Logger: ${logger.name}, Appender: ${appender.getType()}, Level: ${appender.level}, Format: ${appender.format}, DateFormat: ${appender.dateFormat}');
+        print(
+            'Logger: ${logger.name}, Appender: ${appender.getType()}, Level: ${appender.level}, Format: ${appender.format}, DateFormat: ${appender.dateFormat}');
       }
     }
   }
@@ -189,5 +203,4 @@ class LoggerFactory {
       logger.flush();
     }
   }
-
 }

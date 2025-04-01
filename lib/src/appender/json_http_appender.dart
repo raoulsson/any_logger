@@ -61,8 +61,8 @@ class JsonHttpAppender extends Appender {
     if (config.containsKey('headers')) {
       List<String> h = config['headers'];
       for (var s in h) {
-        var splitted = s.split(':');
-        headers.putIfAbsent(splitted.elementAt(0), () => splitted.elementAt(1));
+        var parts = s.split(':');
+        headers.putIfAbsent(parts.elementAt(0), () => parts.elementAt(1));
       }
     } else {
       // Default Content-Type header if not specified
@@ -127,21 +127,22 @@ class JsonHttpAppender extends Appender {
 
   @override
   void append(LogRecord logRecord) async {
-    if (appVersion == null) {
-      await _initAppVersion();
-    }
-
-    logRecord.loggerName ??= getType();
-
+    Logger.getSelfLogger()?.logInternalState(
+        'Got log record for ${logRecord.loggerName}/${getType()}: ${logRecord.message}');
     // Format the individual log entry
     final formattedLogEntry = _formatLogEntry(logRecord);
 
     // Add to buffer
     _logBuffer.add(formattedLogEntry);
 
+    Logger.getSelfLogger()?.logInternalState(
+        'Buffered log entry: ${formattedLogEntry.toString()}');
+
     // If buffer is full, send the logs
     if (_logBuffer.length >= bufferSize) {
-      unawaited(flush()); // Use unawaited to not block
+      Logger.getSelfLogger()?.logInternalState(
+          'Buffer full, flushing logs to $url. Buffer size: ${_logBuffer.length}');
+      await flush();
     }
   }
 
@@ -190,12 +191,9 @@ class JsonHttpAppender extends Appender {
   /// Flushes the log buffer, sending all accumulated logs
   @override
   Future<void> flush() async {
-    Logger.getSelfLogger()?.logTrace('Flushing logs to $url', tag: 'JsonHttpAppender');
     if (_logBuffer.isEmpty) return;
-
-    Logger.getSelfLogger()?.logTrace(
-        'Flushing logs to $url. Buffer size: ${_logBuffer.length}',
-        tag: 'JsonHttpAppender');
+    Logger.getSelfLogger()?.logInternalState(
+        'Flushing logs to $url. Buffer size: ${_logBuffer.length}');
 
     // Create a copy of the current buffer and clear it
     final logs = List<Map<String, dynamic>>.from(_logBuffer);
@@ -215,25 +213,32 @@ class JsonHttpAppender extends Appender {
     int retryCount = 0;
     Duration retryDelay = Duration(seconds: 1);
 
-    Logger.getSelfLogger()?.logTrace(
-        'Attempting to send logs to $url. Retry count: $retryCount',
-        tag: 'JsonHttpAppender');
-    return false;
+    Logger.getSelfLogger()?.logInternalState(
+        'Attempting to send logs to $url. Retry count: $retryCount');
 
     while (retryCount <= maxRetries) {
       try {
         await _sendLogs(logs);
+        Logger.getSelfLogger()?.logInternalState('Successfully sent logs to $url');
         return true; // Success
       } catch (e) {
-        throw e; // Rethrow the error for logging
+        // Log the error but don't rethrow it
+        Logger.getSelfLogger()?.logError(
+            'Error sending logs to $url: $e',
+            tag: 'JsonHttpAppender');
+
         retryCount++;
         if (retryCount > maxRetries) {
-          print('Failed to send logs after $maxRetries retries: $e');
+          Logger.getSelfLogger()?.logError(
+              'Failed to send logs after $maxRetries retries: $e',
+              tag: 'JsonHttpAppender');
           return false; // All retries failed
         }
 
         // Exponential backoff
-        print('Retry attempt $retryCount after error: $e');
+        Logger.getSelfLogger()?.logInfo(
+            'Retry attempt $retryCount after error: $e',
+            tag: 'JsonHttpAppender');
         await Future.delayed(retryDelay);
         retryDelay *= 2; // Double the delay for each retry
       }
@@ -242,52 +247,87 @@ class JsonHttpAppender extends Appender {
     return false; // Should not reach here, but just in case
   }
 
-  /// Actually sends the logs (without retry logic)
+  /**
+   * curl -X POST https://url \
+      -u username:password! \
+      -H "Content-Type: application/json" \
+      -d '{
+      "deviceId": "device-1800",
+      "sessionId": "restart-234",
+      "appVersion": "1.0.1",
+      "logs": [
+      {
+      "timestamp": "2025-03-29 18:33:28.042",
+      "level": "WARN",
+      "message": "Connection lost",
+      "tag": "AppLifecycle",
+      "location": "package:gemma_app/board/board_connection.dart(366:9)",
+      "Class": "BoardConnection",
+      "Method": "reStartWebsocket",
+      "Line": "366"
+      }
+      ]
+      }'
+   */
   Future<void> _sendLogs(List<Map<String, dynamic>> logs) async {
     // Format the complete payload
-    Logger.getSelfLogger()?.logTrace(
-        'Preparing to send logs to $url. Buffer size: ${_logBuffer.length}',
-        tag: 'JsonHttpAppender');
     String payload = _formatFullPayload(logs);
 
-    Logger.getSelfLogger()?.logTrace('Sending logs to $url: $payload. Payload: $payload',
-        tag: 'JsonHttpAppender');
+    Logger.getSelfLogger()?.logInternalState('Sending logs to $url: $payload');
 
     // Prepare headers
     Map<String, String> requestHeaders = Map.from(headers);
     if (username != null && password != null) {
-      final basicAuth =
-          'Basic ${base64Encode(utf8.encode('$username:$password'))}';
+      final basicAuth = 'Basic ${base64Encode(utf8.encode('$username:$password'))}';
       requestHeaders['Authorization'] = basicAuth;
     }
 
     http.Response response;
 
-    if (enableCompression) {
-      // Compress the payload
-      Logger.getSelfLogger()?.logTrace('Compressing payload for $url', tag: 'JsonHttpAppender');
-      List<int> compressedPayload = gzip.encode(utf8.encode(payload));
-      requestHeaders['Content-Encoding'] = 'gzip';
+    try {
+      if (enableCompression) {
+        // Compress the payload
+        List<int> compressedPayload = gzip.encode(utf8.encode(payload));
+        requestHeaders['Content-Encoding'] = 'gzip';
 
-      // Send using http package directly instead of HttpUtils
-      response = await http.post(
-        Uri.parse(url!),
-        headers: requestHeaders,
-        body: compressedPayload,
-      );
-    } else {
-      // Send uncompressed payload
-      response = await http.post(
-        Uri.parse(url!),
-        headers: requestHeaders,
-        body: payload,
-      );
-    }
+        Logger.getSelfLogger()?.logInternalState('Request headers: $requestHeaders');
+        Logger.getSelfLogger()?.logInternalState('Sending compressed payload: ${compressedPayload.length} bytes');
 
-    // Check for successful response
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw HttpException(
-          'HTTP error: ${response.statusCode} ${response.reasonPhrase}');
+        // Send using http package directly
+        response = await http.post(
+          Uri.parse(url!),
+          headers: requestHeaders,
+          body: compressedPayload,
+        );
+      } else {
+        Logger.getSelfLogger()?.logInternalState('Request headers: $requestHeaders');
+        Logger.getSelfLogger()?.logInternalState('Sending uncompressed payload: ${payload.length} bytes');
+        // Send uncompressed payload
+        response = await http.post(
+          Uri.parse(url!),
+          headers: requestHeaders,
+          body: payload,
+        );
+      }
+
+      Logger.getSelfLogger()?.logInternalState(
+          'Received response from $url: ${response.statusCode} ${response.reasonPhrase}');
+      Logger.getSelfLogger()?.logInternalState(
+          'Response body: ${response.body.substring(0, response.body.length.clamp(0, 500))}...');
+
+      // Check for successful response
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw HttpException(
+            'HTTP error: ${response.statusCode} ${response.reasonPhrase} - ${response.body}');
+      }
+      if (LoggerFactory.onHttpComplete != null) {
+        LoggerFactory.onHttpComplete!();
+      }
+    } catch (e) {
+      Logger.getSelfLogger()?.logError(
+          'Exception sending logs to $url: $e',
+          tag: 'JsonHttpAppender');
+      throw e; // Rethrow for the retry mechanism
     }
   }
 
@@ -296,43 +336,31 @@ class JsonHttpAppender extends Appender {
     // Start with the ID part of the payload
     String payload = payloadPatternIdPart;
 
-    Logger.getSelfLogger()?.logTrace('Payload ID part: $payload');
-
     // Replace MDC values
     if (payload.contains('%X{logging.device-hash}')) {
-      final deviceHash = _getMdcValue('logging.device-hash', 'unknown-device');
+      final deviceHash = _getMdcValue('logging.device-hash', LoggerFactory.deviceId);
       payload = payload.replaceAll('%X{logging.device-hash}', deviceHash);
     }
 
-    Logger.getSelfLogger()?.logTrace('Payload after device hash: $payload');
-
     if (payload.contains('%X{logging.session-hash}')) {
       final sessionHash =
-          _getMdcValue('logging.session-hash', 'unknown-session');
+          _getMdcValue('logging.session-hash', LoggerFactory.sessionId);
       payload = payload.replaceAll('%X{logging.session-hash}', sessionHash);
     }
-
-    Logger.getSelfLogger()?.logTrace('Payload after session hash: $payload');
 
     // Replace app version
     payload = payload.replaceAll('%APP-VERSION', appVersion ?? '1.0.0');
 
-    Logger.getSelfLogger()?.logTrace('Payload after app version: $payload');
-
     // Add logs array part
     String logsJsonArray = json.encode(logs);
-
-    Logger.getSelfLogger()?.logTrace('Logs JSON array: $logsJsonArray');
 
     String logsPartWithArray =
         payloadPatternLogsPart.replaceAll('%LOGS_ARRAY%', logsJsonArray);
 
-    Logger.getSelfLogger()?.logTrace('Logs part with array: $logsPartWithArray');
+    Logger.getSelfLogger()?.logInternalState('Logs part with array: $logsPartWithArray');
 
     // Combine the parts
     payload += logsPartWithArray;
-
-    Logger.getSelfLogger()?.logTrace('Final payload: $payload');
 
     return payload;
   }

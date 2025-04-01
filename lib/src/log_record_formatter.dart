@@ -60,7 +60,7 @@ class LogRecordFormatter {
           if (values.isNotEmpty) {
             format = format.replaceAll('%X{$mdcKey}', values[0].toString());
           } else {
-            format = format.replaceAll('%X{$mdcKey}', 'n/a');
+            //format = format.replaceAll('%X{$mdcKey}', '');
           }
         }
       });

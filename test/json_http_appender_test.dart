@@ -1,24 +1,19 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:any_logger/any_logger_lib.dart';
 import 'package:test/test.dart';
 
-/**
- * Read credentials from a file named "http_endpoint_credentials.txt" in the root
- * project directory. Format:
- *
- *    url=<your_url>
- *    username=<your_username>
- *    password=<your_password>
- */
 void main() {
   String url = "undefined";
   String username = "undefined";
   String password = "undefined";
 
+  // Read credentials
   File credentialsFile = File('http_endpoint_credentials.txt');
-  if(!credentialsFile.existsSync()) {
-    throw Exception('Credentials file not found. Please create a file named "http_endpoint_credentials.txt"');
+  if (!credentialsFile.existsSync()) {
+    throw Exception(
+        'Credentials file not found. Please create a file named "http_endpoint_credentials.txt"');
   }
   List<String> lines = credentialsFile.readAsLinesSync();
   for (String line in lines) {
@@ -30,6 +25,7 @@ void main() {
       password = line.substring(9);
     }
   }
+
   final kAnyLogDartConfig = {
     'appenders': [
       {
@@ -49,28 +45,46 @@ void main() {
         'enableCompression': false,
         'dateFormat': 'yyyy-MM-dd HH:mm:ss.SSS',
         'headers': ['Content-Type:application/json'],
+        'flushIntervalSeconds': 10,
+        // Longer interval to ensure our manual flush happens
       }
     ]
   };
 
-  test('Test1', () async {
-    await LoggerFactory.init(kAnyLogDartConfig, selfDebug: true);
-    ClientWithAnyLoggerMixin client = ClientWithAnyLoggerMixin();
+  test('Test HTTP logging', () async {
+    await LoggerFactory.init(kAnyLogDartConfig,
+        selfDebug: true,
+        deviceId: 'test_device_id',
+        sessionId: 'test_session_id');
 
+    // Create a completer to signal when the HTTP operation is done
+    final completer = Completer<void>();
+
+    // Register HTTP completion callback
+    LoggerFactory.onHttpComplete = () {
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
+    };
+
+    // Log a message
+    ClientWithAnyLoggerMixin client = ClientWithAnyLoggerMixin();
     client.doStuff();
 
-    LoggerFactory.logLogger2AppendersInfo();
+    // Wait for HTTP completion with timeout
+    try {
+      await completer.future.timeout(Duration(seconds: 10));
+      print("HTTP request completed successfully");
+    } catch (e) {
+      print("HTTP request timed out after 10 seconds");
+    }
 
-    await LoggerFactory.flushAll();
-
-    //await LoggerFactory.dispose();
-
-    sleep(const Duration(seconds: 2));
+    // Additional delay to ensure logs are printed
+    await Future.delayed(Duration(milliseconds: 500));
   });
 }
 
 class ClientWithAnyLoggerMixin with AnyLogger {
-
   void doStuff() {
     logDebug('Doing stuff');
   }
