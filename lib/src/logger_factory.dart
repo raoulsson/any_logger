@@ -6,6 +6,7 @@ import '../any_logger_lib.dart';
 typedef HttpCompleteCallback = void Function();
 
 class LoggerFactory {
+  static const ANYLOGGER_SELF_LOGGER_NAME = 'ANYLOGGER_SELF_LOGGER';
   /// Callback for when HTTP operations are completed
   static HttpCompleteCallback? onHttpComplete;
 
@@ -126,11 +127,10 @@ class LoggerFactory {
   static void _setupSelfLogger() {
     if (_rootLogger == null) return;
 
-    const selfLoggerName = 'ANY_DEBUG_LOGGER';
     _selfLogger = Logger.fromExisting(_rootLogger!,
-        name: selfLoggerName, consoleOnly: true);
+        name: ANYLOGGER_SELF_LOGGER_NAME, consoleOnly: true);
     _selfLogger?.setLevelAll(_selfLogLevel);
-    _loggers[selfLoggerName] = _selfLogger!;
+    _loggers[ANYLOGGER_SELF_LOGGER_NAME] = _selfLogger!;
     _selfLog('Self-debugging enabled');
   }
 
