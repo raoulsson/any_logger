@@ -45,18 +45,25 @@ class LoggerStackTrace {
     if (frame == '<asynchronous suspension>') return FileInfo();
     try {
       final indexOfFileName = frame.indexOf('(');
+      if (indexOfFileName < 0) return FileInfo(); // Return empty if format not recognized
+
       final rightSide = frame.substring(indexOfFileName);
       final splits = rightSide.split(':');
+      if (splits.length < 3) return FileInfo(); // Not enough parts
+
       var fileName = splits[1];
+      if (fileName.isEmpty) return FileInfo(); // Empty filename
+
       if (splits[0].startsWith('(package')) {
         fileName = 'package:' + fileName;
       } else {
         fileName = 'file:' + fileName;
       }
-      var lineNumber = splits[2];
-      var column = splits[3].replaceFirst(')', '');
-      return FileInfo(
-          fileName: fileName, lineNumber: lineNumber, column: column);
+
+      var lineNumber = splits.length > 2 ? splits[2] : "0";
+      var column = splits.length > 3 ? splits[3].replaceFirst(')', '') : "0";
+
+      return FileInfo(fileName: fileName, lineNumber: lineNumber, column: column);
     } catch (e) {
       print('Failed to build FileInfo for frame: \n\t$frame\n');
       print(e);
@@ -68,14 +75,21 @@ class LoggerStackTrace {
     // root level reached
     if (frame == '<asynchronous suspension>') return '';
     try {
-      //print(frame);
       final indexOfWhiteSpace = frame.indexOf(' ');
-      final subStr = frame.substring(indexOfWhiteSpace);
-      final indexOfFunction = subStr.indexOf(RegExp('[A-Za-z0-9]'));
+      if (indexOfWhiteSpace < 0) return '?'; // No whitespace found
 
-      return subStr
-          .substring(indexOfFunction)
-          .substring(0, subStr.substring(indexOfFunction).indexOf(' '));
+      final subStr = frame.substring(indexOfWhiteSpace);
+      final functionMatcher = RegExp('[A-Za-z0-9]');
+      final indexOfFunction = subStr.indexOf(functionMatcher);
+
+      if (indexOfFunction < 0) return '?'; // No function name found
+
+      final functionPart = subStr.substring(indexOfFunction);
+      final endOfFunctionIndex = functionPart.indexOf(' ');
+
+      if (endOfFunctionIndex < 0) return functionPart; // No space after function
+
+      return functionPart.substring(0, endOfFunctionIndex);
     } catch (e) {
       print('Failed to build FunctionName for frame: \n\t$frame\n');
       print(e);
