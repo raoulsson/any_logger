@@ -83,10 +83,6 @@ class Logger {
   }
 
   Future<void> flush() async {
-    if(name == LoggerFactory.ANYLOGGER_SELF_LOGGER_NAME) {
-      getSelfLogger()?.logInfo('Not Flushing logger: $name');
-      return;
-    }
     try {
       getSelfLogger()?.logInfo('Flushing logger: $name');
       for (var appender in appenders) {
