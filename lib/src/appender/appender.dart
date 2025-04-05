@@ -26,6 +26,26 @@ abstract class Appender {
 
   void append(LogRecord logRecord);
 
+  /// Creates a deep copy of this appender with all properties
+  Appender createDeepCopy() {
+    // Create a new appender of the same type
+    AppenderType appenderType = AppenderType.values
+        .firstWhere((type) => type.name == getType());
+    Appender copy = appenderType.createAppender();
+
+    // Copy base properties
+    copy.level = level;
+    copy.format = format;
+    copy.initialFormat = initialFormat;
+    copy.dateFormat = dateFormat;
+    copy.initialDateFormat = initialDateFormat;
+    copy.clientDepthOffset = clientDepthOffset;
+    copy.created = created;
+    copy.lineInfo = lineInfo;
+
+    return copy;
+  }
+
   @protected
   void initializeCommonProperties(Map<String, dynamic> config,
       {bool test = false, DateTime? date}) {

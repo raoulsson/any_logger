@@ -52,6 +52,21 @@ class FileAppender extends Appender {
     }
   }
 
+  // In file_appender.dart
+  @override
+  Appender createDeepCopy() {
+    FileAppender copy = super.createDeepCopy() as FileAppender;
+
+    // Copy FileAppender-specific properties
+    copy.filePattern = filePattern;
+    copy.fileExtension = fileExtension;
+    copy.path = path;
+    copy.rotationCycle = rotationCycle;
+    copy._file = File(_getFullFilename());
+
+    return copy;
+  }
+
   String _getFullFilename() {
     switch (rotationCycle) {
       case RotationCycle.NEVER:

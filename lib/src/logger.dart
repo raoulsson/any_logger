@@ -16,53 +16,27 @@ class Logger {
     this.clientDepthOffset = clientDepthOffset;
   }
 
-  /// Create a new logger from an existing one, but with a different name
   Logger.fromExisting(Logger other,
       {required String name, bool consoleOnly = false})
       : this.name = name,
         clientDepthOffset = other.clientDepthOffset {
     getSelfLogger()?.logInfo(
         'Creating new logger named $name from existing logger: ${other.name}');
-    // Create deep copies of appenders so each logger has independent instances
-    appenders = other.appenders.map((appender) {
-      // Create a new appender of the same type
-      Appender newAppender = AppenderType.values
-          .firstWhere((type) => type.name == appender.getType())
-          .createAppender();
 
-      // Copy configuration from the original appender
-      newAppender.level = appender.level;
-      newAppender.format = appender.format;
-      newAppender.initialFormat = appender.initialFormat;
-      newAppender.dateFormat = appender.dateFormat;
-      newAppender.initialDateFormat = appender.initialDateFormat;
-      newAppender.clientDepthOffset = appender.clientDepthOffset;
-
-      return newAppender;
-    }).toList();
+    // Create deep copies of appenders using the createDeepCopy method
+    appenders = other.appenders.map((appender) => appender.createDeepCopy()).toList();
 
     if (consoleOnly) {
       appenders.removeWhere(
-          (appender) => appender.getType() != AppenderType.CONSOLE.name);
+              (appender) => appender.getType() != AppenderType.CONSOLE.name);
     }
 
-    // Same for registered appenders
-    customAppenders = other.customAppenders.map((appender) {
-      Appender newAppender = AppenderType.values
-          .firstWhere((type) => type.name == appender.getType())
-          .createAppender();
-
-      newAppender.level = appender.level;
-      newAppender.format = appender.format;
-      newAppender.dateFormat = appender.dateFormat;
-      newAppender.clientDepthOffset = appender.clientDepthOffset;
-
-      return newAppender;
-    }).toList();
+    // Same for custom appenders
+    customAppenders = other.customAppenders.map((appender) => appender.createDeepCopy()).toList();
 
     if (consoleOnly) {
       customAppenders.removeWhere(
-          (appender) => appender.getType() != AppenderType.CONSOLE.name);
+              (appender) => appender.getType() != AppenderType.CONSOLE.name);
     }
 
     tag = other.tag;

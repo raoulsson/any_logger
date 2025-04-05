@@ -29,6 +29,18 @@ class ConsoleAppender extends Appender {
     }
   }
 
+  // In console_appender.dart
+  @override
+  Appender createDeepCopy() {
+    ConsoleAppender copy = super.createDeepCopy() as ConsoleAppender;
+
+    // Copy ConsoleAppender-specific properties
+    copy.mode = mode;
+    copy.sequenceNumber = sequenceNumber;
+
+    return copy;
+  }
+
   @override
   void append(LogRecord logRecord) {
     logRecord.loggerName ??= getType().toString();

@@ -114,6 +114,31 @@ class JsonHttpAppender extends Appender {
     }
   }
 
+  // In json_http_appender.dart
+  @override
+  Appender createDeepCopy() {
+    // Call the base class implementation to copy common properties
+    JsonHttpAppender copy = super.createDeepCopy() as JsonHttpAppender;
+
+    // Copy JsonHttpAppender-specific properties
+    copy.url = url;
+    copy.username = username;
+    copy.password = password;
+    copy.headers = Map.from(headers);
+    copy.enableCompression = enableCompression;
+    copy.maxRetries = maxRetries;
+    copy.bufferSize = bufferSize;
+    copy.flushInterval = flushInterval;
+    copy.payloadPatternIdPart = payloadPatternIdPart;
+    copy.payloadPatternLogsPart = payloadPatternLogsPart;
+    copy.logEntryPattern = logEntryPattern;
+
+    // For _logBuffer, we don't copy it since it should start empty in the new instance
+    // The _flushTimer should be initialized by the constructor
+
+    return copy;
+  }
+
   void _startFlushTimer() {
     _flushTimer?.cancel();
     _flushTimer = Timer.periodic(flushInterval, (_) {
