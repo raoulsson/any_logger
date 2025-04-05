@@ -232,6 +232,7 @@ class LoggerFactory {
   }
 
   static flushAll() {
+    _selfLog('Flushing all loggers');
     for (var logger in _loggers.values) {
       logger.flush();
     }
