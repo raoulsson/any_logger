@@ -86,7 +86,7 @@ void main() {
     // should not log
     clientWithRscLogger.doStuff(); // correct
 
-    rscLogger.setLevel(AppenderType.CONSOLE, Level.DEBUG);
+    rscLogger.setLogLevelForAppender(AppenderType.CONSOLE, Level.DEBUG);
     clientWithRscLogger.doStuff();
     rscLogger.setDateTimeFormatAll('MM/dd/yyyy HH:mm:ss');
     clientWithRscLogger.doStuff();

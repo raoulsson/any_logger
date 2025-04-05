@@ -10,8 +10,7 @@ class Logger {
   Logger.defaultLogger(List<Appender> appendersFromConfig,
       {int clientDepthOffset = 0, String? name})
       : this.name = name ?? LoggerFactory.ROOT_LOGGER {
-    getSelfLogger()
-        ?.logInfo('Creating default logger with name: $name');
+    getSelfLogger()?.logInfo('Creating default logger with name: $name');
     appenders = appendersFromConfig;
     this.clientDepthOffset = clientDepthOffset;
   }
@@ -24,19 +23,22 @@ class Logger {
         'Creating new logger named $name from existing logger: ${other.name}');
 
     // Create deep copies of appenders using the createDeepCopy method
-    appenders = other.appenders.map((appender) => appender.createDeepCopy()).toList();
+    appenders =
+        other.appenders.map((appender) => appender.createDeepCopy()).toList();
 
     if (consoleOnly) {
       appenders.removeWhere(
-              (appender) => appender.getType() != AppenderType.CONSOLE.name);
+          (appender) => appender.getType() != AppenderType.CONSOLE.name);
     }
 
     // Same for custom appenders
-    customAppenders = other.customAppenders.map((appender) => appender.createDeepCopy()).toList();
+    customAppenders = other.customAppenders
+        .map((appender) => appender.createDeepCopy())
+        .toList();
 
     if (consoleOnly) {
       customAppenders.removeWhere(
-              (appender) => appender.getType() != AppenderType.CONSOLE.name);
+          (appender) => appender.getType() != AppenderType.CONSOLE.name);
     }
 
     tag = other.tag;
@@ -64,17 +66,20 @@ class Logger {
           getSelfLogger()?.logDebug('Flushing appender: ${appender.getType()}');
           await appender.flush();
         } catch (e, stackTrace) {
-          getSelfLogger()?.logError('Error flushing appender ${appender.getType()}: $e');
+          getSelfLogger()
+              ?.logError('Error flushing appender ${appender.getType()}: $e');
           // Optionally log the stack trace if needed
           // getSelfLogger()?.logDebug('Stack trace: $stackTrace');
         }
       }
       for (var appender in customAppenders) {
         try {
-          getSelfLogger()?.logDebug('Flushing custom appender: ${appender.getType()}');
+          getSelfLogger()
+              ?.logDebug('Flushing custom appender: ${appender.getType()}');
           await appender.flush();
         } catch (e, stackTrace) {
-          getSelfLogger()?.logError('Error flushing custom appender ${appender.getType()}: $e');
+          getSelfLogger()?.logError(
+              'Error flushing custom appender ${appender.getType()}: $e');
           // Optionally log the stack trace if needed
           // getSelfLogger()?.logDebug('Stack trace: $stackTrace');
         }
@@ -87,8 +92,7 @@ class Logger {
   }
 
   void setFormatAll(String format) {
-    getSelfLogger()
-        ?.logInfo('Setting format for all appenders to $format');
+    getSelfLogger()?.logInfo('Setting format for all appenders to $format');
     for (var appender in appenders) {
       appender.format = format;
     }
@@ -105,22 +109,21 @@ class Logger {
   }
 
   void resetFormatToInitialConfig() {
-    getSelfLogger()?.logInfo(
-        'Resetting format for all appenders to initial config');
+    getSelfLogger()
+        ?.logInfo('Resetting format for all appenders to initial config');
     for (var appender in appenders) {
       appender.format = appender.initialFormat;
     }
   }
 
   void setLevelAll(Level level) {
-    getSelfLogger()
-        ?.logInfo('Setting level for all appenders to $level');
+    getSelfLogger()?.logInfo('Setting level for all appenders to $level');
     for (var appender in appenders) {
       appender.level = level;
     }
   }
 
-  void setLevel(AppenderType appenderType, Level level) {
+  void setLogLevelForAppender(AppenderType appenderType, Level level) {
     for (var appender in appenders) {
       if (appender.getType() == appenderType.name) {
         getSelfLogger()?.logInfo(
@@ -130,9 +133,17 @@ class Logger {
     }
   }
 
+  void setLogLevel(Level level) {
+    for (var appender in appenders) {
+      getSelfLogger()?.logInfo(
+          'Setting level for appender ${appender.getType()} to $level');
+      appender.level = level;
+    }
+  }
+
   void setDateTimeFormatAll(String dateTimeFormat) {
-    getSelfLogger()?.logInfo(
-        'Setting date format for all appenders to $dateTimeFormat');
+    getSelfLogger()
+        ?.logInfo('Setting date format for all appenders to $dateTimeFormat');
     for (var appender in appenders) {
       appender.dateFormat = dateTimeFormat;
     }
@@ -149,16 +160,16 @@ class Logger {
   }
 
   void resetDateTimeFormatToInitialConfig() {
-    getSelfLogger()?.logInfo(
-        'Resetting date format for all appenders to initial config');
+    getSelfLogger()
+        ?.logInfo('Resetting date format for all appenders to initial config');
     for (var appender in appenders) {
       appender.dateFormat = appender.initialDateFormat;
     }
   }
 
   void setClientDepthOffsetAll(int offset) {
-    getSelfLogger()?.logInfo(
-        'Setting client depth offset for all appenders to $offset');
+    getSelfLogger()
+        ?.logInfo('Setting client depth offset for all appenders to $offset');
     for (var appender in appenders) {
       appender.clientDepthOffset = offset;
     }
@@ -210,8 +221,7 @@ class Logger {
   }
 
   void addCustomAppender(Appender appender) {
-    getSelfLogger()
-        ?.logInfo('Adding custom appender: ${appender.getType()}');
+    getSelfLogger()?.logInfo('Adding custom appender: ${appender.getType()}');
     appenders.add(appender);
   }
 
@@ -221,8 +231,7 @@ class Logger {
   }
 
   void registerCustomAppender(Appender appender) {
-    getSelfLogger()
-        ?.logInfo('Registering appender: ${appender.getType()}');
+    getSelfLogger()?.logInfo('Registering appender: ${appender.getType()}');
     customAppenders.add(appender);
   }
 
