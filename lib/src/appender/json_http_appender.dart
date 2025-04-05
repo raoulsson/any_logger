@@ -25,8 +25,8 @@ class JsonHttpAppender extends Appender {
   // Default payload pattern for identification part
   String payloadPatternIdPart = '''
 {
-  "deviceId": "%X{logging.device-hash}",
-  "sessionId": "%X{logging.session-hash}",
+  "deviceId": "%X{anylogger.device-hash}",
+  "sessionId": "%X{anylogger.session-hash}",
   "appVersion": "%APP-VERSION",
 ''';
 
@@ -337,16 +337,16 @@ class JsonHttpAppender extends Appender {
     String payload = payloadPatternIdPart;
 
     // Replace MDC values
-    if (payload.contains('%X{logging.device-hash}')) {
-      final deviceHash = _getMdcValue('logging.device-hash',
-          LoggerFactory.getDeviceId() ?? 'device-id-not-set');
-      payload = payload.replaceAll('%X{logging.device-hash}', deviceHash);
+    if (payload.contains('%X{anylogger.device-hash}')) {
+      final deviceHash = _getMdcValue('anylogger.device-hash',
+          LoggerFactory.getDeviceId() ?? 'anylogger-device-id-not-set');
+      payload = payload.replaceAll('%X{anylogger.device-hash}', deviceHash);
     }
 
-    if (payload.contains('%X{logging.session-hash}')) {
-      final sessionHash = _getMdcValue('logging.session-hash',
-          LoggerFactory.getSessionId() ?? 'session-id-not-set');
-      payload = payload.replaceAll('%X{logging.session-hash}', sessionHash);
+    if (payload.contains('%X{anylogger.session-hash}')) {
+      final sessionHash = _getMdcValue('anylogger.session-hash',
+          LoggerFactory.getSessionId() ?? 'anylogger-session-id-not-set');
+      payload = payload.replaceAll('%X{anylogger.session-hash}', sessionHash);
     }
 
     // Replace app version

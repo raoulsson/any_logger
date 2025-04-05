@@ -10,16 +10,16 @@ const kAnyLogDartConfigWithMDC = {
     {
       'type': 'CONSOLE',
       'format':
-          '%d%i%X{logging.device-hash}%X{logging.session-hash}%t%l%c %m %f',
+          '%d%i%X{anylogger.device-hash}%X{anylogger.session-hash}%t%l%c %m %f',
       'level': 'TRACE',
       'dateFormat': 'yyyy-MM-dd HH:mm:ss.SSS',
     },
   ]
 };
 
-// This is setup on the clinet side. The logger picks the values up from the appender configs
-const LOG_DEVICE_HASH_KEY = 'logging.device-hash';
-const LOG_SESSION_HASH_KEY = 'logging.session-hash';
+// This is setup on the client side. The logger picks the values up from the appender configs
+const LOG_DEVICE_HASH_KEY = 'anylogger.device-hash';
+const LOG_SESSION_HASH_KEY = 'anylogger.session-hash';
 
 void main() async {
   // Make test runner happy
