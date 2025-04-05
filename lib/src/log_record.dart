@@ -36,10 +36,23 @@ class LogRecord {
   }
 
   String functionNameAndLine() {
-    return '${contextInfo.functionName}:${contextInfo.lineNumber}';
+    try {
+      final functionName = contextInfo.functionName ?? 'unknown';
+      final lineNumber = contextInfo.lineNumber ?? 0;
+      return '$functionName:$lineNumber';
+    } catch (e) {
+      return 'unknown:0';
+    }
   }
 
   String? inFileLocation() {
-    return '${contextInfo.fileName}(${contextInfo.lineNumber}:${contextInfo.columnNumber})';
+    try {
+      final fileName = contextInfo.fileName ?? 'unknown';
+      final lineNumber = contextInfo.lineNumber ?? 0;
+      final columnNumber = contextInfo.columnNumber ?? 0;
+      return '$fileName($lineNumber:$columnNumber)';
+    } catch (e) {
+      return 'unknown(0:0)';
+    }
   }
 }
