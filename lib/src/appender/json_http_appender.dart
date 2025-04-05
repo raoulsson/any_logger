@@ -117,6 +117,9 @@ class JsonHttpAppender extends Appender {
   void _startFlushTimer() {
     _flushTimer?.cancel();
     _flushTimer = Timer.periodic(flushInterval, (_) {
+      if(_logBuffer.length == 0) {
+        return;
+      }
       Logger.getSelfLogger()?.logInfo(
           'Periodic flush triggered after ${flushInterval.inSeconds} seconds. Buffer size: ${_logBuffer.length}');
       flush();
