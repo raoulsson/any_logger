@@ -83,16 +83,32 @@ class Logger {
   }
 
   Future<void> flush() async {
-    getSelfLogger()?.logInfo('Flushing logger: $name');
-    for (var appender in appenders) {
-      getSelfLogger()
-          ?.logDebug('Flushing appender: ${appender.getType()}');
-      await appender.flush();
-    }
-    for (var appender in customAppenders) {
-      getSelfLogger()
-          ?.logDebug('Flushing custom appender: ${appender.getType()}');
-      await appender.flush();
+    try {
+      getSelfLogger()?.logInfo('Flushing logger: $name');
+      for (var appender in appenders) {
+        try {
+          getSelfLogger()?.logDebug('Flushing appender: ${appender.getType()}');
+          await appender.flush();
+        } catch (e, stackTrace) {
+          getSelfLogger()?.logError('Error flushing appender ${appender.getType()}: $e');
+          // Optionally log the stack trace if needed
+          // getSelfLogger()?.logDebug('Stack trace: $stackTrace');
+        }
+      }
+      for (var appender in customAppenders) {
+        try {
+          getSelfLogger()?.logDebug('Flushing custom appender: ${appender.getType()}');
+          await appender.flush();
+        } catch (e, stackTrace) {
+          getSelfLogger()?.logError('Error flushing custom appender ${appender.getType()}: $e');
+          // Optionally log the stack trace if needed
+          // getSelfLogger()?.logDebug('Stack trace: $stackTrace');
+        }
+      }
+    } catch (e, stackTrace) {
+      // This catches any errors in the overall flush operation
+      print('Error in logger flush: $e');
+      // print('Stack trace: $stackTrace');
     }
   }
 
