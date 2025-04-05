@@ -113,7 +113,7 @@ class JsonHttpAppender extends Appender {
   void _startFlushTimer() {
     _flushTimer?.cancel();
     _flushTimer = Timer.periodic(flushInterval, (_) {
-      Logger.getSelfLogger()?.logInternalState(
+      Logger.getSelfLogger()?.logInfo(
           'Periodic flush triggered after ${flushInterval.inSeconds} seconds. Buffer size: ${_logBuffer.length}');
       flush();
     });
@@ -129,7 +129,7 @@ class JsonHttpAppender extends Appender {
 
   @override
   void append(LogRecord logRecord) async {
-    Logger.getSelfLogger()?.logInternalState(
+    Logger.getSelfLogger()?.logDebug(
         'Got log record for ${logRecord.loggerName}/${getType()}: ${logRecord.message}');
     // Format the individual log entry
     final formattedLogEntry = _formatLogEntry(logRecord);
@@ -140,7 +140,7 @@ class JsonHttpAppender extends Appender {
     // If buffer is full, send the logs
     if (_logBuffer.length >= bufferSize) {
       Logger.getSelfLogger()
-          ?.logInternalState('Buffer full: ${_logBuffer.length}');
+          ?.logDebug('Buffer full: ${_logBuffer.length}');
       await flush();
     }
   }
@@ -191,7 +191,7 @@ class JsonHttpAppender extends Appender {
   @override
   Future<void> flush() async {
     if (_logBuffer.isEmpty) return;
-    Logger.getSelfLogger()?.logInternalState(
+    Logger.getSelfLogger()?.logInfo(
         'Flushing logs to $url. Buffer size: ${_logBuffer.length}');
 
     // Create a copy of the current buffer and clear it
@@ -216,7 +216,7 @@ class JsonHttpAppender extends Appender {
       try {
         await _sendLogs(logs);
         Logger.getSelfLogger()
-            ?.logInternalState('Successfully sent logs to $url');
+            ?.logDebug('Successfully sent logs to $url');
         return true; // Success
       } catch (e) {
         // Log the error but don't rethrow it
@@ -269,7 +269,7 @@ class JsonHttpAppender extends Appender {
     // Format the complete payload
     String payload = _formatFullPayload(logs);
 
-    Logger.getSelfLogger()?.logInternalState('Sending logs to $url: $payload');
+    Logger.getSelfLogger()?.logDebug('Sending logs to $url: $payload');
 
     // Prepare headers
     Map<String, String> requestHeaders = Map.from(headers);
@@ -288,8 +288,8 @@ class JsonHttpAppender extends Appender {
         requestHeaders['Content-Encoding'] = 'gzip';
 
         Logger.getSelfLogger()
-            ?.logInternalState('Request headers: $requestHeaders');
-        Logger.getSelfLogger()?.logInternalState(
+            ?.logDebug('Request headers: $requestHeaders');
+        Logger.getSelfLogger()?.logInfo(
             'Sending compressed payload: ${compressedPayload.length} bytes');
 
         // Send using http package directly
@@ -300,8 +300,8 @@ class JsonHttpAppender extends Appender {
         );
       } else {
         Logger.getSelfLogger()
-            ?.logInternalState('Request headers: $requestHeaders');
-        Logger.getSelfLogger()?.logInternalState(
+            ?.logDebug('Request headers: $requestHeaders');
+        Logger.getSelfLogger()?.logInfo(
             'Sending uncompressed payload: ${payload.length} bytes');
         // Send uncompressed payload
         response = await http.post(
@@ -311,9 +311,9 @@ class JsonHttpAppender extends Appender {
         );
       }
 
-      Logger.getSelfLogger()?.logInternalState(
+      Logger.getSelfLogger()?.logDebug(
           'HTTP response code: ${response.statusCode} ${response.reasonPhrase}');
-      Logger.getSelfLogger()?.logInternalState(
+      Logger.getSelfLogger()?.logDebug(
           'Response body: ${response.body.substring(0, response.body.length.clamp(0, 500))}...');
 
       // Check for successful response
