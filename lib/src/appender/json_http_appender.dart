@@ -104,6 +104,10 @@ class JsonHttpAppender extends Appender {
       flushInterval = Duration(seconds: config['flushIntervalSeconds']);
     }
 
+    if (config.containsKey('enableCompression')) {
+      enableCompression = config['enableCompression'];
+    }
+
     // Start the timer for periodic flushes
     if (!test) {
       _startFlushTimer();
