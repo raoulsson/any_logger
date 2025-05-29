@@ -20,6 +20,7 @@ class LoggerFactory {
   static String? _deviceId = null;
   static String? _sessionId = null;
   static String? _appVersion = null;
+  static String? deviceIdentifier = null;
 
   /// Get the library's self-logging logger
   static Logger? get selfLogger => _selfLogger;
@@ -49,6 +50,14 @@ class LoggerFactory {
 
   static void setAppVersion(String appVersion) {
     _appVersion = appVersion;
+  }
+
+  static void setDeviceIdentifier(String? deviceId) {
+    deviceIdentifier = deviceId;
+  }
+
+  static String? getDeviceIdentifier() {
+    return deviceIdentifier;
   }
 
   /// Initialize the logging system with a configuration
