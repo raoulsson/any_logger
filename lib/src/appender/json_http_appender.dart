@@ -142,7 +142,7 @@ class JsonHttpAppender extends Appender {
   void _startFlushTimer() {
     _flushTimer?.cancel();
     _flushTimer = Timer.periodic(flushInterval, (_) {
-      if(_logBuffer.length == 0) {
+      if (_logBuffer.length == 0) {
         return;
       }
       Logger.getSelfLogger()?.logInfo(
@@ -171,8 +171,7 @@ class JsonHttpAppender extends Appender {
 
     // If buffer is full, send the logs
     if (_logBuffer.length >= bufferSize) {
-      Logger.getSelfLogger()
-          ?.logDebug('Buffer full: ${_logBuffer.length}');
+      Logger.getSelfLogger()?.logDebug('Buffer full: ${_logBuffer.length}');
       await flush();
     }
   }
@@ -223,8 +222,8 @@ class JsonHttpAppender extends Appender {
   @override
   Future<void> flush() async {
     if (_logBuffer.isEmpty) return;
-    Logger.getSelfLogger()?.logInfo(
-        'Flushing logs to $url. Buffer size: ${_logBuffer.length}');
+    Logger.getSelfLogger()
+        ?.logInfo('Flushing logs to $url. Buffer size: ${_logBuffer.length}');
 
     // Create a copy of the current buffer and clear it
     final logs = List<Map<String, dynamic>>.from(_logBuffer);
@@ -247,8 +246,7 @@ class JsonHttpAppender extends Appender {
     while (retryCount <= maxRetries) {
       try {
         await _sendLogs(logs);
-        Logger.getSelfLogger()
-            ?.logDebug('Successfully sent logs to $url');
+        Logger.getSelfLogger()?.logDebug('Successfully sent logs to $url');
         return true; // Success
       } catch (e) {
         // Log the error but don't rethrow it
@@ -319,8 +317,7 @@ class JsonHttpAppender extends Appender {
         List<int> compressedPayload = gzip.encode(utf8.encode(payload));
         requestHeaders['Content-Encoding'] = 'gzip';
 
-        Logger.getSelfLogger()
-            ?.logDebug('Request headers: $requestHeaders');
+        Logger.getSelfLogger()?.logDebug('Request headers: $requestHeaders');
         Logger.getSelfLogger()?.logInfo(
             'Sending compressed payload: ${compressedPayload.length} bytes');
 
@@ -331,10 +328,9 @@ class JsonHttpAppender extends Appender {
           body: compressedPayload,
         );
       } else {
+        Logger.getSelfLogger()?.logDebug('Request headers: $requestHeaders');
         Logger.getSelfLogger()
-            ?.logDebug('Request headers: $requestHeaders');
-        Logger.getSelfLogger()?.logInfo(
-            'Sending uncompressed payload: ${payload.length} bytes');
+            ?.logInfo('Sending uncompressed payload: ${payload.length} bytes');
         // Send uncompressed payload
         response = await http.post(
           Uri.parse(url!),
@@ -370,8 +366,13 @@ class JsonHttpAppender extends Appender {
 
     // Replace MDC values
     if (payload.contains('%X{anylogger.device-hash}')) {
-      final deviceHash = _getMdcValue('anylogger.device-hash',
-          LoggerFactory.getDeviceId() ?? 'anylogger-device-id-not-set');
+      String deviceHash;
+      if(LoggerFactory.getDeviceIdentifier() != null && LoggerFactory.getDeviceIdentifier()!.isNotEmpty) {
+        // Use the device identifier if available
+        deviceHash = LoggerFactory.getDeviceIdentifier()!;
+      } else {
+        deviceHash = _getMdcValue('anylogger.device-hash', LoggerFactory.getDeviceId() ?? 'anylogger-device-id-not-set');
+      }
       payload = payload.replaceAll('%X{anylogger.device-hash}', deviceHash);
     }
 
