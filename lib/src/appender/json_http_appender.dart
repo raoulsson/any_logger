@@ -161,7 +161,7 @@ class JsonHttpAppender extends Appender {
 
   @override
   void append(LogRecord logRecord) async {
-    Logger.getSelfLogger()?.logDebug(
+    Logger.getSelfLogger()?.logTrace(
         'Got log record for ${logRecord.loggerName}/${getType()}: ${logRecord.message}');
     // Format the individual log entry
     final formattedLogEntry = _formatLogEntry(logRecord);
