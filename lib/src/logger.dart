@@ -7,6 +7,7 @@ class Logger {
   String? tag;
   String name;
   bool enabled = true;
+  String? deviceIdentifier = '';
 
   Logger.defaultLogger(List<Appender> appendersFromConfig,
       {int clientDepthOffset = 0, String? name})
@@ -193,6 +194,15 @@ class Logger {
   void setEnabled(bool enabled) {
     this.enabled = enabled;
     getSelfLogger()?.logInfo('Setting logger $name enabled state to $enabled');
+  }
+
+  void setDeviceIdentifier(String? deviceId) {
+    deviceIdentifier = deviceId;
+    getSelfLogger()?.logInfo('Setting device identifier to $deviceId');
+  }
+
+  String? getDeviceIdentifier() {
+    return deviceIdentifier;
   }
 
   void log(Level logLevel, String message, String? tag,
