@@ -8,15 +8,6 @@ class Logger {
   String name;
   bool enabled = true;
 
-  String getName() {
-    return name;
-  }
-
-  void setName(String name) {
-    this.name = name;
-    getSelfLogger()?.logInfo('Setting logger name to $name');
-  }
-
   Logger.defaultLogger(List<Appender> appendersFromConfig,
       {int clientDepthOffset = 0, String? name})
       : this.name = name ?? LoggerFactory.ROOT_LOGGER {
