@@ -6,6 +6,7 @@ class Logger {
   int clientDepthOffset = 0;
   String? tag;
   String name;
+  bool enabled = true;
 
   Logger.defaultLogger(List<Appender> appendersFromConfig,
       {int clientDepthOffset = 0, String? name})
@@ -185,8 +186,20 @@ class Logger {
     }
   }
 
+  bool isEnabled(Level logLevel) {
+    return enabled;
+  }
+
+  void setEnabled(bool enabled) {
+    this.enabled = enabled;
+    getSelfLogger()?.logInfo('Setting logger $name enabled state to $enabled');
+  }
+
   void log(Level logLevel, String message, String? tag,
       [Object? error, StackTrace? stackTrace, int depthOffset = 0]) {
+    if(!enabled) {
+      return;
+    }
     var totalDepthOffset = clientDepthOffset + depthOffset;
     var contextInfo = LoggerStackTrace.from(StackTrace.current,
         depthOffset: totalDepthOffset);
