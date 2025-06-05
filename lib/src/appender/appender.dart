@@ -13,6 +13,7 @@ abstract class Appender {
   String? lineInfo;
   String initialFormat = defaultFormat;
   String initialDateFormat = defaultDateFormat;
+  bool enabled = true;
 
   Appender({DateTime? customDate}) {
     created = customDate ?? DateTime.now();
@@ -42,6 +43,7 @@ abstract class Appender {
     copy.clientDepthOffset = clientDepthOffset;
     copy.created = created;
     copy.lineInfo = lineInfo;
+    copy.enabled = enabled;
 
     return copy;
   }
@@ -63,10 +65,14 @@ abstract class Appender {
     if (config.containsKey('depthOffset')) {
       clientDepthOffset = config['depthOffset'];
     }
+
+    if (config.containsKey('enabled')) {
+      enabled = config['enabled'];
+    }
   }
 
   @override
   String toString() {
-    return 'Appender{type: ${getType()}, level: $level, format: $format, dateFormat: $dateFormat}';
+    return 'Appender{type: ${getType()}, level: $level, format: $format, dateFormat: $dateFormat, enabled: $enabled}';
   }
 }

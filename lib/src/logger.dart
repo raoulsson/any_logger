@@ -205,9 +205,9 @@ class Logger {
         depthOffset: totalDepthOffset);
     var record = LogRecord(logLevel, message, tag, contextInfo,
         error: error, stackTrace: stackTrace, loggerName: name);
-    for (var app in appenders) {
-      if (logLevel >= app.level) {
-        app.append(record);
+    for (var appender in appenders) {
+      if (appender.enabled && logLevel >= appender.level) {
+        appender.append(record);
       }
     }
   }
