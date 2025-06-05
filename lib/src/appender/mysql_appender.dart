@@ -99,7 +99,7 @@ class MySqlAppender extends Appender {
 
   @override
   String toString() {
-    return super.toString();
+    return super.toString() + ' ' + 'MySqlAppender(host: $host, user: $user, port: $port, database: $database, table: $table, level: $level, format: $format, dateFormat: $dateFormat, created: $created, enabled: $enabled)';
   }
 
   @override

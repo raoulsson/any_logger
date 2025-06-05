@@ -73,6 +73,6 @@ abstract class Appender {
 
   @override
   String toString() {
-    return 'Appender{type: ${getType()}, level: $level, format: $format, dateFormat: $dateFormat, enabled: $enabled}';
+    return 'Appender(type: ${getType()}, level: $level, format: $format, dateFormat: $dateFormat, created: $created, enabled: $enabled)';
   }
 }

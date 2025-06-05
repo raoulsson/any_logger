@@ -107,7 +107,7 @@ class LoggerFactory {
         appendersFromConfig.add(appender);
 
         if (selfDebug) {
-          _selfLog('Initialized appender: ${appenderType.name}');
+          _selfLog('Initialized appender: ${appenderType.name}. Appender: ${appender.toString()}');
         }
       } on FormatException catch (e) {
         if (selfDebug) {

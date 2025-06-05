@@ -170,7 +170,7 @@ class FileAppender extends Appender {
 
   @override
   String toString() {
-    return super.toString();
+    return super.toString() + ' ' + 'FileAppender(filePattern: $filePattern, fileExtension: $fileExtension, path: $path, rotationCycle: $rotationCycle, created: $created, enabled: $enabled)';
   }
 
   @override

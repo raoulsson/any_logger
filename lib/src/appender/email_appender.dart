@@ -140,7 +140,7 @@ class EmailAppender extends Appender {
 
   @override
   String toString() {
-    return super.toString();
+    return super.toString() + ' ' + 'EmailAppender(host: $host, user: $user, password: $password, port: $port, fromMail: $fromMail, fromName: $fromName, to: $to, toCC: $toCC, toBCC: $toBCC, ssl: $ssl, html: $html, created: $created, enabled: $enabled)';
   }
 
   @override

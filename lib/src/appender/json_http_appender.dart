@@ -435,7 +435,7 @@ class JsonHttpAppender extends Appender {
 
   @override
   String toString() {
-    return super.toString();
+    return super.toString() + ' ' + 'JsonHttpAppender(url: $url, username: $username, password: $password, headers: $headers, enableCompression: $enableCompression, maxRetries: $maxRetries, bufferSize: $bufferSize, flushInterval: $flushInterval, sendLogsOnlyIfDeviceIdentifierStringIsSet: $_sendLogsOnlyIfDeviceIdentifierStringIsSet, payloadPatternIdPart: $payloadPatternIdPart, payloadPatternLogsPart: $payloadPatternLogsPart, logEntryPattern: $logEntryPattern)';
   }
 
   @override
