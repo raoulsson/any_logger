@@ -229,31 +229,31 @@ class LoggerFactory {
     return _rootLogger!;
   }
 
-  static enableAppender(String appenderName) {
+  static enableAppender(AppenderType appenderType) {
     for(Logger logger in _loggers.values) {
-      print('Enabling appender $appenderName for logger ${logger.name}. Appenders: ${logger.appenders.map((a) => a.getType()).join(', ')}');
-      if (logger.appenders.contains(appenderName)) {
-        logger.appenders.firstWhere((appender) => appender.getType() == appenderName).setEnabled(true);
+      print('Enabling appender $appenderType for logger ${logger.name}. Found Appenders: ${logger.appenders.map((a) => a.getType()).join(', ')}');
+      if (logger.appenders.contains(appenderType)) {
+        logger.appenders.firstWhere((appender) => appender.getType() == appenderType).setEnabled(true);
         selfLogger?.logInfo(
-            'Appender $appenderName enabled for logger ${logger.name}');
+            'Appender $appenderType enabled for logger ${logger.name}');
       } else {
         selfLogger?.logWarn(
-            'Appender $appenderName not found, cannot enable it');
+            'Appender $appenderType not found, cannot enable it');
       }
     }
 
   }
 
-  static disableAppender(String appenderName) {
+  static disableAppender(AppenderType appenderType) {
     for(Logger logger in _loggers.values) {
-      print('Disabling appender $appenderName for logger ${logger.name}. Appenders: ${logger.appenders.map((a) => a.getType()).join(', ')}');
-      if (logger.appenders.contains(appenderName)) {
-        logger.appenders.firstWhere((appender) => appender.getType() == appenderName).setEnabled(false);
+      print('Disabling appender $appenderType for logger ${logger.name}. Found Appenders: ${logger.appenders.map((a) => a.getType()).join(', ')}');
+      if (logger.appenders.contains(appenderType)) {
+        logger.appenders.firstWhere((appender) => appender.getType() == appenderType).setEnabled(false);
         selfLogger?.logInfo(
-            'Appender $appenderName disabled for logger ${logger.name}');
+            'Appender $appenderType disabled for logger ${logger.name}');
       } else {
         selfLogger?.logWarn(
-            'Appender $appenderName not found, cannot disable it');
+            'Appender $appenderType not found, cannot disable it');
       }
     }
   }
