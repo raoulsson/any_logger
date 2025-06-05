@@ -231,6 +231,7 @@ class LoggerFactory {
 
   static enableAppender(String appenderName) {
     for(Logger logger in _loggers.values) {
+      print('Enabling appender $appenderName for logger ${logger.name}. Appenders: ${logger.appenders.map((a) => a.getType()).join(', ')}');
       if (logger.appenders.contains(appenderName)) {
         logger.appenders.firstWhere((appender) => appender.getType() == appenderName).setEnabled(true);
         selfLogger?.logInfo(
