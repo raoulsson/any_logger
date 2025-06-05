@@ -245,6 +245,7 @@ class LoggerFactory {
 
   static disableAppender(String appenderName) {
     for(Logger logger in _loggers.values) {
+      print('Disabling appender $appenderName for logger ${logger.name}. Appenders: ${logger.appenders.map((a) => a.getType()).join(', ')}');
       if (logger.appenders.contains(appenderName)) {
         logger.appenders.firstWhere((appender) => appender.getType() == appenderName).setEnabled(false);
         selfLogger?.logInfo(
