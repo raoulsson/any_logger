@@ -127,6 +127,9 @@ class LoggerFactory {
       _setupSelfLogger();
       _selfLog(
           'Logging system initialized with ${appendersFromConfig.length} active appenders');
+      for(var appender in appendersFromConfig) {
+        _selfLog('Appender: ${appender.getType()}, Level: ${appender.level}, Format: ${appender.format}, DateFormat: ${appender.dateFormat}');
+      }
     }
 
     return true;
@@ -227,20 +230,29 @@ class LoggerFactory {
   }
 
   static enableAppender(String appenderName) {
-    if (_loggers.containsKey(appenderName)) {
-      return _loggers[appenderName]!.setEnabled(true);
-    } else {
-      selfLogger?.logWarn(
-          'Appender $appenderName not found, cannot enable it');
+    for(Logger logger in _loggers.values) {
+      if (logger.appenders.contains(appenderName)) {
+        logger.appenders.firstWhere((appender) => appender.getType() == appenderName).setEnabled(true);
+        selfLogger?.logInfo(
+            'Appender $appenderName enabled for logger ${logger.name}');
+      } else {
+        selfLogger?.logWarn(
+            'Appender $appenderName not found, cannot enable it');
+      }
     }
+
   }
 
   static disableAppender(String appenderName) {
-    if (_loggers.containsKey(appenderName)) {
-      return _loggers[appenderName]!.setEnabled(false);
-    } else {
-      selfLogger?.logWarn(
-          'Appender $appenderName not found, cannot disable it');
+    for(Logger logger in _loggers.values) {
+      if (logger.appenders.contains(appenderName)) {
+        logger.appenders.firstWhere((appender) => appender.getType() == appenderName).setEnabled(false);
+        selfLogger?.logInfo(
+            'Appender $appenderName disabled for logger ${logger.name}');
+      } else {
+        selfLogger?.logWarn(
+            'Appender $appenderName not found, cannot disable it');
+      }
     }
   }
 

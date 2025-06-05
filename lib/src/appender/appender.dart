@@ -21,6 +21,10 @@ abstract class Appender {
 
   String getType();
 
+  void setEnabled(bool enabled) {
+    this.enabled = enabled;
+  }
+
   Future<void> dispose();
 
   Future<void> flush();
