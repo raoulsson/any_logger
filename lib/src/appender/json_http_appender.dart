@@ -21,7 +21,7 @@ class JsonHttpAppender extends Appender {
   int bufferSize = 100; // Default buffer size
   Timer? _flushTimer;
   Duration flushInterval = Duration(minutes: 1); // Default flush interval
-  bool sendLogsOnlyIfDeviceIdentifierStringIsSet = false;
+  bool _sendLogsOnlyIfDeviceIdentifierStringIsSet = false;
 
   // Default payload pattern for identification part
   String payloadPatternIdPart = '''
@@ -110,7 +110,7 @@ class JsonHttpAppender extends Appender {
     }
 
     if (config.containsKey('sendLogsOnlyIfDeviceIdentifierStringIsSet')) {
-      sendLogsOnlyIfDeviceIdentifierStringIsSet = config['sendLogsOnlyIfDeviceIdentifierStringIsSet'];
+      _sendLogsOnlyIfDeviceIdentifierStringIsSet = config['sendLogsOnlyIfDeviceIdentifierStringIsSet'];
     }
 
     // Start the timer for periodic flushes
@@ -137,8 +137,8 @@ class JsonHttpAppender extends Appender {
     copy.payloadPatternIdPart = payloadPatternIdPart;
     copy.payloadPatternLogsPart = payloadPatternLogsPart;
     copy.logEntryPattern = logEntryPattern;
-    copy.sendLogsOnlyIfDeviceIdentifierStringIsSet =
-        sendLogsOnlyIfDeviceIdentifierStringIsSet;
+    copy._sendLogsOnlyIfDeviceIdentifierStringIsSet =
+        _sendLogsOnlyIfDeviceIdentifierStringIsSet;
 
     // For _logBuffer, we don't copy it since it should start empty in the new instance
     // The _flushTimer should be initialized by the constructor
@@ -303,7 +303,7 @@ class JsonHttpAppender extends Appender {
       }'
    */
   Future<void> _sendLogs(List<Map<String, dynamic>> logs) async {
-    if(sendLogsOnlyIfDeviceIdentifierStringIsSet && (LoggerFactory.getDeviceIdentifier() == null || LoggerFactory.getDeviceIdentifier()!.isEmpty)) {
+    if(_sendLogsOnlyIfDeviceIdentifierStringIsSet && (LoggerFactory.getDeviceIdentifier() == null || LoggerFactory.getDeviceIdentifier()!.isEmpty)) {
       Logger.getSelfLogger()?.logInfo(
           'Skipping log send because device identifier is not set and sendLogsOnlyIfDeviceIdentifierStringIsSet is true');
       return; // Skip sending if device identifier is not set

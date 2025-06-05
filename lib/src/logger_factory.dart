@@ -20,7 +20,7 @@ class LoggerFactory {
   static String? _deviceId = null;
   static String? _sessionId = null;
   static String? _appVersion = null;
-  static String? deviceIdentifier = null;
+  static String? _deviceIdentifier = null;
 
   /// Get the library's self-logging logger
   static Logger? get selfLogger => _selfLogger;
@@ -53,11 +53,11 @@ class LoggerFactory {
   }
 
   static void setDeviceIdentifier(String? deviceId) {
-    deviceIdentifier = deviceId;
+    _deviceIdentifier = deviceId;
   }
 
   static String? getDeviceIdentifier() {
-    return deviceIdentifier;
+    return _deviceIdentifier;
   }
 
   /// Initialize the logging system with a configuration
@@ -224,6 +224,14 @@ class LoggerFactory {
           'Logger has not been initialized yet. Call await LoggerFactory.init() first.');
     }
     return _rootLogger!;
+  }
+
+  static enableJsonHttpLogger(bool enable) {
+    if (_loggers.containsKey('JSON_HTTP')) {
+      return _loggers['JSON_HTTP']!.setEnabled(enable);
+    } else {
+      throw StateError('JSON_HTTP logger not found.');
+    }
   }
 
   /// Get a list of all logger names
