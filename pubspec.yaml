@@ -1,6 +1,6 @@
 name: any_logger # Formerly log_4_dart_2 at https://github.com/Ephenodrom/Dart-Log-4-Dart-2
 description: Logging library for Dart and Flutter, inspired by log4j and based on log_4_dart_2
-version: 4.2.4
+version: 4.2.5
 homepage: https://github.com/raoulsson/any_logger
 
 # version tweaked by raoulsson.com. https://github.com/raoulsson/Dart-Log-4-Dart-2

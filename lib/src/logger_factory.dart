@@ -226,11 +226,21 @@ class LoggerFactory {
     return _rootLogger!;
   }
 
-  static enableJsonHttpLogger(bool enable) {
-    if (_loggers.containsKey('JSON_HTTP')) {
-      return _loggers['JSON_HTTP']!.setEnabled(enable);
+  static enableAppender(String appenderName) {
+    if (_loggers.containsKey(appenderName)) {
+      return _loggers[appenderName]!.setEnabled(true);
     } else {
-      throw StateError('JSON_HTTP logger not found.');
+      selfLogger?.logWarn(
+          'Appender $appenderName not found, cannot enable it');
+    }
+  }
+
+  static disableAppender(String appenderName) {
+    if (_loggers.containsKey(appenderName)) {
+      return _loggers[appenderName]!.setEnabled(false);
+    } else {
+      selfLogger?.logWarn(
+          'Appender $appenderName not found, cannot disable it');
     }
   }
 
