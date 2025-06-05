@@ -234,7 +234,7 @@ class LoggerFactory {
       print('Enabling appender $appenderType for logger ${logger.name}. Found Appenders: ${logger.appenders.map((a) => a.getType()).join(', ')}');
       for(Appender appender in logger.appenders) {
         print('Checking appender ${appender.getType()} for logger ${logger.name}');
-        if (appender.getType() == appenderType) {
+        if (appender.getType() == appenderType.name) {
           appender.setEnabled(true);
           selfLogger?.logInfo(
               'Appender $appenderType enabled for logger ${logger.name}');
@@ -252,7 +252,7 @@ class LoggerFactory {
       print('Disabling appender $appenderType for logger ${logger.name}. Found Appenders: ${logger.appenders.map((a) => a.getType()).join(', ')}');
       for(Appender appender in logger.appenders) {
         print('Checking appender ${appender.getType()} for logger ${logger.name}');
-        if (appender.getType() == appenderType) {
+        if (appender.getType() == appenderType.name) {
           appender.setEnabled(false);
           selfLogger?.logInfo(
               'Appender $appenderType disabled for logger ${logger.name}');
