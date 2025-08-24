@@ -63,20 +63,10 @@ class AnyLoggerFileIdProvider implements IdProvider {
 
   bool _isFlutterApp() {
     try {
-      // Multiple checks for Flutter
-      if (Platform.resolvedExecutable.contains('flutter')) return true;
-      if (Platform.environment['FLUTTER_ROOT'] != null) return true;
-      if (Platform.environment['FLUTTER_TEST'] == 'true') return true;
-
-      // iOS/Android are always Flutter for our purposes
-      if (Platform.isIOS || Platform.isAndroid) return true;
-
-      // Check project structure
-      if (File('pubspec.yaml').existsSync()) {
-        return Directory('android').existsSync() || Directory('ios').existsSync() || Directory('web').existsSync();
-      }
-
-      return false;
+      // This will work in a Flutter app, but throw on other platforms
+      // If it throws, it's not a Flutter app
+      // We can also check for path_provider existence
+      return getAppDocumentsDirectory != null;
     } catch (e) {
       return false;
     }
