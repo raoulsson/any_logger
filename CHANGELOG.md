@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.2
+
+* Updated README
+
 ## 1.0.1
 
 * Removed claim to be web compatible and amended README accordingly
