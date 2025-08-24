@@ -20,7 +20,7 @@ A powerful, flexible, and intuitive logging library for Dart and Flutter applica
 ### Core Package (Console & File logging)
 ```yaml
 dependencies:
-  any_logger: ^1.0.0
+  any_logger: ^1.0.1
   path_provider: ^2.1.5  # Required for Flutter apps using %did or %sid
 ```
 
@@ -300,7 +300,7 @@ await LoggerFactory.builder()
 ```dart
 // First, add the required packages to pubspec.yaml:
 // dependencies:
-//   any_logger_json_http: ^1.0.0
+//   any_logger_json_http: ^1.0.1
 //   any_logger_email: ^1.0.0
 
 import 'package:any_logger/any_logger.dart';
@@ -504,7 +504,7 @@ You only need to add the packages for the appenders you actually use:
 ```dart
 // 1. Add to pubspec.yaml
 dependencies:
-  any_logger: ^1.0.0
+  any_logger: ^1.0.1
   any_logger_json_http: ^1.0.0  # Only if needed
   any_logger_email: ^1.0.0      # Only if needed
   any_logger_mysql: ^1.0.0      # Only if needed
@@ -663,7 +663,7 @@ LoggerFactory.builder()
 ```dart
 // Add to pubspec.yaml:
 // dependencies:
-//   any_logger: ^5.2.0
+//   any_logger: ^1.0.1
 //   any_logger_json_http: ^1.0.0
 
 import 'package:any_logger/any_logger.dart';
@@ -791,7 +791,7 @@ await LoggerFactory.init(...);  // Not initSync()
 **Solution:** Add and import the required extension package:
 ```yaml
 dependencies:
-  any_logger_json_http: ^1.0.0
+  any_logger_json_http: ^1.0.1
 ```
 ```dart
 import 'package:any_logger_json_http/any_logger_json_http.dart';
