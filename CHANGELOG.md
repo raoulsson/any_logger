@@ -2,7 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.0] - 2025-08-25
+## 1.0.1
 
-### Added
-- Initial release of Any Logger
+* Removed claim to be web compatible and amended README accordingly
+
+## 1.0.0
+
+* Initial release of Any Logger

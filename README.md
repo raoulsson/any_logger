@@ -142,12 +142,12 @@ void main() async {
 }
 ```
 
-### Flutter Web / No Persistence Needed
+### Flutter / No Persistence Needed
 ```dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Use MemoryIdProvider for web or when persistence isn't needed
+  // Use MemoryIdProvider when persistence isn't needed
   LoggerFactory.setIdProvider(MemoryIdProvider());
   
   await LoggerFactory.initConsole(
@@ -411,10 +411,10 @@ void main() async {
 }
 ```
 
-### Flutter Web / No Persistence Needed
+### Flutter / No Persistence Needed
 ```dart
 void main() {
-  // Use MemoryIdProvider for web or when persistence isn't needed
+  // Use MemoryIdProvider for when persistence isn't needed
   LoggerFactory.setIdProvider(MemoryIdProvider());
   
   LoggerFactory.initConsole(
@@ -800,7 +800,7 @@ import 'package:any_logger_json_http/any_logger_json_http.dart';
 ### Performance Tips
 
 - If you don't use `%did` or `%sid`, the ID provider never runs
-- Use `MemoryIdProvider` for web apps
+- Use `MemoryIdProvider` for if %sid and %did are not needed
 - Enable batching for network appenders (extension packages)
 - Only import extension packages you actually use
 
