@@ -2,8 +2,6 @@
 
 A powerful, flexible, and intuitive logging library for Dart and Flutter applications with automatic device/session tracking and progressive complexity - from one-line setup to enterprise-grade configurations.
 
-**Flutter-first design** with proper mobile app support, persistent device IDs, and clear error messages.
-
 ## ✨ Why Any Logger?
 
 - **🚀 Zero Configuration** - Start logging with literally one line of code
