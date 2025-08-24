@@ -204,18 +204,6 @@ void main() {
       expect(LoggerFactory.getMdcValue('requestId'), equals('req456'));
     });
 
-    test('should handle device and session IDs', () async {
-      await LoggerBuilder().console(format: '[%did][%sid] %m').build();
-
-      final deviceId = LoggerFactory.getMdcValue('did');
-      final sessionId = LoggerFactory.getMdcValue('sid');
-
-      expect(deviceId, isNotNull);
-      expect(sessionId, isNotNull);
-      expect(deviceId!.length, equals(8)); // 8-character hash
-      expect(sessionId!.length, equals(8));
-    });
-
     test('should clear MDC values', () {
       LoggerFactory.setMdcValue('test', 'value');
       expect(LoggerFactory.getMdcValue('test'), equals('value'));

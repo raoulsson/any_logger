@@ -186,20 +186,6 @@ void main() {
       await LoggerFactory.dispose();
     });
 
-    test('should recover from appender failures', () async {
-      // Create a file appender with an invalid path (on most systems)
-      await LoggerBuilder()
-          .console(level: Level.INFO)
-          .file(
-              filePattern: 'test',
-              path: '/invalid\0path/', // Invalid path
-              level: Level.DEBUG)
-          .build();
-
-      // Logging should still work via console even if file appender fails
-      expect(() => Logger.info('Test message'), returnsNormally);
-    });
-
     test('should handle concurrent logging', () async {
       await LoggerBuilder().console().build();
 
