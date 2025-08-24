@@ -18,7 +18,6 @@ platforms:
   ios:
   linux:
   macos:
-  web:
   windows:
 
 dev_dependencies:
