@@ -1,0 +1,31 @@
+name: any_logger
+description: >-
+  A powerful, flexible, and intuitive logging library for Dart and Flutter 
+  with progressive complexity - from one-line setup to enterprise configurations.
+version: 1.0.0
+homepage: https://github.com/raoulsson/any_logger
+repository: https://github.com/raoulsson/any_logger
+issue_tracker: https://github.com/raoulsson/any_logger/issues
+documentation: https://github.com/raoulsson/any_logger/wiki
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
+
+dev_dependencies:
+  test: ^1.24.0
+
+topics:
+  - logging
+
+funding:
+  - https://github.com/sponsors/raoulsson
+  - https://www.buymeacoffee.com/raoulsson
+
