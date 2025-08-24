@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:any_logger/any_logger_lib.dart';
+import 'package:any_logger/any_logger.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -291,7 +291,7 @@ void main() {
           .withRotationCycle(RotationCycle.MONTH)
           .build(test: true); // test mode to avoid actual file creation
 
-      final fileAppender = appender as FileAppender;
+      final fileAppender = appender;
       expect(fileAppender.getType(), equals('FILE'));
       expect(fileAppender.level, equals(Level.DEBUG));
       expect(fileAppender.filePattern, equals('test_file'));

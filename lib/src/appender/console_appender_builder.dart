@@ -1,4 +1,4 @@
-import '../../any_logger_lib.dart';
+import '../../any_logger.dart';
 
 /// A specialized builder for creating and configuring [ConsoleAppender] instances.
 ///

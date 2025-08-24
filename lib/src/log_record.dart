@@ -92,14 +92,10 @@ class LogRecord {
     // Add line number if available
     if (_lineNumber != null && _lineNumber! > 0) {
       parts.add(':${_lineNumber}');
-    } else if (contextInfo.lineNumber != null) {
+    } else {
       // Fallback to contextInfo.lineNumber if _lineNumber is not set
       String lineStr;
-      if (contextInfo.lineNumber is String) {
-        lineStr = contextInfo.lineNumber as String;
-      } else {
-        lineStr = contextInfo.lineNumber.toString();
-      }
+      lineStr = contextInfo.lineNumber;
 
       if (lineStr.isNotEmpty && lineStr != '0') {
         parts.add(':$lineStr');
@@ -117,11 +113,7 @@ class LogRecord {
   /// Returns the file location for %f placeholder
   /// Format: "package:example/path/file.dart(line:column)" or "file:///path/file.dart(line:column)"
   String? inFileLocation() {
-    if (contextInfo.fileName == null) {
-      return null;
-    }
-
-    String location = contextInfo.fileName!;
+    String location = contextInfo.fileName;
 
     // Convert absolute path to package path if possible
     if (!location.startsWith('package:') && !location.startsWith('dart:')) {
@@ -133,22 +125,10 @@ class LogRecord {
     int? colNum;
 
     // Convert lineNumber to int if it's a string
-    if (contextInfo.lineNumber != null) {
-      if (contextInfo.lineNumber is String) {
-        lineNum = int.tryParse(contextInfo.lineNumber as String);
-      } else if (contextInfo.lineNumber is int) {
-        lineNum = contextInfo.lineNumber as int;
-      }
-    }
+    lineNum = int.tryParse(contextInfo.lineNumber);
 
     // Convert columnNumber to int if it's a string
-    if (contextInfo.columnNumber != null) {
-      if (contextInfo.columnNumber is String) {
-        colNum = int.tryParse(contextInfo.columnNumber as String);
-      } else if (contextInfo.columnNumber is int) {
-        colNum = contextInfo.columnNumber as int;
-      }
-    }
+    colNum = int.tryParse(contextInfo.columnNumber);
 
     if (lineNum != null && lineNum > 0) {
       final column = colNum ?? 5; // Default column to 5 if not available

@@ -1,4 +1,4 @@
-library any_logger_lib;
+library any_logger;
 
 export 'src/any_logger.dart';
 export 'src/appender/appender.dart';

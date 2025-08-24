@@ -2,7 +2,7 @@
 // PRESET CONFIGURATIONS - PRODUCTION-READY PATTERNS
 // ============================================================
 
-import '../any_logger_lib.dart';
+import '../any_logger.dart';
 
 /// Preset configurations for common use cases with device and session tracking
 class LoggerPresets {

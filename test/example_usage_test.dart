@@ -1,4 +1,4 @@
-import 'package:any_logger/any_logger_lib.dart';
+import 'package:any_logger/any_logger.dart';
 import 'package:test/test.dart';
 
 /// This file contains simple, clear examples that can be used in documentation

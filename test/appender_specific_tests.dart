@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:any_logger/any_logger_lib.dart';
+import 'package:any_logger/any_logger.dart';
 import 'package:test/test.dart';
 
 void main() {

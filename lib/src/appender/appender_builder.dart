@@ -1,4 +1,4 @@
-import '../../any_logger_lib.dart';
+import '../../any_logger.dart';
 
 /// A builder class for programmatically creating and configuring [Appender] instances.
 

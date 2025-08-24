@@ -4,7 +4,7 @@
 
 import 'dart:io' show Platform;
 
-import '../../any_logger_lib.dart';
+import '../../any_logger.dart';
 
 /// Platform-aware ID provider for Flutter applications
 ///

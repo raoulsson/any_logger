@@ -1,4 +1,4 @@
-import '../any_logger_lib.dart';
+import '../any_logger.dart';
 
 /// Main Logger class with both static and instance methods
 class Logger {

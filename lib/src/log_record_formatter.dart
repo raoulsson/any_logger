@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../any_logger_lib.dart';
+import '../any_logger.dart';
 
 /// Optimized formatter with MDC pattern caching (no intl dependency)
 class LogRecordFormatter {
@@ -94,18 +94,6 @@ class LogRecordFormatter {
 
   static bool isNullOrEmpty(String? str) {
     return str == null || str.isEmpty;
-  }
-
-  /// Optimized MDC processing with caching
-  static String _processMdcOptimized(String format) {
-    return format.replaceAllMapped(
-      _mdcPattern,
-      (match) {
-        String mdcKey = match.group(1)!;
-        String? value = LoggerFactory.getMdcValue(mdcKey);
-        return value ?? '';
-      },
-    );
   }
 
   /// Alternative: More aggressive caching with template parsing

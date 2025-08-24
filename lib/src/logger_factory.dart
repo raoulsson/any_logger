@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import '../any_logger_lib.dart';
+import '../any_logger.dart';
 
 typedef HttpCompleteCallback = void Function();
 
@@ -24,9 +24,7 @@ class LoggerFactory {
   static Logger? _selfLogger;
 
   // Configuration state
-  static Map<String, dynamic>? _currentConfig;
   static bool _initialized = false;
-  static Level _globalLevel = Level.INFO;
 
   // Self-debugging
   static bool _selfDebugEnabled = false;
@@ -360,7 +358,6 @@ class LoggerFactory {
     // Initialize identification synchronously
     _initializeIdentification();
 
-    _currentConfig = config;
     _initialized = true;
     _selfDebugEnabled = selfDebug;
     _selfLogLevel = selfLogLevel;
@@ -437,7 +434,6 @@ class LoggerFactory {
     _selfLogLevel = selfLogLevel;
     if (appVersion != null) _appVersion = appVersion;
     _initialized = true;
-    _currentConfig = config;
 
     if (config == null || config.isEmpty) {
       _rootLogger = Logger.empty();
@@ -521,10 +517,6 @@ class LoggerFactory {
     _selfLogLevel = selfLogLevel;
     if (appVersion != null) _appVersion = appVersion;
     _initialized = true;
-    _currentConfig = null; // Config is programmatic, not from a map
-
-    // Set global level from config
-    _globalLevel = config.level;
 
     // Use the provided appenders
     var appendersFromConfig = config.appenders;
@@ -723,8 +715,6 @@ class LoggerFactory {
     _selfDebugEnabled = false;
     _selfLogLevel = Level.INFO;
     _initialized = false;
-    _currentConfig = null;
-    _globalLevel = Level.INFO;
 
     // Clear metadata
     _appVersion = null;
@@ -787,8 +777,6 @@ class LoggerFactory {
           mostPermissive = level;
         }
       }
-
-      _globalLevel = mostPermissive;
     }
   }
 

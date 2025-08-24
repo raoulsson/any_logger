@@ -2,7 +2,7 @@
 // LoggerConfig Class
 // ============================================================
 
-import '../any_logger_lib.dart';
+import '../any_logger.dart';
 
 /// A configuration class to hold a list of appenders and a root logging level.
 ///

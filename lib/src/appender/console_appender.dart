@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer' as devtools;
 
-import '../../any_logger_lib.dart';
+import '../../any_logger.dart';
 
 enum ConsoleLoggerMode { stdout, devtools }
 

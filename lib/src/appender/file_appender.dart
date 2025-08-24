@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../../any_logger_lib.dart';
+import '../../any_logger.dart';
 
 class FileAppender extends Appender {
   String? filePattern;

@@ -1,6 +1,6 @@
 // In: any_logger/lib/src/appender/appender_registry.dart
 
-import '../../any_logger_lib.dart';
+import '../../any_logger.dart';
 
 // A type definition for our factory functions
 typedef AppenderFactoryFunction = Future<Appender> Function(Map<String, dynamic> config, {bool test, DateTime? date});
