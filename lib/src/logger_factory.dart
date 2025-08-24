@@ -43,9 +43,6 @@ class LoggerFactory {
   // Callbacks
   static HttpCompleteCallback? onHttpComplete;
 
-  // Static initialization block to register core appenders
-  static bool _registryInitialized = false;
-
   // ============================================================
   // ID PROVIDER CONFIGURATION
   // ============================================================
