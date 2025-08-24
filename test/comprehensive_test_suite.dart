@@ -73,8 +73,6 @@ void main() {
     });
 
     test('should respect log levels', () {
-      final messages = <String>[];
-
       // Create a test appender that captures messages
       LoggerFactory.initSimpleConsole(level: Level.WARN);
       final logger = LoggerFactory.getRootLogger();
