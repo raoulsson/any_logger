@@ -78,8 +78,10 @@ class LoggerFactory {
 
     // Check if this is a Flutter app
     if (_isFlutterApp()) {
+      print('is flutter app');
       // Flutter app logic
       if (_deviceIdNeeded) {
+        print('is _deviceIdNeeded $_deviceIdNeeded');
         // Device ID requires persistent storage on Flutter
         // Check if path_provider is configured
         if (_getAppDocumentsDirectoryFnc == null) {
@@ -124,18 +126,22 @@ OPTION 3: Remove %did from your log format
 ════════════════════════════════════════════════════════════════════════════════
 ''');
         }
-        FileIdProvider.getAppDocumentsDirectoryFnc = _getAppDocumentsDirectoryFnc;
+        print('using FileIdProvider');
         return FileIdProvider();
       } else if (_sessionIdNeeded) {
+        print('is _sessionIdNeeded $_sessionIdNeeded');
         // Only session ID needed - use memory provider for Flutter
+        print('using MemoryIdProvider');
         return MemoryIdProvider();
       }
     } else {
       // Non-Flutter app - use file provider
+      print('using FileIdProvider');
       return FileIdProvider();
     }
 
     // Fallback to null provider
+    print('using NullIdProvider');
     return NullIdProvider();
   }
 
