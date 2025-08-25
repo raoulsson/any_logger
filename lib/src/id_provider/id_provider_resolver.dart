@@ -100,6 +100,7 @@ class IdProviderResolver {
 
   static String _getPathProviderErrorMessage() {
     return '''
+    
 ════════════════════════════════════════════════════════════════════════════════
 🚨 ANYLOGGER CONFIG ERROR: At least one of your appenders format strings contains
 '%did' for device hash tracking. Running on Flutter, you need to:
