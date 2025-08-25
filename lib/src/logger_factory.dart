@@ -35,7 +35,7 @@ class LoggerFactory {
   static bool _deviceIdNeeded = false;
   static bool _sessionIdNeeded = false;
   // Flutter apps MUST set this or logging will fail
-  static Future<Directory> Function()? getAppDocumentsDirectoryFnc;
+  static Future<Directory> Function()? _getAppDocumentsDirectoryFnc;
 
   // Metadata
   static String? _appVersion;
@@ -49,6 +49,9 @@ class LoggerFactory {
   // ============================================================
   // ID PROVIDER CONFIGURATION
   // ============================================================
+  static void setGetAppDocumentsDirectoryFnc(Future<Directory> Function() getAppDocumentsDirectoryFnc) {
+    FileIdProvider.getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
+  }
 
   /// Set a custom ID provider (must be called before initialization)
   static void setIdProvider(IdProvider provider) {
@@ -78,7 +81,7 @@ class LoggerFactory {
       if (_deviceIdNeeded) {
         // Device ID requires persistent storage on Flutter
         // Check if path_provider is configured
-        if (getAppDocumentsDirectoryFnc == null) {
+        if (_getAppDocumentsDirectoryFnc == null) {
           throw StateError('''
 ════════════════════════════════════════════════════════════════════════════════
 🚨 LOGGING DISABLED: path_provider Not Configured for Device ID (%did)
@@ -120,7 +123,7 @@ OPTION 3: Remove %did from your log format
 ════════════════════════════════════════════════════════════════════════════════
 ''');
         }
-        FileIdProvider.getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
+        FileIdProvider.getAppDocumentsDirectoryFnc = _getAppDocumentsDirectoryFnc;
         return FileIdProvider();
       } else if (_sessionIdNeeded) {
         // Only session ID needed - use memory provider for Flutter
@@ -140,7 +143,7 @@ OPTION 3: Remove %did from your log format
       // This will work in a Flutter app, but throw on other platforms
       // If it throws, it's not a Flutter app
       // We can also check for path_provider existence
-      return getAppDocumentsDirectoryFnc != null;
+      return _getAppDocumentsDirectoryFnc != null;
     } catch (e) {
       return false;
     }
