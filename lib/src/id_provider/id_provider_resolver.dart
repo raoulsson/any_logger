@@ -101,38 +101,22 @@ class IdProviderResolver {
   static String _getPathProviderErrorMessage() {
     return '''
 ════════════════════════════════════════════════════════════════════════════════
-🚨 LOGGING DISABLED: path_provider Not Configured for Device ID (%did)
+🚨 ANYLOGGER CONFIG ERROR: At least one of your appenders format strings contains
+'%did' for device hash tracking. Running on Flutter, you need to:
 ════════════════════════════════════════════════════════════════════════════════
-
-Your Flutter app uses %did (device ID) which requires persistent storage.
-
-OPTION 1: Configure path_provider (Recommended)
-  Step 1: Add to pubspec.yaml
-     dependencies:
-       path_provider: ^2.1.1
-
-  Step 2: Run command
-     flutter pub get
-
-  Step 3: Add 2 lines to main.dart
-     import 'package:path_provider/path_provider.dart';
-     
-     void main() async {
-       WidgetsFlutterBinding.ensureInitialized();
-       
-       // ADD THIS LINE:
-       LoggerFactory.setGetAppDocumentsDirectoryFnc(getApplicationDocumentsDirectory);
-       
-       await LoggerFactory.init(yourConfig);
-       runApp(MyApp());
-     }
-
-OPTION 2: Use Memory Provider (IDs won't persist)
+Add:
+  path_provider: ^x.y.z // in pubspec.yaml
+and call:
+  LoggerFactory.setGetAppDocumentsDirectoryFnc(getApplicationDocumentsDirectory);
+before you initialize the logging system:
+  LoggerFactory.init(...)
+════════════════════════════════════════════════════════════════════════════════
+Thus we can use the FileIdProvider for consistent but anonymous device identification
+════════════════════════════════════════════════════════════════════════════════
+Alternatively: 
+Use Memory Provider (IDs won't persist)
   LoggerFactory.setIdProvider(MemoryIdProvider());
-
-OPTION 3: Remove %did from your log format
-  Use only %sid for session tracking, or remove both.
-
+...or remove %did from your log format
 ════════════════════════════════════════════════════════════════════════════════
 ''';
   }

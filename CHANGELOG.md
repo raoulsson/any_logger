@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.3
+
+* Stabilized Flutter platform detection for best IdProvider implementation selection
+* Uncluttered README
+
 ## 1.0.2
 
 * Updated README

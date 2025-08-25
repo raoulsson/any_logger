@@ -5,7 +5,7 @@ import 'id_provider.dart';
 
 class FileIdProvider implements IdProvider {
   static const String DEVICE_ID_FILE = 'anylogger_device_id';
-  static const int _ID_LENGTH = 10;
+  static const int _ID_LENGTH = 8;
 
   String? _deviceId;
   String? _sessionId;

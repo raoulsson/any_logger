@@ -15,25 +15,12 @@ A powerful, flexible, and intuitive logging library for Dart and Flutter applica
 
 ## 📦 Installation
 
-### Core Package (Console & File logging)
 ```yaml
 dependencies:
   any_logger: ^1.0.1
-  path_provider: ^2.1.5  # Required for Flutter apps using %did or %sid
 ```
 
-### Extension Packages (Add only what you need)
-```yaml
-dependencies:
-  # For JSON HTTP logging
-  any_logger_json_http: ^1.0.0
-  
-  # For Email logging
-  any_logger_email: ^1.0.0
-  
-  # For MySQL logging
-  any_logger_mysql: ^1.0.0
-```
+That's it! No other dependencies needed to start logging.
 
 ## 🚀 Quick Start
 
@@ -41,69 +28,184 @@ dependencies:
 
 ```dart
 import 'package:any_logger/any_logger.dart';
-import 'package:path_provider/path_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Required for Flutter if using %did or %sid
-  AnyLoggerFileIdProvider.getAppDocumentsDirectory = getApplicationDocumentsDirectory;
-  
-  await LoggerFactory.initConsole(
-    format: '[%did][%sid] %l: %m',
-  );
+  await LoggerFactory.initConsole();
   
   Logger.info("Flutter app started!");
   runApp(MyApp());
 }
 ```
+### Dart Console Apps
 
-### What Happens Without path_provider?
+```dart
+import 'package:any_logger/any_logger.dart';
 
-If you forget to add `path_provider` or set `getAppDocumentsDirectory`, the logger will **fail fast** with clear instructions:
-
-```
-════════════════════════════════════════════════════════════════════════════════
-🚨 LOGGING DISABLED: path_provider Not Configured
-add dependency to pubspec.yaml:
-     path_provider: ^2.1.1
-and set before LoggerFactory.init(...):
-      AnyLoggerFileIdProvider.getAppDocumentsDirectory = getApplicationDocumentsDirectory;
-════════════════════════════════════════════════════════════════════════════════
-Your Flutter app REQUIRES path_provider to use device/session IDs (%did, %sid).
-
-Step 1: Add to pubspec.yaml
-   dependencies:
-     path_provider: ^2.1.1
-
-Step 2: Run command
-   flutter pub get
-
-Step 3: Add 2 lines to main.dart
-
-   import 'package:path_provider/path_provider.dart';
-   
-   void main() async {
-     WidgetsFlutterBinding.ensureInitialized();
-     
-     // ADD THIS LINE:
-     AnyLoggerFileIdProvider.getAppDocumentsDirectory = getApplicationDocumentsDirectory;
-     
-     await LoggerFactory.init(yourConfig);
-     runApp(MyApp());
-   }
-
-ALTERNATIVE: Remove %did and %sid from your log format.
-
-Error: $error
-════════════════════════════════════════════════════════════════════════════════
+void main() {
+  Logger.info("I'm logging!");  // That's it! Auto-configures everything
+}
 ```
 
-## 🔧 ID Provider Configuration for Flutter
+No initialization needed for simple cases. The logger auto-configures on first use.
 
-Any Logger automatically detects Flutter apps and requires proper setup for device/session tracking:
+### One Line with Options
 
-### Flutter Mobile Setup (Required for %did/%sid)
+```dart
+// Dart or Flutter
+void main() {
+  LoggerFactory.initSimpleConsole(level: Level.DEBUG);
+  
+  Logger.debug("Debug mode enabled");
+  Logger.info("Application started");
+  Logger.error("An error occurred");
+}
+```
+
+## 📖 Configuration Examples
+
+### Basic Console Logging
+
+```dart
+// Simple console with custom format
+LoggerFactory.initConsole(
+  format: '🚀 %l: %m',
+  level: Level.DEBUG,
+);
+
+// Professional console with file location
+LoggerFactory.initProConsole(
+  level: Level.DEBUG,
+);
+// Output: [10:30:45][ROOT_LOGGER][INFO][main:42] User logged in [lib/main.dart(42:5)]
+```
+
+### File Logging
+
+```dart
+// Simple file logging
+await LoggerFactory.initFile(
+  filePattern: 'myapp',
+  fileLevel: Level.DEBUG,
+  consoleLevel: Level.INFO,  // Optional console output
+);
+// Creates: myapp_2025-01-20.log
+
+// Professional file setup
+await LoggerFactory.initProFile(
+  filePattern: 'myapp',
+  fileLevel: Level.DEBUG,
+  consoleLevel: Level.INFO,
+);
+```
+
+### Using Presets
+
+```dart
+// Development - verbose with full stack traces
+await LoggerFactory.initWithPreset(LoggerPresets.development);
+
+// Production - optimized with essential info only
+await LoggerFactory.initWithPreset(LoggerPresets.production);
+```
+
+### Builder Pattern
+
+```dart
+// Console and file logging
+await LoggerFactory.builder()
+    .console(level: Level.INFO)
+    .file(
+      filePattern: 'app',
+      level: Level.DEBUG,
+      path: 'logs/',
+    )
+    .build();
+```
+
+### Using the AnyLogger Mixin
+
+```dart
+class PaymentService with AnyLogger {
+  @override
+  String get loggerName => 'PaymentService';
+  
+  void processPayment(String userId, double amount) {
+    logInfo('Processing payment for $userId: \$$amount');
+    
+    if (isDebugEnabled) {
+      logDebug('Payment details: ${_getExpensiveDetails()}');
+    }
+    
+    logInfo('Payment successful');
+  }
+}
+```
+
+## 📝 Format Patterns
+
+| Pattern | Description | Example Output |
+|---------|-------------|----------------|
+| `%d` | Date/time | `2025-01-20 10:30:45` |
+| `%l` | Log level | `INFO` |
+| `%m` | Message | `User logged in` |
+| `%c` | Class.method:line | `UserService.login:42` |
+| `%f` | File location | `lib/user.dart(42:5)` |
+| `%i` | Logger name | `UserService` |
+| `%t` | Tag | `AUTH` |
+
+### Example Formats
+
+```dart
+// Minimal
+'%l: %m'
+// Output: INFO: User logged in
+
+// With timestamp
+'%d [%l] %m'
+// Output: 10:30:45 [INFO] User logged in
+
+// With location
+'[%l][%c] %m'
+// Output: [INFO][UserService.login:42] User logged in
+
+// More complete
+'[%d][%did][%sid][%i][%l][%c] %m [%f]'
+// Output: [11:50:43.399][lw8aqkjl][2xny54b4][ROOT_LOGGER][INFO][ServiceFactory.initializeCoreServices:326] Core services initialized successfully [package:my_app/service/service_factory.dart(326:7)]
+
+```
+
+## 🔍 Automatic User Tracking
+
+Any Logger can automatically generate and persist anonymous IDs to help you understand user behavior without compromising privacy:
+
+- **Device ID** (`%did`) - Persists across app restarts, unique per device
+- **Session ID** (`%sid`) - New for each app launch, tracks individual sessions
+- **App Version** (`%app`) - Your application version for tracking deployments
+
+### Basic Usage (Dart Console/Server)
+
+```dart
+// Just add IDs to your format - works automatically on Dart console/server
+LoggerFactory.initConsole(
+  format: '[%did][%sid] %l: %m',
+);
+
+// Output: [a3f5c8d2][e7b9f1a4] INFO: User clicked button
+```
+
+### Flutter Setup for Device/Session IDs
+
+Flutter apps need additional setup for persistent device IDs:
+
+```yaml
+# Add to pubspec.yaml
+dependencies:
+  any_logger: ^1.0.1
+  path_provider: ^2.1.5  # Required for %did on Flutter
+```
+
 ```dart
 import 'package:path_provider/path_provider.dart';
 
@@ -111,40 +213,25 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // Connect path_provider to AnyLogger (one line!)
-  FileIdProvider.getAppDocumentsDirectory = getApplicationDocumentsDirectory;
+  LoggerFactory.setGetAppDocumentsDirectoryFnc(getApplicationDocumentsDirectory);
   
-  await LoggerFactory.init({
-    'appenders': [{
-      'type': 'CONSOLE',
-      'format': '[%app][%did][%sid] %l: %m',
-      'level': 'INFO',
-    }]
-  }, appVersion: '1.0.0');
-  
-  Logger.info('Device ID persists across app restarts!');
-  runApp(MyApp());
-}
-```
-
-### Flutter Without Device/Session IDs (Simplest)
-```dart
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // No path_provider needed if you don't use %did or %sid
   await LoggerFactory.initConsole(
-    format: '%l: %m',  // No IDs = no path_provider needed
+    format: '[%app][%did][%sid] %l: %m',
   );
   
+  LoggerFactory.setAppVersion('1.2.3');
+  
+  Logger.info('Device ID persists across app restarts!');
+  // Output: [1.2.3][a3f5c8d2][e7b9f1a4] INFO: Device ID persists...
+  
   runApp(MyApp());
 }
 ```
 
-### Flutter / No Persistence Needed
+### Alternative: Memory-Only IDs (No path_provider needed)
+
 ```dart
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
   // Use MemoryIdProvider when persistence isn't needed
   LoggerFactory.setIdProvider(MemoryIdProvider());
   
@@ -156,180 +243,11 @@ void main() async {
 }
 ```
 
-### Dart Console Apps / Servers
-
-```dart
-import 'package:any_logger/any_logger.dart';
-
-void main() {
-  Logger.info("I'm logging!");  // That's it! Auto-configures everything
-}
-```
-
-Yes, really! No initialization needed for simple cases. The logger auto-configures on first use.
-
-### One Line with Options
-
-```dart
-void main() {
-  LoggerFactory.initSimpleConsole(level: Level.DEBUG);
-  
-  Logger.debug("Debug mode enabled");
-  Logger.info("Application started");
-  Logger.error("An error occurred");
-}
-```
-
-## 🔍 Automatic Anonymous User Tracking
-
-Any Logger automatically generates and persists anonymous IDs to help you understand user behavior without compromising privacy:
-
-- **Device ID** (`%did`) - Persists across app restarts, unique per device
-- **Session ID** (`%sid`) - New for each app launch, tracks individual sessions
-- **App Version** (`%app`) - Your application version for tracking deployments
-
-```dart
-// Enable tracking in your format
-LoggerFactory.initConsole(
-  format: '[%app][%did][%sid] %l: %m',
-);
-
-// Set app version
-LoggerFactory.setAppVersion('1.2.3');
-
-// Output: [1.2.3][a3f5c8d2][e7b9f1a4] INFO: User clicked button
-// Now you can track what users do across sessions and app versions!
-```
-
-This helps you:
+This tracking helps you:
 - Debug user-reported issues by asking for their logs
 - Track which app versions have specific issues
 - Understand user journeys without collecting personal data
-- Track session-specific problems
 - Maintain GDPR compliance with anonymous identifiers
-
-## 📖 Progressive Usage Examples
-
-### Level 1: Using Built-in Presets
-
-```dart
-// Development - verbose with full stack traces
-await LoggerFactory.initWithPreset(LoggerPresets.development);
-
-// Production - optimized with essential info only
-await LoggerFactory.initWithPreset(LoggerPresets.production);
-
-// Professional - includes device/session tracking
-await LoggerFactory.initWithPreset(LoggerPresets.developmentPro);
-
-// Production with app version tracking
-await LoggerFactory.initWithPreset(
-  LoggerPresets.productionWithApp,
-  appVersion: '1.2.3',
-);
-
-// Mobile optimized with version
-await LoggerFactory.initWithPreset(
-  LoggerPresets.mobileProduction,
-  appVersion: '1.2.3',
-);
-```
-
-### Level 2: Simple Configurations
-
-```dart
-// Console with custom format
-LoggerFactory.initConsole(
-  format: '🚀 %l: %m',
-  level: Level.DEBUG,
-);
-
-// Professional console with file location
-LoggerFactory.initProConsole(
-  level: Level.DEBUG,
-  includeIds: true,  // Enable device/session tracking
-);
-
-// File logging with app version
-await LoggerFactory.initFile(
-  filePattern: 'myapp',
-  fileLevel: Level.DEBUG,
-  consoleLevel: Level.INFO,  // Optional console output
-  appVersion: '1.2.3',  // Include app version in logs
-);
-
-// Professional file with all metadata
-await LoggerFactory.initProFileWithApp(
-  filePattern: 'myapp',
-  appVersion: '1.2.3',
-  fileLevel: Level.DEBUG,
-  consoleLevel: Level.INFO,
-);
-```
-
-### Level 3: Fluent Builder Pattern
-
-```dart
-// Simple builder - Core package only
-await LoggerFactory.builder()
-    .console(level: Level.INFO)
-    .file(
-      filePattern: 'app',
-      level: Level.DEBUG,
-      path: 'logs/',
-    )
-    .build();
-
-// With app version tracking - Core package only
-await LoggerFactory.builder()
-    .console(
-      format: '[%app][%sid][%l] %m',
-    )
-    .file(
-      filePattern: 'app',
-      path: 'logs/',
-    )
-    .withAppVersion('1.2.3')
-    .build();
-```
-
-### Level 4: With Extension Packages
-
-```dart
-// First, add the required packages to pubspec.yaml:
-// dependencies:
-//   any_logger_json_http: ^1.0.1
-//   any_logger_email: ^1.0.0
-
-import 'package:any_logger/any_logger.dart';
-import 'package:any_logger_json_http/any_logger_json_http.dart';
-import 'package:any_logger_email/any_logger_email.dart';
-
-// Advanced multi-appender setup with extensions
-await LoggerFactory.builder()
-    .console(
-      level: Level.WARN,
-      format: '[%d][%app][%did][%sid][%l] %m',
-    )
-    .file(
-      filePattern: 'app',
-      level: Level.DEBUG,
-      path: 'logs/',
-    )
-    .jsonHttp(  // Requires any_logger_json_http package
-      url: 'https://logs.example.com',
-      level: Level.ERROR,
-      bufferSize: 100,
-    )
-    .email(  // Requires any_logger_email package
-      host: 'smtp.gmail.com',
-      to: ['admin@example.com'],
-      level: Level.FATAL,
-    )
-    .withAppVersion('1.2.3')
-    .withMdcValue('environment', 'production')
-    .build();
-```
 
 ## 🏷️ MDC - Mapped Diagnostic Context
 
@@ -353,260 +271,61 @@ Logger.info('Checkout started');
 LoggerFactory.removeMdcValue('userId');
 ```
 
-## 🎨 Using the AnyLogger Mixin
-
-Add logging superpowers to any class:
+### Request Tracking Example
 
 ```dart
-class PaymentService with AnyLogger {
-  @override
-  String get loggerName => 'PaymentService';
-  
-  Future<void> processPayment(String userId, double amount) async {
-    logInfo('Processing payment for $userId: \$$amount');
+class ApiServer {
+  void handleRequest(Request request) {
+    final requestId = Uuid().v4();
     
-    try {
-      // Only compute expensive debug info if needed
-      if (isDebugEnabled) {
-        logDebug('Payment details: ${_getDetailedInfo()}');
-      }
-      
-      await _chargeCard(amount);
-      logInfo('Payment successful');
-      
-    } catch (e, stack) {
-      logError('Payment failed', exception: e, stackTrace: stack);
-      rethrow;
-    }
+    // Set request context
+    LoggerFactory.setMdcValue('requestId', requestId);
+    LoggerFactory.setMdcValue('endpoint', request.uri.path);
+    
+    Logger.info('Request started');
+    // Process request...
+    Logger.info('Request completed');
+    
+    // Clean up
+    LoggerFactory.clearMdc();
   }
 }
 ```
 
-## 🔧 ID Provider Configuration for Flutter
-
-Any Logger needs proper setup for device/session tracking on Flutter:
-
-### Flutter Mobile Setup (Recommended)
-```dart
-import 'package:path_provider/path_provider.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // Configure for Flutter - REQUIRED if using %did or %sid
-  AnyLoggerFileIdProvider.getAppDocumentsDirectory = getApplicationDocumentsDirectory;
-  
-  await LoggerFactory.init({
-    'appenders': [{
-      'type': 'CONSOLE',
-      'format': '[%app][%did][%sid] %l: %m',
-      'level': 'INFO',
-    }]
-  }, appVersion: '1.0.0');
-  
-  Logger.info('Device ID persists across app restarts!');
-  runApp(MyApp());
-}
-```
-
-### Flutter / No Persistence Needed
-```dart
-void main() {
-  // Use MemoryIdProvider for when persistence isn't needed
-  LoggerFactory.setIdProvider(MemoryIdProvider());
-  
-  LoggerFactory.initConsole(
-    format: '[%did][%sid] %l: %m',
-  );
-  
-  runApp(MyApp());
-}
-```
-
-### No IDs Needed (Simplest)
-```dart
-void main() {
-  // If you don't use %did or %sid, no setup needed!
-  LoggerFactory.initConsole(
-    format: '%l: %m',  // No IDs = works everywhere
-  );
-  
-  runApp(MyApp());
-}
-```
-
-## 📝 Format Patterns
-
-| Pattern | Description | Example Output |
-|---------|-------------|----------------|
-| `%d` | Date/time | `2025-01-20 10:30:45` |
-| `%did` | Device ID (anonymous) | `a3f5c8d2` |
-| `%sid` | Session ID | `e7b9f1a4` |
-| `%app` | App version | `1.2.3` |
-| `%l` | Log level | `INFO` |
-| `%m` | Message | `User logged in` |
-| `%c` | Class.method:line | `UserService.login:42` |
-| `%f` | File location | `lib/user.dart(42:5)` |
-| `%i` | Logger name | `UserService` |
-| `%t` | Tag | `AUTH` |
-| `%X{key}` | MDC value | `production` |
-
-### Example Formats
-
-```dart
-// Minimal
-'%l: %m'
-// Output: INFO: User logged in
-
-// With timestamp
-'%d [%l] %m'
-// Output: 10:30:45 [INFO] User logged in
-
-// Production with tracking
-'[%did][%sid][%l][%c] %m'
-// Output: [a3f5c8d2][e7b9f1a4][INFO][UserService.login:42] User logged in
-
-// With app version
-'[%app][%sid][%l] %m'
-// Output: [1.2.3][e7b9f1a4][INFO] User logged in
-
-// Full debug format
-'[%d][%app][%did][%sid][%X{env}][%i][%l][%c] %m [%f]'
-// Output: [10:30:45][1.2.3][a3f5c8d2][e7b9f1a4][prod][UserService][INFO][login:42] User logged in [lib/user.dart(42:5)]
-```
-
 ## 🧩 Extension Packages
 
-The core `any_logger` library is intentionally kept lightweight with minimal dependencies (only `crypto`). Additional appenders for network and database logging are provided through separate, optional extension packages.
+The core `any_logger` library is intentionally kept lightweight. Additional appenders are available through optional extension packages:
 
-**Core package includes:**
-- ✅ Console appender (stdout and developer tools)
-- ✅ File appender with rotation
-
-**Extension packages provide:**
-- 📦 JSON HTTP appender (requires `any_logger_json_http`)
-- 📦 Email appender (requires `any_logger_email`)
-- 📦 MySQL appender (requires `any_logger_mysql`)
-
-You only need to add the packages for the appenders you actually use:
+### Available Extensions
 
 | Package | Description | When to Use |
 |---------|-------------|-------------|
-| **`any_logger`** | Core library with Console & File appenders | Always required |
 | **`any_logger_json_http`** | JSON over HTTP logging | When sending logs to REST APIs, Logstash, etc. |
 | **`any_logger_email`** | Email notifications | For critical alerts and error notifications |
 | **`any_logger_mysql`** | MySQL database logging | For structured, queryable log storage |
 
-### Using Extension Packages
+### Installation
 
-```dart
-// 1. Add to pubspec.yaml
+```yaml
 dependencies:
   any_logger: ^1.0.1
   any_logger_json_http: ^1.0.0  # Only if needed
   any_logger_email: ^1.0.0      # Only if needed
-  any_logger_mysql: ^1.0.0      # Only if needed
+```
 
-// 2. Import the extensions you need
+### Usage Example
+
+```dart
 import 'package:any_logger/any_logger.dart';
 import 'package:any_logger_json_http/any_logger_json_http.dart';
-import 'package:any_logger_email/any_logger_email.dart';
 
-// 3. Use them in your configuration
 await LoggerFactory.builder()
     .console()  // Core package
     .file()     // Core package
     .jsonHttp(  // Extension package
       url: 'https://api.example.com/logs',
-    )
-    .email(     // Extension package
-      host: 'smtp.gmail.com',
-      to: ['admin@example.com'],
-    )
-    .build();
-```
-
-## 🎯 Appenders
-
-### Core Appenders (Always Available)
-
-#### Console Appender
-```dart
-LoggerFactory.builder()
-    .console(
-      level: Level.DEBUG,
-      format: '%d [%l] %m',
-      devtools: true,  // Use Flutter DevTools output
-    )
-    .build();
-```
-
-#### File Appender with Rotation
-```dart
-await LoggerFactory.builder()
-    .file(
-      filePattern: 'myapp',
-      path: 'logs/',
-      rotationCycle: 'DAY',  // DAY, WEEK, MONTH, YEAR, NEVER
-      level: Level.DEBUG,
-    )
-    .build();
-// Creates: logs/myapp_2025-01-20.log
-```
-
-### Extension Appenders (Require Additional Packages)
-
-#### JSON HTTP Appender
-**Requires:** `any_logger_json_http: ^1.0.0`
-
-```dart
-import 'package:any_logger_json_http/any_logger_json_http.dart';
-
-await LoggerFactory.builder()
-    .jsonHttp(
-      url: 'https://api.example.com/logs',
-      username: 'apiuser',
-      password: 'apipass',
-      bufferSize: 100,  // Batch 100 logs
-      flushIntervalSeconds: 60,  // Or flush every minute
-      enableCompression: true,  // Gzip compression
-    )
-    .build();
-```
-
-#### Email Appender
-**Requires:** `any_logger_email: ^1.0.0`
-
-```dart
-import 'package:any_logger_email/any_logger_email.dart';
-
-await LoggerFactory.builder()
-    .email(
-      host: 'smtp.gmail.com',
-      port: 587,
-      user: 'alerts@example.com',
-      password: 'password',
-      to: ['admin@example.com'],
-      minLevelForImmediate: Level.ERROR,  // Send errors immediately
-      batchSize: 10,  // Batch info/debug logs
-    )
-    .build();
-```
-
-#### MySQL Appender
-**Requires:** `any_logger_mysql: ^1.0.0`
-
-```dart
-import 'package:any_logger_mysql/any_logger_mysql.dart';
-
-await LoggerFactory.builder()
-    .mysql(
-      host: 'localhost',
-      database: 'logs',
-      user: 'logger',
-      password: 'password',
-      table: 'app_logs',
-      batchSize: 50,
+      level: Level.ERROR,
+      bufferSize: 100,
     )
     .build();
 ```
@@ -627,184 +346,63 @@ if (logger.isDebugEnabled) {
 logger.logDebugSupplier(() => expensiveComputation());
 ```
 
-### Batch Processing
-```dart
-// Configure batching for network appenders (requires extension package)
-import 'package:any_logger_json_http/any_logger_json_http.dart';
+## 🔍 Troubleshooting
 
-final logger = LoggerFactory.builder()
-    .jsonHttp(
-      url: 'https://logs.example.com',
-      bufferSize: 100,  // Send after 100 logs
-      flushIntervalSeconds: 30,  // Or after 30 seconds
-    )
-    .build();
+### Enable Self-Debugging
 
-// Manual flush when needed (e.g., before app terminates)
-await LoggerFactory.flushAll();
-```
-
-## 🔍 Self-Debugging
-
-Having issues with the logger itself? Enable self-debugging:
+Having issues? Enable self-debugging to see what the logger is doing:
 
 ```dart
+// See internal logger operations
 LoggerFactory.builder()
     .console(level: Level.INFO)
-    .withSelfDebug(Level.DEBUG)  // See what the logger is doing
+    .withSelfDebug(Level.DEBUG)  // Shows platform detection, ID provider selection, etc.
     .build();
+
+// Output:
+// [LoggerFactory.DEBUG] Platform: Dart | IDs: %did+%sid | Provider: FileIdProvider
+// [LoggerFactory.DEBUG] Self-debugging enabled
+// [LoggerFactory.DEBUG] Logger initialized with 1 appender
 ```
-
-## 📊 Real-World Examples
-
-### Flutter App with Crash Reporting
-```dart
-// Add to pubspec.yaml:
-// dependencies:
-//   any_logger: ^1.0.1
-//   any_logger_json_http: ^1.0.0
-
-import 'package:any_logger/any_logger.dart';
-import 'package:any_logger_json_http/any_logger_json_http.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // Configure path provider for Flutter
-  AnyLoggerFileIdProvider.getAppDocumentsDirectory = getApplicationDocumentsDirectory;
-  
-  // Setup logging with automatic tracking
-  await LoggerFactory.builder()
-      .console(
-        level: kDebugMode ? Level.DEBUG : Level.INFO,
-        format: '[%app][%sid][%l] %m',
-      )
-      .file(
-        filePattern: 'app',
-        level: Level.DEBUG,
-        path: (await getApplicationDocumentsDirectory()).path,
-        format: '[%d][%app][%did][%sid][%l][%c] %m [%f]',
-      )
-      .jsonHttp(  // Requires extension package
-        url: 'https://logs.myapp.com',
-        level: Level.ERROR,  // Only send errors to server
-      )
-      .withAppVersion('1.2.3')
-      .withMdcValue('platform', Platform.operatingSystem)
-      .build();
-  
-  // Catch Flutter errors
-  FlutterError.onError = (details) {
-    Logger.fatal('Flutter error', exception: details.exception, stackTrace: details.stack);
-  };
-  
-  runApp(MyApp());
-}
-```
-
-### Backend Service with Request Tracking
-```dart
-class ApiServer {
-  void handleRequest(Request request) {
-    final requestId = Uuid().v4();
-    
-    // Set request context
-    LoggerFactory.setMdcValue('requestId', requestId);
-    LoggerFactory.setMdcValue('endpoint', request.uri.path);
-    LoggerFactory.setMdcValue('method', request.method);
-    
-    try {
-      Logger.info('Request started');
-      
-      // Process request...
-      
-      Logger.info('Request completed');
-    } finally {
-      // Clean up context
-      LoggerFactory.clearMdc();
-    }
-  }
-}
-```
-
-## 🏆 Best Practices
-
-1. **Always set app version** with `%app` to track issues across releases
-2. **Use device/session IDs** (`%did`/`%sid`) for anonymous user tracking and debugging
-3. **Set appropriate log levels** - DEBUG for development, INFO/WARN for production
-4. **Use MDC** for adding context to all logs (user ID, request ID, etc.)
-5. **Enable batching** for network/database appenders to reduce overhead (extension packages)
-6. **Use early exit checks** or suppliers for expensive debug logging
-7. **Configure rotation** for file appenders to manage disk space
-8. **Set up immediate alerts** for ERROR/FATAL with email appender (extension package)
-9. **Use named loggers** for better organization in large apps
-10. **Enable self-debugging** when troubleshooting logger issues
-11. **Flush logs** before app termination to avoid data loss
-12. **Only add extension packages you actually use** to minimize dependencies
-
-## 🔄 Dynamic Configuration
-
-Modify logger behavior at runtime:
-
-```dart
-final logger = LoggerFactory.getRootLogger();
-
-// Change log level dynamically
-logger.setLevelAll(Level.WARN);
-
-// Change format
-logger.setFormatAll('[%sid] %l: %m');
-
-// Enable/disable specific appenders by type
-LoggerFactory.disableAppender('FILE');
-LoggerFactory.enableAppender('CONSOLE');
-
-// Reset to initial configuration
-logger.resetFormatToInitialConfig();
-```
-
-## 🔍 Troubleshooting
 
 ### Common Flutter Issues
 
-#### "FileIdProvider failed to persist device ID"
-**Solution:** Configure path_provider:
-```dart
-AnyLoggerFileIdProvider.getAppDocumentsDirectory = getApplicationDocumentsDirectory;
-```
-
-#### "Permission denied" on Mobile
-**Solution:** Add storage permissions or use MemoryIdProvider:
-```dart
-LoggerFactory.setIdProvider(MemoryIdProvider());
-```
-
-#### "Cannot use sync init with Flutter"
-**Solution:** Use async initialization:
-```dart
-await LoggerFactory.init(...);  // Not initSync()
-```
+#### "path_provider Not Configured for Device ID (%did)"
+The logger will show a clear error message with instructions. Either:
+- Add `path_provider` and configure it (see User Tracking section)
+- Use `MemoryIdProvider` for non-persistent IDs
+- Remove `%did` from your format
 
 #### "No appender registered for type 'JSON_HTTP'"
-**Solution:** Add and import the required extension package:
+Add and import the required extension package:
 ```yaml
 dependencies:
   any_logger_json_http: ^1.0.1
 ```
+
+#### "Permission denied" on Mobile
+Use MemoryIdProvider instead of file-based storage:
 ```dart
-import 'package:any_logger_json_http/any_logger_json_http.dart';
+LoggerFactory.setIdProvider(MemoryIdProvider());
 ```
 
 ### Performance Tips
 
 - If you don't use `%did` or `%sid`, the ID provider never runs
-- Use `MemoryIdProvider` for if %sid and %did are not needed
+- Use `MemoryIdProvider` if persistence isn't needed
 - Enable batching for network appenders (extension packages)
 - Only import extension packages you actually use
 
-## 🤝 Contributing
+## 🏆 Best Practices
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+1. **Start simple** - Use basic console logging, add features as needed
+2. **Use self-debugging** when troubleshooting logger configuration
+3. **Set appropriate log levels** - DEBUG for development, INFO/WARN for production
+4. **Use named loggers** via the mixin for better organization
+5. **Add tracking IDs** (`%did`/`%sid`) only when you need user journey tracking
+6. **Use MDC** for request/transaction tracking
+7. **Configure rotation** for file appenders to manage disk space
+8. **Flush logs** before app termination: `await LoggerFactory.flushAll()`
 
 ## 📄 License
 

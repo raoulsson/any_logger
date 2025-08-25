@@ -9,7 +9,7 @@ import '../../any_logger.dart';
 /// - Testing environments
 /// - Applications that don't need persistent device IDs
 class MemoryIdProvider implements IdProvider {
-  static const int _ID_LENGTH = 10;
+  static const int _ID_LENGTH = 8;
   String? _deviceId;
   String? _sessionId;
   bool _initialized = false;
