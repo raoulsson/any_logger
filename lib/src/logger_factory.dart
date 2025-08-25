@@ -80,6 +80,7 @@ class LoggerFactory {
     if (_isFlutterApp()) {
       print('is flutter app');
       // Flutter app logic
+      print('is _deviceIdNeeded $_deviceIdNeeded');
       if (_deviceIdNeeded) {
         print('is _deviceIdNeeded $_deviceIdNeeded');
         // Device ID requires persistent storage on Flutter
@@ -146,14 +147,7 @@ OPTION 3: Remove %did from your log format
   }
 
   static bool _isFlutterApp() {
-    try {
-      // This will work in a Flutter app, but throw on other platforms
-      // If it throws, it's not a Flutter app
-      // We can also check for path_provider existence
-      return _getAppDocumentsDirectoryFnc != null;
-    } catch (e) {
-      return false;
-    }
+    return const bool.fromEnvironment('dart.library.ui', defaultValue: false);
   }
 
   /// Check which IDs are needed based on format strings
