@@ -50,6 +50,7 @@ class LoggerFactory {
   // ID PROVIDER CONFIGURATION
   // ============================================================
   static void setGetAppDocumentsDirectoryFnc(Future<Directory> Function() getAppDocumentsDirectoryFnc) {
+    _getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
     FileIdProvider.getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
   }
 
