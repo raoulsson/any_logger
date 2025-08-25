@@ -21,6 +21,12 @@ class LoggerBuilder {
     return this;
   }
 
+  /// Needed by extensions
+  LoggerBuilder addAppenderConfig(Map<String, dynamic> config) {
+    _appenderConfigs.add(config);
+    return this;
+  }
+
   /// Adds a pre-built appender instance to the configuration.
   /// This is useful for custom appenders or those created programmatically
   /// using the [AppenderBuilder].
