@@ -129,7 +129,10 @@ Future<void> oneLineConfigExamples() async {
   Logger.warn('Warning with style');
 
   await LoggerFactory.dispose();
-  await LoggerBuilder().file(filePattern: 'myapp', path: 'logs/').console(level: Level.WARN).build();
+  await LoggerBuilder()
+      .file(filePattern: 'myapp', path: 'logs/')
+      .console(level: Level.WARN)
+      .build();
   Logger.warn('This goes to both file and console');
 }
 
@@ -194,7 +197,8 @@ Future<void> performanceExample() async {
   LoggerBuilder().console(level: Level.INFO).withSelfDebug().buildSync();
   final logger = LoggerFactory.getLogger('Performance');
   // This next line will NOT print, because the logger level is INFO
-  logger.logDebugSupplier(() => 'This expensive computation is never executed.');
+  logger
+      .logDebugSupplier(() => 'This expensive computation is never executed.');
 }
 
 /// Example 7: Custom MDC for tracking application context
@@ -204,7 +208,9 @@ Future<void> performanceExample() async {
 /// [production][user-456][req-002] INFO: Request started
 Future<void> mdcExample() async {
   await LoggerFactory.dispose();
-  await LoggerBuilder().console(format: '[%X{env}][%X{userId}][%X{requestId}] %l: %m').build();
+  await LoggerBuilder()
+      .console(format: '[%X{env}][%X{userId}][%X{requestId}] %l: %m')
+      .build();
   LoggerFactory.setMdcValue('env', 'production');
   await handleUserRequest('user-123', 'req-001');
   await handleUserRequest('user-456', 'req-002');
@@ -228,6 +234,7 @@ Future<void> customBuilderExample() async {
         format: '[%did][%sid][%X{env}] %d [%l][%c] %m [%f]',
       )
       .withMdcValue('env', 'staging')
+      .withSelfDebug()
       .build();
   Logger.info('Info - goes to console and file');
   Logger.info('Same here');
@@ -269,9 +276,14 @@ Future<void> exampleWithCustomIdProvider() async {
 /// [INFO] And also this one.
 Future<void> appenderBuilderExample() async {
   await LoggerFactory.dispose();
-  final fileAppender = await fileAppenderBuilder('app_builder_log').withPath('logs/').build();
-  final consoleAppender = consoleAppenderBuilder().withFormat('[%l] %m').buildSync();
-  await LoggerBuilder().addAppender(consoleAppender).addAppender(fileAppender).build();
+  final fileAppender =
+      await fileAppenderBuilder('app_builder_log').withPath('logs/').build();
+  final consoleAppender =
+      consoleAppenderBuilder().withFormat('[%l] %m').buildSync();
+  await LoggerBuilder()
+      .addAppender(consoleAppender)
+      .addAppender(fileAppender)
+      .build();
   Logger.info('This info message goes to both console and file.');
   Logger.info('And so does this.');
   Logger.info('And also this one.');
@@ -295,7 +307,7 @@ Future<void> jsonConfigExample() async {
     ]
   };
   await configFile.writeAsString(json.encode(config));
-  await LoggerFactory.initFromFile('logger_config.json');
+  await LoggerFactory.initFromFile('logger_config.json', selfDebug: true);
   Logger.info('Logger configured from JSON with automatic IDs');
   if (await configFile.exists()) {
     await configFile.delete();
@@ -318,6 +330,7 @@ Future<void> proServiceExample() async {
         path: 'logs/',
       )
       .console(format: '[%d][%sid][%i][%l][%c] %m')
+      .withSelfDebug()
       .build();
   final service = ErrorProneService();
   await service.handleNetworkRequest();
@@ -336,10 +349,14 @@ Future<void> productionExample() async {
       .withFormat('[%d][%did][%sid][%X{env}][%l][%c] %m [%f]')
       .withDateFormat('yyyy-DD-mm HH:mm:ss.SSS')
       .buildSync();
-  await LoggerBuilder().addAppender(consoleAppender).withMdcValue('env', 'production').build();
+  await LoggerBuilder()
+      .addAppender(consoleAppender)
+      .withMdcValue('env', 'production')
+      .build();
   Logger.info('Application started in production mode');
   Logger.info('You got deviceId, sessionId, Logger name, Log level...');
-  Logger.info('...and class.method linnumber, and then again actual file with line and column number if available');
+  Logger.info(
+      '...and class.method linnumber, and then again actual file with line and column number if available');
 }
 
 // ============================================================
@@ -502,17 +519,27 @@ Future<void> performanceMonitoringExample() async {
   sleep(Duration(milliseconds: 100));
 }
 
-/// Example 19: Using AppenderBuilder for granular control
+/// Example 16: Using AppenderBuilder for granular control
 ///
 /// CONSOLE [INFO]: This info message goes to both console and file.
 /// CONSOLE [ERROR]: This error also goes to both appenders.
 /// CONSOLE [INFO]: And i am here because three lines look better...
 Future<void> builderWithAppenderBuilderExample() async {
   await LoggerFactory.dispose();
-  final fileAppender =
-      await FileAppenderBuilder('granular_log').withLevel(Level.TRACE).withPath('logs/').build(test: true);
-  final consoleAppender = consoleAppenderBuilder().withLevel(Level.INFO).withFormat('CONSOLE [%l]: %m').buildSync();
-  await LoggerBuilder().withRootLevel(Level.TRACE).addAppender(fileAppender).addAppender(consoleAppender).build();
+  final fileAppender = await FileAppenderBuilder('granular_log')
+      .withLevel(Level.TRACE)
+      .withPath('logs/')
+      .build();
+  final consoleAppender = consoleAppenderBuilder()
+      .withLevel(Level.INFO)
+      .withFormat('CONSOLE [%i][%l]: %m')
+      .buildSync();
+  await LoggerBuilder()
+      .withRootLevel(Level.TRACE)
+      .addAppender(fileAppender)
+      .addAppender(consoleAppender)
+      .withSelfDebug()
+      .build();
   Logger.info('This info message goes to both console and file.');
   Logger.error('This error also goes to both appenders.');
   Logger.info('And i am here because three lines look better...');

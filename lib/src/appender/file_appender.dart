@@ -11,7 +11,9 @@ class FileAppender extends Appender {
 
   FileAppender() : super();
 
-  FileAppender.fromConfig(Map<String, dynamic> config, {bool test = false, DateTime? date}) : super(customDate: date) {
+  FileAppender.fromConfig(Map<String, dynamic> config,
+      {bool test = false, DateTime? date})
+      : super(customDate: date) {
     initializeCommonProperties(config, test: test, date: date);
 
     if (config.containsKey('filePattern')) {
@@ -45,9 +47,11 @@ class FileAppender extends Appender {
     if (!directory.existsSync()) {
       try {
         directory.createSync(recursive: true);
-        Logger.getSelfLogger()?.logDebug('Created directory: ${directory.path}');
+        Logger.getSelfLogger()
+            ?.logDebug('Created directory: ${directory.path}');
       } catch (e) {
-        Logger.getSelfLogger()?.logError('Failed to create directory: ${directory.path}: $e');
+        Logger.getSelfLogger()
+            ?.logError('Failed to create directory: ${directory.path}: $e');
         throw Exception('Cannot create log directory: ${directory.path}');
       }
     }
@@ -58,7 +62,8 @@ class FileAppender extends Appender {
         file.createSync();
         Logger.getSelfLogger()?.logDebug('Created log file: $fullPath');
       } catch (e) {
-        Logger.getSelfLogger()?.logError('Failed to create log file: $fullPath: $e');
+        Logger.getSelfLogger()
+            ?.logError('Failed to create log file: $fullPath: $e');
         throw Exception('Cannot create log file: $fullPath');
       }
     }
@@ -81,7 +86,9 @@ class FileAppender extends Appender {
   String _getFullFilename() {
     // Ensure path ends with separator if it's not empty
     String finalPath = path;
-    if (finalPath.isNotEmpty && !finalPath.endsWith('/') && !finalPath.endsWith('\\')) {
+    if (finalPath.isNotEmpty &&
+        !finalPath.endsWith('/') &&
+        !finalPath.endsWith('\\')) {
       // Use forward slash for cross-platform compatibility
       finalPath += '/';
     }
@@ -91,7 +98,12 @@ class FileAppender extends Appender {
         return finalPath + filePattern! + '.' + fileExtension;
       case RotationCycle.DAY:
         // Use SimpleDateFormat instead of intl's DateFormat
-        return finalPath + filePattern! + '_' + SimpleDateFormat('yyyy-MM-dd').format(created) + '.' + fileExtension;
+        return finalPath +
+            filePattern! +
+            '_' +
+            SimpleDateFormat('yyyy-MM-dd').format(created) +
+            '.' +
+            fileExtension;
       case RotationCycle.WEEK:
         return finalPath +
             filePattern! +
@@ -103,10 +115,20 @@ class FileAppender extends Appender {
             fileExtension;
       case RotationCycle.MONTH:
         // Use SimpleDateFormat instead of intl's DateFormat
-        return finalPath + filePattern! + '_' + SimpleDateFormat('yyyy-MM').format(created) + '.' + fileExtension;
+        return finalPath +
+            filePattern! +
+            '_' +
+            SimpleDateFormat('yyyy-MM').format(created) +
+            '.' +
+            fileExtension;
       case RotationCycle.YEAR:
         // Use SimpleDateFormat instead of intl's DateFormat
-        return finalPath + filePattern! + '_' + SimpleDateFormat('yyyy').format(created) + '.' + fileExtension;
+        return finalPath +
+            filePattern! +
+            '_' +
+            SimpleDateFormat('yyyy').format(created) +
+            '.' +
+            fileExtension;
     }
   }
 
@@ -129,11 +151,14 @@ class FileAppender extends Appender {
     logRecord.loggerName ??= getType().toString();
 
     try {
-      _file.writeAsStringSync(LogRecordFormatter.format(logRecord, format, dateFormat: dateFormat) + '\n',
+      _file.writeAsStringSync(
+          LogRecordFormatter.format(logRecord, format, dateFormat: dateFormat) +
+              '\n',
           mode: FileMode.append);
 
       if (logRecord.stackTrace != null) {
-        _file.writeAsStringSync(logRecord.stackTrace.toString() + '\n', mode: FileMode.append);
+        _file.writeAsStringSync(logRecord.stackTrace.toString() + '\n',
+            mode: FileMode.append);
       }
     } catch (e) {
       Logger.getSelfLogger()?.logError('Failed to write to log file: $e');
@@ -141,10 +166,14 @@ class FileAppender extends Appender {
       try {
         _ensurePathExists();
         // Retry the write
-        _file.writeAsStringSync(LogRecordFormatter.format(logRecord, format, dateFormat: dateFormat) + '\n',
+        _file.writeAsStringSync(
+            LogRecordFormatter.format(logRecord, format,
+                    dateFormat: dateFormat) +
+                '\n',
             mode: FileMode.append);
       } catch (retryError) {
-        Logger.getSelfLogger()?.logError('Failed to write after recreating file: $retryError');
+        Logger.getSelfLogger()
+            ?.logError('Failed to write after recreating file: $retryError');
       }
     }
   }
@@ -166,7 +195,8 @@ class FileAppender extends Appender {
       case RotationCycle.WEEK:
         if (now.year > created.year) {
           create = true;
-        } else if (Utils.getCalendarWeek(now) > Utils.getCalendarWeek(created)) {
+        } else if (Utils.getCalendarWeek(now) >
+            Utils.getCalendarWeek(created)) {
           create = true;
         }
         break;

@@ -315,7 +315,8 @@ class LoggerPresets {
     'appenders': [
       {
         'type': 'CONSOLE',
-        'format': '{"time":"%d","service":"%X{service}","trace":"%X{traceId}","level":"%l","msg":"%m"}',
+        'format':
+            '{"time":"%d","service":"%X{service}","trace":"%X{traceId}","level":"%l","msg":"%m"}',
         'level': 'INFO',
         'dateFormat': 'yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'',
       }
@@ -431,7 +432,8 @@ class LoggerPresets {
     'appenders': [
       {
         'type': 'CONSOLE',
-        'format': '[%d][%X{request-id}][%X{method}][%X{path}][%l] %m - %X{status}',
+        'format':
+            '[%d][%X{request-id}][%X{method}][%X{path}][%l] %m - %X{status}',
         'level': 'INFO',
         'dateFormat': 'yyyy-MM-dd HH:mm:ss',
       }

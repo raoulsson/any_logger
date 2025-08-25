@@ -32,7 +32,8 @@ abstract class Appender {
   /// Creates a deep copy of this appender with all properties
   Appender createDeepCopy() {
     // This should be overridden by each concrete appender class
-    throw UnimplementedError('createDeepCopy must be implemented by concrete appender classes');
+    throw UnimplementedError(
+        'createDeepCopy must be implemented by concrete appender classes');
   }
 
   void copyBasePropertiesTo(Appender target) {
@@ -47,7 +48,8 @@ abstract class Appender {
     target.enabled = enabled;
   }
 
-  void initializeCommonProperties(Map<String, dynamic> config, {bool test = false, DateTime? date}) {
+  void initializeCommonProperties(Map<String, dynamic> config,
+      {bool test = false, DateTime? date}) {
     created = date ?? DateTime.now();
     format = config['format'] ?? defaultFormat;
     initialFormat = format;

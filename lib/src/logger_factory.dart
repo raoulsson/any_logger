@@ -34,6 +34,7 @@ class LoggerFactory {
   static IdProvider? _idProvider;
   static bool _deviceIdNeeded = false;
   static bool _sessionIdNeeded = false;
+
   // Flutter apps MUST set this or logging will fail
   static Future<Directory> Function()? _getAppDocumentsDirectoryFnc;
 
@@ -49,7 +50,8 @@ class LoggerFactory {
   // ============================================================
   // ID PROVIDER CONFIGURATION
   // ============================================================
-  static void setGetAppDocumentsDirectoryFnc(Future<Directory> Function() getAppDocumentsDirectoryFnc) {
+  static void setGetAppDocumentsDirectoryFnc(
+      Future<Directory> Function() getAppDocumentsDirectoryFnc) {
     _getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
     FileIdProvider.getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
   }
@@ -63,7 +65,6 @@ class LoggerFactory {
     _idProvider = provider;
   }
 
-  /// Get the current ID provider (creates default if needed)
   static IdProvider get idProvider {
     _idProvider ??= _createDefaultProvider();
     return _idProvider!;
@@ -71,105 +72,11 @@ class LoggerFactory {
 
   /// Create the appropriate default provider based on platform and needs
   static IdProvider _createDefaultProvider() {
-    // If neither ID is needed, use null provider
-    if (!_deviceIdNeeded && !_sessionIdNeeded) {
-      return NullIdProvider();
-    }
-
-    // Check if this is a Flutter app
-    if (_isFlutterApp()) {
-      print('is flutter app');
-      // Flutter app logic
-      print('is _deviceIdNeeded $_deviceIdNeeded');
-      if (_deviceIdNeeded) {
-        print('is _deviceIdNeeded $_deviceIdNeeded');
-        // Device ID requires persistent storage on Flutter
-        // Check if path_provider is configured
-        if (_getAppDocumentsDirectoryFnc == null) {
-          throw StateError('''
-════════════════════════════════════════════════════════════════════════════════
-🚨 LOGGING DISABLED: path_provider Not Configured for Device ID (%did)
-add dependency to pubspec.yaml:
-     path_provider: ^2.1.1
-and set before LoggerFactory.init(...):
-      AnyLoggerFileIdProvider.getAppDocumentsDirectory = getApplicationDocumentsDirectory;
-════════════════════════════════════════════════════════════════════════════════
-
-Your Flutter app uses %did (device ID) which requires persistent storage.
-
-OPTION 1: Configure path_provider (Recommended)
-  Step 1: Add to pubspec.yaml
-     dependencies:
-       path_provider: ^2.1.1
-
-  Step 2: Run command
-     flutter pub get
-
-  Step 3: Add 2 lines to main.dart
-     import 'package:path_provider/path_provider.dart';
-     
-     void main() async {
-       WidgetsFlutterBinding.ensureInitialized();
-       
-       // ADD THIS LINE:
-       AnyLoggerFileIdProvider.getAppDocumentsDirectory = getApplicationDocumentsDirectory;
-       
-       await LoggerFactory.init(yourConfig);
-       runApp(MyApp());
-     }
-
-OPTION 2: Use Memory Provider (IDs won't persist)
-  LoggerFactory.setIdProvider(MemoryIdProvider());
-
-OPTION 3: Remove %did from your log format
-  Use only %sid for session tracking, or remove both.
-
-════════════════════════════════════════════════════════════════════════════════
-''');
-        }
-        print('using FileIdProvider');
-        return FileIdProvider();
-      } else if (_sessionIdNeeded) {
-        print('is _sessionIdNeeded $_sessionIdNeeded');
-        // Only session ID needed - use memory provider for Flutter
-        print('using MemoryIdProvider');
-        return MemoryIdProvider();
-      }
-    } else {
-      // Non-Flutter app - use file provider
-      print('using FileIdProvider');
-      return FileIdProvider();
-    }
-
-    // Fallback to null provider
-    print('using NullIdProvider');
-    return NullIdProvider();
-  }
-
-  static bool _isFlutterApp() {
-    return const bool.fromEnvironment('dart.library.ui', defaultValue: false);
-  }
-
-  /// Check which IDs are needed based on format strings
-  static void _checkIdRequirements(Map<String, dynamic>? config) {
-    _deviceIdNeeded = false;
-    _sessionIdNeeded = false;
-
-    if (config == null || !config.containsKey('appenders')) return;
-
-    for (var appender in config['appenders']) {
-      final format = appender['format'] as String?;
-      print('format: $format');
-      if (format != null) {
-        if (format.contains('%did')) {
-          print('_deviceIdNeeded: hit');
-          _deviceIdNeeded = true;
-        }
-        if (format.contains('%sid')) {
-          _sessionIdNeeded = true;
-        }
-      }
-    }
+    return IdProviderResolver.resolveProvider(
+      deviceIdNeeded: _deviceIdNeeded,
+      sessionIdNeeded: _sessionIdNeeded,
+      getAppDocumentsDirectoryFnc: _getAppDocumentsDirectoryFnc,
+    );
   }
 
   // ============================================================
@@ -252,7 +159,9 @@ OPTION 3: Remove %did from your log format
   }) {
     _initializeIdentification();
 
-    String format = includeIds ? '[%d][%did][%sid][%i][%l][%c] %m [%f]' : '[%d][%i][%l][%c] %m [%f]';
+    String format = includeIds
+        ? '[%d][%did][%sid][%i][%l][%c] %m [%f]'
+        : '[%d][%i][%l][%c] %m [%f]';
 
     final config = {
       'appenders': [
@@ -339,9 +248,12 @@ OPTION 3: Remove %did from your log format
     await _initializeIdentificationAsync();
 
     // Pro format with or without IDs
-    final String fileFormat = includeIds ? '[%d][%did][%sid][%i][%l][%c] %m [%f]' : '[%d][%i][%l][%c] %m [%f]';
+    final String fileFormat = includeIds
+        ? '[%d][%did][%sid][%i][%l][%c] %m [%f]'
+        : '[%d][%i][%l][%c] %m [%f]';
 
-    final String consoleFormat = includeIds ? '[%d][%did][%sid][%i][%l][%c] %m' : '[%d][%i][%l][%c] %m';
+    final String consoleFormat =
+        includeIds ? '[%d][%did][%sid][%i][%l][%c] %m' : '[%d][%i][%l][%c] %m';
 
     final appenders = <Map<String, dynamic>>[];
 
@@ -418,7 +330,8 @@ OPTION 3: Remove %did from your log format
     bool isDebugMode = true,
     String? appVersion,
   }) async {
-    final preset = isDebugMode ? LoggerPresets.development : LoggerPresets.production;
+    final preset =
+        isDebugMode ? LoggerPresets.development : LoggerPresets.production;
 
     await initWithPreset(preset, appVersion: appVersion);
   }
@@ -441,17 +354,30 @@ OPTION 3: Remove %did from your log format
           'Use init() for file/network appenders.');
     }
 
-    // Check which IDs are needed
-    _checkIdRequirements(config);
+    // Set up self-debugging FIRST
+    _selfDebugEnabled = selfDebug;
+    _selfLogLevel = selfLogLevel;
 
-    // Initialize identification synchronously only if needed
+    // Use the resolver to analyze requirements
+    final requirements = IdProviderResolver.analyzeRequirements(config);
+    _deviceIdNeeded = requirements.deviceIdNeeded;
+    _sessionIdNeeded = requirements.sessionIdNeeded;
+
+    // Log the one-line summary if debugging
+    if (_selfDebugEnabled) {
+      _selfLog(IdProviderResolver.getDebugSummary(
+        deviceIdNeeded: _deviceIdNeeded,
+        sessionIdNeeded: _sessionIdNeeded,
+        getAppDocumentsDirectoryFnc: _getAppDocumentsDirectoryFnc,
+      ));
+    }
+
+    // Initialize identification synchronously if needed
     if (_deviceIdNeeded || _sessionIdNeeded) {
       _initializeIdentification();
     }
 
     _initialized = true;
-    _selfDebugEnabled = selfDebug;
-    _selfLogLevel = selfLogLevel;
 
     // Set metadata
     if (appVersion != null) _appVersion = appVersion;
@@ -475,23 +401,25 @@ OPTION 3: Remove %did from your log format
         appendersFromConfig.add(appender);
 
         if (selfDebug) {
-          print('[LoggerFactory] Initialized console appender: ${appender.toString()}');
+          _selfLog('Initialized console appender: ${appender.toString()}');
         }
       } catch (e) {
         if (selfDebug) {
-          print('[LoggerFactory] Error creating appender: $e');
+          _selfLog('Error creating appender: $e', level: Level.ERROR);
         }
         throw ArgumentError('Failed to create console appender: $e');
       }
     }
 
     // Create root logger
-    _rootLogger = Logger.defaultLogger(appendersFromConfig, clientDepthOffset: clientProxyCallDepthOffset);
+    _rootLogger = Logger.defaultLogger(appendersFromConfig,
+        clientDepthOffset: clientProxyCallDepthOffset);
     _loggers[ROOT_LOGGER] = _rootLogger!;
 
     if (selfDebug) {
       _setupSelfLogger();
-      _selfLog('Logger initialized synchronously with ${appendersFromConfig.length} console appenders');
+      _selfLog(
+          'Logger initialized synchronously with ${appendersFromConfig.length} console appenders');
       for (var appender in appendersFromConfig) {
         _selfLog('Appender: ${appender.getType()}, Level: ${appender.level}, '
             'Format: ${appender.format}, DateFormat: ${appender.dateFormat}');
@@ -513,15 +441,29 @@ OPTION 3: Remove %did from your log format
     Level selfLogLevel = Level.INFO,
     String? appVersion,
   }) async {
-    _checkIdRequirements(config);
+    // Set up self-debugging FIRST
+    _selfDebugEnabled = selfDebug;
+    _selfLogLevel = selfLogLevel;
+
+    // Use the resolver to analyze requirements
+    final requirements = IdProviderResolver.analyzeRequirements(config);
+    _deviceIdNeeded = requirements.deviceIdNeeded;
+    _sessionIdNeeded = requirements.sessionIdNeeded;
+
+    // Log the one-line summary if debugging
+    if (_selfDebugEnabled) {
+      _selfLog(IdProviderResolver.getDebugSummary(
+        deviceIdNeeded: _deviceIdNeeded,
+        sessionIdNeeded: _sessionIdNeeded,
+        getAppDocumentsDirectoryFnc: _getAppDocumentsDirectoryFnc,
+      ));
+    }
 
     // Initialize device identification only if needed
     if (_deviceIdNeeded || _sessionIdNeeded) {
       await _initializeIdentificationAsync();
     }
 
-    _selfDebugEnabled = selfDebug;
-    _selfLogLevel = selfLogLevel;
     if (appVersion != null) _appVersion = appVersion;
     _initialized = true;
 
@@ -551,11 +493,13 @@ OPTION 3: Remove %did from your log format
         final appConfig = Map<String, dynamic>.from(app);
 
         // Use the registry to create the appender with test and date as parameters
-        Appender appender = await AppenderRegistry.instance.create(appConfig, test: test, date: date);
+        Appender appender = await AppenderRegistry.instance
+            .create(appConfig, test: test, date: date);
         appendersFromConfig.add(appender);
 
         if (selfDebug) {
-          _selfLog('Initialized appender: ${appender.getType()}. Appender: ${appender.toString()}');
+          _selfLog(
+              'Initialized appender: ${appender.getType()}. Appender: ${appender.toString()}');
         }
       } catch (e) {
         if (selfDebug) {
@@ -565,14 +509,16 @@ OPTION 3: Remove %did from your log format
       }
     }
 
-    _rootLogger = Logger.defaultLogger(appendersFromConfig, clientDepthOffset: clientProxyCallDepthOffset);
+    _rootLogger = Logger.defaultLogger(appendersFromConfig,
+        clientDepthOffset: clientProxyCallDepthOffset);
 
     // Add the root logger to the map
     _loggers[ROOT_LOGGER] = _rootLogger!;
 
     if (selfDebug) {
       _setupSelfLogger();
-      _selfLog('Logging system initialized with ${appendersFromConfig.length} active appenders');
+      _selfLog(
+          'Logging system initialized with ${appendersFromConfig.length} active appenders');
       for (var appender in appendersFromConfig) {
         _selfLog('Appender: ${appender.getType()}, Level: ${appender.level}, '
             'Format: ${appender.format}, DateFormat: ${appender.dateFormat}');
@@ -583,7 +529,8 @@ OPTION 3: Remove %did from your log format
   }
 
   /// Initialize from a configuration file
-  static Future<bool> initFromFile(String fileName, {bool selfDebug = false, String? appVersion}) async {
+  static Future<bool> initFromFile(String fileName,
+      {bool selfDebug = false, String? appVersion}) async {
     if (selfDebug) {
       print('[SELF_DEBUG] Loading config from file: $fileName');
     }
@@ -595,23 +542,44 @@ OPTION 3: Remove %did from your log format
 
   /// Initialize with a pre-built LoggerConfig object
   static Future<void> initWithLoggerConfig(
-    LoggerConfig config, {
+    LoggerConfig loggerConfig, {
     bool selfDebug = false,
     Level selfLogLevel = Level.INFO,
     String? appVersion,
     int clientProxyCallDepthOffset = 0,
   }) async {
-    await _initializeIdentificationAsync();
-
+    // Set up self-debugging FIRST
     _selfDebugEnabled = selfDebug;
     _selfLogLevel = selfLogLevel;
+
+    // Use the resolver to analyze requirements
+    final requirements =
+        IdProviderResolver.analyzeRequirements(loggerConfig.appenders);
+    _deviceIdNeeded = requirements.deviceIdNeeded;
+    _sessionIdNeeded = requirements.sessionIdNeeded;
+
+    // Log the one-line summary if debugging
+    if (_selfDebugEnabled) {
+      _selfLog(IdProviderResolver.getDebugSummary(
+        deviceIdNeeded: _deviceIdNeeded,
+        sessionIdNeeded: _sessionIdNeeded,
+        getAppDocumentsDirectoryFnc: _getAppDocumentsDirectoryFnc,
+      ));
+    }
+
+    // Initialize identification if needed
+    if (_deviceIdNeeded || _sessionIdNeeded) {
+      await _initializeIdentificationAsync();
+    }
+
     if (appVersion != null) _appVersion = appVersion;
     _initialized = true;
 
     // Use the provided appenders
-    var appendersFromConfig = config.appenders;
+    var appendersFromConfig = loggerConfig.appenders;
 
-    _rootLogger = Logger.defaultLogger(appendersFromConfig, clientDepthOffset: clientProxyCallDepthOffset);
+    _rootLogger = Logger.defaultLogger(appendersFromConfig,
+        clientDepthOffset: clientProxyCallDepthOffset);
 
     // Add the root logger to the map
     _loggers[ROOT_LOGGER] = _rootLogger!;
@@ -736,11 +704,13 @@ OPTION 3: Remove %did from your log format
       for (Appender appender in logger.appenders) {
         if (appender.getType() == upperType) {
           appender.setEnabled(true);
-          selfLogger?.logInfo('Appender $upperType enabled for logger ${logger.name}');
+          selfLogger?.logInfo(
+              'Appender $upperType enabled for logger ${logger.name}');
           return;
         }
       }
-      selfLogger?.logWarn('Appender $upperType not found, cannot enable it for logger ${logger.name}');
+      selfLogger?.logWarn(
+          'Appender $upperType not found, cannot enable it for logger ${logger.name}');
     }
   }
 
@@ -750,11 +720,13 @@ OPTION 3: Remove %did from your log format
       for (Appender appender in logger.appenders) {
         if (appender.getType() == upperType) {
           appender.setEnabled(false);
-          selfLogger?.logInfo('Appender $upperType disabled for logger ${logger.name}');
+          selfLogger?.logInfo(
+              'Appender $upperType disabled for logger ${logger.name}');
           return;
         }
       }
-      selfLogger?.logWarn('Appender $upperType not found, cannot disable it for logger ${logger.name}');
+      selfLogger?.logWarn(
+          'Appender $upperType not found, cannot disable it for logger ${logger.name}');
     }
   }
 
@@ -775,7 +747,8 @@ OPTION 3: Remove %did from your log format
       } catch (e) {
         // Log but don't throw - we want to flush as many as possible
         if (_selfDebugEnabled) {
-          _selfLog('Error flushing logger ${logger.name}: $e', level: Level.ERROR);
+          _selfLog('Error flushing logger ${logger.name}: $e',
+              level: Level.ERROR);
         }
       }
     }
@@ -878,7 +851,8 @@ OPTION 3: Remove %did from your log format
   static void _setupSelfLogger() {
     if (_rootLogger == null) return;
 
-    _selfLogger = Logger.fromExisting(_rootLogger!, name: ANYLOGGER_SELF_LOGGER_NAME, consoleOnly: true);
+    _selfLogger = Logger.fromExisting(_rootLogger!,
+        name: ANYLOGGER_SELF_LOGGER_NAME, consoleOnly: true);
     _selfLogger?.setLevelAll(_selfLogLevel);
     _loggers[ANYLOGGER_SELF_LOGGER_NAME] = _selfLogger!;
     _selfLog('Self-debugging enabled');
@@ -886,7 +860,13 @@ OPTION 3: Remove %did from your log format
 
   /// Log a message using the self logger
   static void _selfLog(String message, {Level level = Level.DEBUG}) {
-    if (!_selfDebugEnabled || _selfLogger == null) return;
+    if (!_selfDebugEnabled) return;
+
+    // If self-logger isn't set up yet, use print for early debugging
+    if (_selfLogger == null) {
+      print('[ANYLOGGER_STARTUP}] $message');
+      return;
+    }
 
     switch (level) {
       case Level.TRACE:

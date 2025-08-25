@@ -2,10 +2,7 @@
 // memory_id_provider.dart - In-memory implementation
 // ============================================================
 
-import 'dart:math';
-
 import '../../any_logger.dart';
-import 'id_provider.dart';
 
 /// In-memory ID provider that doesn't persist IDs
 /// Perfect for:
@@ -19,7 +16,7 @@ class MemoryIdProvider implements IdProvider {
 
   @override
   Future<void> initialize() async {
-    _deviceId ??=  IdGenerator.generateBase36Id(_ID_LENGTH);
+    _deviceId ??= IdGenerator.generateBase36Id(_ID_LENGTH);
     _sessionId = IdGenerator.generateBase36Id(_ID_LENGTH);
     _initialized = true;
   }

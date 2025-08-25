@@ -9,7 +9,7 @@ class LoggerBuilder {
   final List<Appender> _appenders = [];
   final Map<String, String> _mdcValues = {};
   bool _selfDebug = false;
-  Level _selfLogLevel = Level.INFO;
+  Level _selfLogLevel = Level.TRACE;
   String? _appVersion;
   Level _rootLevel = Level.INFO;
 

@@ -2,7 +2,8 @@ import 'appender/rotation_cycle.dart';
 
 class Utils {
   static RotationCycle getRotationCycleFromString(String? s) {
-    return RotationCycle.values.firstWhere((e) => e.toString().split('.')[1].toLowerCase() == s!.toLowerCase(),
+    return RotationCycle.values.firstWhere(
+        (e) => e.toString().split('.')[1].toLowerCase() == s!.toLowerCase(),
         orElse: () => RotationCycle.NEVER);
   }
 
@@ -18,7 +19,8 @@ class Utils {
     DateTime firstThursday = jan1.add(Duration(days: (11 - jan1DayOfWeek) % 7));
 
     // Calculate week number
-    int weekNumber = ((thursday.difference(firstThursday).inDays) / 7).floor() + 1;
+    int weekNumber =
+        ((thursday.difference(firstThursday).inDays) / 7).floor() + 1;
 
     return weekNumber;
   }

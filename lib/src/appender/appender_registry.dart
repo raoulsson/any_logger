@@ -3,7 +3,8 @@
 import '../../any_logger.dart';
 
 // A type definition for our factory functions
-typedef AppenderFactoryFunction = Future<Appender> Function(Map<String, dynamic> config, {bool test, DateTime? date});
+typedef AppenderFactoryFunction = Future<Appender>
+    Function(Map<String, dynamic> config, {bool test, DateTime? date});
 
 /// A central registry for creating Appender instances from configuration.
 /// Extension packages can register their own appender types here.
@@ -47,7 +48,8 @@ class AppenderRegistry {
     if (_factories.containsKey(upperType)) {
       // Log warning but allow overrides for testing
       if (Logger.getSelfLogger() != null) {
-        Logger.getSelfLogger()?.logWarn('Overwriting appender factory for type $upperType');
+        Logger.getSelfLogger()
+            ?.logWarn('Overwriting appender factory for type $upperType');
       }
     }
     _factories[upperType] = factory;
@@ -55,7 +57,8 @@ class AppenderRegistry {
 
   /// Creates an appender instance from a config map based on its 'type'.
   /// The test and date parameters are passed separately, not in the config.
-  Future<Appender> create(Map<String, dynamic> config, {bool test = false, DateTime? date}) async {
+  Future<Appender> create(Map<String, dynamic> config,
+      {bool test = false, DateTime? date}) async {
     // Ensure core appenders are registered
     if (!_coreAppendersRegistered) {
       _registerCoreAppenders();
