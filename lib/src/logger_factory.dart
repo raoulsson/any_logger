@@ -165,8 +165,10 @@ OPTION 3: Remove %did from your log format
 
     for (var appender in config['appenders']) {
       final format = appender['format'] as String?;
+      print('format: $format');
       if (format != null) {
         if (format.contains('%did')) {
+          print('_deviceIdNeeded: hit');
           _deviceIdNeeded = true;
         }
         if (format.contains('%sid')) {
