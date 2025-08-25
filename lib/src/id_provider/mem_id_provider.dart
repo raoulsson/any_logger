@@ -4,30 +4,30 @@
 
 import 'dart:math';
 
+import '../../any_logger.dart';
 import 'id_provider.dart';
 
 /// In-memory ID provider that doesn't persist IDs
 /// Perfect for:
-/// - Flutter Web applications
 /// - Testing environments
 /// - Applications that don't need persistent device IDs
 class MemoryIdProvider implements IdProvider {
+  static const int _ID_LENGTH = 10;
   String? _deviceId;
   String? _sessionId;
   bool _initialized = false;
-  final Random _random = Random();
 
   @override
   Future<void> initialize() async {
-    _deviceId ??= _generateId('device');
-    _sessionId = _generateId('session');
+    _deviceId ??=  IdGenerator.generateBase36Id(_ID_LENGTH);
+    _sessionId = IdGenerator.generateBase36Id(_ID_LENGTH);
     _initialized = true;
   }
 
   @override
   void initializeSync() {
-    _deviceId ??= _generateId('device');
-    _sessionId = _generateId('session');
+    _deviceId ??= IdGenerator.generateBase36Id(_ID_LENGTH);
+    _sessionId = IdGenerator.generateBase36Id(_ID_LENGTH);
     _initialized = true;
   }
 
@@ -42,8 +42,8 @@ class MemoryIdProvider implements IdProvider {
 
   @override
   void regenerateSessionId() {
-    _sessionId = _generateId('session');
-    _deviceId ??= _generateId('device');
+    _sessionId = IdGenerator.generateBase36Id(_ID_LENGTH);
+    _deviceId ??= IdGenerator.generateBase36Id(_ID_LENGTH);
   }
 
   @override
@@ -56,14 +56,5 @@ class MemoryIdProvider implements IdProvider {
   @override
   void resetSession() {
     _sessionId = null;
-  }
-
-  String _generateId(String prefix) {
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final random = _random.nextInt(999999);
-    return '$prefix-${timestamp % 100000}-$random'
-        .replaceAll('device-', 'd')
-        .replaceAll('session-', 's')
-        .substring(0, 8);
   }
 }

@@ -1,3 +1,4 @@
+import '../../any_logger.dart';
 import 'id_provider.dart';
 
 class LazyIdProvider implements IdProvider {
@@ -10,8 +11,14 @@ class LazyIdProvider implements IdProvider {
   LazyIdProvider(this._delegate);
 
   void _ensureInitialized() {
+    // Skip initialization for NullIdProvider
+    if (_delegate is NullIdProvider) {
+      _lazyInitialized = true;
+      return;
+    }
+
     if (_initError != null) {
-      throw _initError; // Rethrow stored error
+      throw _initError;
     }
 
     if (!_lazyInitialized) {
@@ -19,15 +26,21 @@ class LazyIdProvider implements IdProvider {
         _delegate.initializeSync();
         _lazyInitialized = true;
       } catch (e) {
-        _initError = e; // Store the error
-        throw e; // Always rethrow
+        _initError = e;
+        throw e;
       }
     }
   }
 
   Future<void> _ensureInitializedAsync() async {
+    // Skip initialization for NullIdProvider
+    if (_delegate is NullIdProvider) {
+      _lazyInitialized = true;
+      return;
+    }
+
     if (_initError != null) {
-      throw _initError; // Rethrow stored error
+      throw _initError;
     }
 
     if (!_lazyInitialized) {
@@ -35,11 +48,12 @@ class LazyIdProvider implements IdProvider {
         await _delegate.initialize();
         _lazyInitialized = true;
       } catch (e) {
-        _initError = e; // Store the error
-        throw e; // Always rethrow
+        _initError = e;
+        throw e;
       }
     }
   }
+
 
   @override
   Future<void> initialize() async {

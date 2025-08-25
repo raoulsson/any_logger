@@ -11,8 +11,6 @@ documentation: https://github.com/raoulsson/any_logger/wiki
 environment:
   sdk: '>=3.0.0 <4.0.0'
 
-dependencies:
-
 platforms:
   android:
   ios:

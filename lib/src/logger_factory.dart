@@ -32,7 +32,10 @@ class LoggerFactory {
 
   // ID Provider
   static IdProvider? _idProvider;
-  static bool _idProviderNeeded = false;
+  static bool _deviceIdNeeded = false;
+  static bool _sessionIdNeeded = false;
+  // Flutter apps MUST set this or logging will fail
+  static Future<Directory> Function()? getAppDocumentsDirectoryFnc;
 
   // Metadata
   static String? _appVersion;
@@ -53,31 +56,114 @@ class LoggerFactory {
       throw StateError('Cannot set ID provider after initialization. '
           'Call setIdProvider() before any init methods.');
     }
-    // Wrap the provider in lazy wrapper
     _idProvider = LazyIdProvider(provider);
   }
 
   /// Get the current ID provider (creates default if needed)
   static IdProvider get idProvider {
-    if (_idProvider == null) {
-      // Default to FileIdProvider wrapped in LazyIdProvider
-      // This will only initialize when actually accessed
-      _idProvider = LazyIdProvider(AnyLoggerFileIdProvider());
-    }
+    _idProvider ??= LazyIdProvider(_createDefaultProvider());
     return _idProvider!;
   }
 
-  /// Check if ID provider is needed based on format strings
-  static bool _checkIfIdProviderNeeded(Map<String, dynamic>? config) {
-    if (config == null || !config.containsKey('appenders')) return false;
+  /// Create the appropriate default provider based on platform and needs
+  static IdProvider _createDefaultProvider() {
+    // If neither ID is needed, use null provider
+    if (!_deviceIdNeeded && !_sessionIdNeeded) {
+      return NullIdProvider();
+    }
+
+    // Check if this is a Flutter app
+    if (_isFlutterApp()) {
+      // Flutter app logic
+      if (_deviceIdNeeded) {
+        // Device ID requires persistent storage on Flutter
+        // Check if path_provider is configured
+        if (getAppDocumentsDirectoryFnc == null) {
+          throw StateError('''
+════════════════════════════════════════════════════════════════════════════════
+🚨 LOGGING DISABLED: path_provider Not Configured for Device ID (%did)
+add dependency to pubspec.yaml:
+     path_provider: ^2.1.1
+and set before LoggerFactory.init(...):
+      AnyLoggerFileIdProvider.getAppDocumentsDirectory = getApplicationDocumentsDirectory;
+════════════════════════════════════════════════════════════════════════════════
+
+Your Flutter app uses %did (device ID) which requires persistent storage.
+
+OPTION 1: Configure path_provider (Recommended)
+  Step 1: Add to pubspec.yaml
+     dependencies:
+       path_provider: ^2.1.1
+
+  Step 2: Run command
+     flutter pub get
+
+  Step 3: Add 2 lines to main.dart
+     import 'package:path_provider/path_provider.dart';
+     
+     void main() async {
+       WidgetsFlutterBinding.ensureInitialized();
+       
+       // ADD THIS LINE:
+       AnyLoggerFileIdProvider.getAppDocumentsDirectory = getApplicationDocumentsDirectory;
+       
+       await LoggerFactory.init(yourConfig);
+       runApp(MyApp());
+     }
+
+OPTION 2: Use Memory Provider (IDs won't persist)
+  LoggerFactory.setIdProvider(MemoryIdProvider());
+
+OPTION 3: Remove %did from your log format
+  Use only %sid for session tracking, or remove both.
+
+════════════════════════════════════════════════════════════════════════════════
+''');
+        }
+        FileIdProvider.getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
+        return FileIdProvider();
+      } else if (_sessionIdNeeded) {
+        // Only session ID needed - use memory provider for Flutter
+        return MemoryIdProvider();
+      }
+    } else {
+      // Non-Flutter app - use file provider
+      return FileIdProvider();
+    }
+
+    // Fallback to null provider
+    return NullIdProvider();
+  }
+
+  static bool _isFlutterApp() {
+    try {
+      // This will work in a Flutter app, but throw on other platforms
+      // If it throws, it's not a Flutter app
+      // We can also check for path_provider existence
+      return getAppDocumentsDirectoryFnc != null;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Check which IDs are needed based on format strings
+  static void _checkIdRequirements(Map<String, dynamic>? config) {
+    _deviceIdNeeded = false;
+    _sessionIdNeeded = false;
+
+    if (config == null || !config.containsKey('appenders')) return;
 
     for (var appender in config['appenders']) {
       final format = appender['format'] as String?;
-      if (format != null && (format.contains('%did') || format.contains('%sid'))) {
-        return true;
+      if (format != null) {
+        if (format.contains('%did')) {
+          _deviceIdNeeded = true;
+        }
+        if (format.contains('%sid')) {
+          _sessionIdNeeded = true;
+        }
       }
     }
-    return false;
   }
 
   // ============================================================
@@ -349,11 +435,13 @@ class LoggerFactory {
           'Use init() for file/network appenders.');
     }
 
-    // Check if ID provider is needed
-    _idProviderNeeded = _checkIfIdProviderNeeded(config);
+    // Check which IDs are needed
+    _checkIdRequirements(config);
 
-    // Initialize identification synchronously
-    _initializeIdentification();
+    // Initialize identification synchronously only if needed
+    if (_deviceIdNeeded || _sessionIdNeeded) {
+      _initializeIdentification();
+    }
 
     _initialized = true;
     _selfDebugEnabled = selfDebug;
@@ -419,13 +507,12 @@ class LoggerFactory {
     Level selfLogLevel = Level.INFO,
     String? appVersion,
   }) async {
-    // No need for _ensureRegistryInitialized() - registry auto-initializes
+    _checkIdRequirements(config);
 
-    // Check if ID provider is needed
-    _idProviderNeeded = _checkIfIdProviderNeeded(config);
-
-    // Initialize device identification
-    await _initializeIdentificationAsync();
+    // Initialize device identification only if needed
+    if (_deviceIdNeeded || _sessionIdNeeded) {
+      await _initializeIdentificationAsync();
+    }
 
     _selfDebugEnabled = selfDebug;
     _selfLogLevel = selfLogLevel;
@@ -539,24 +626,24 @@ class LoggerFactory {
   // ============================================================
 
   static void _initializeIdentification() {
-    // Only initialize if IDs are actually used in format
-    if (_idProviderNeeded) {
-      idProvider.initializeSync(); // This will now throw if Flutter
+    if (_deviceIdNeeded || _sessionIdNeeded) {
+      idProvider.initializeSync();
 
-      // Ensure both IDs are set
-      if (idProvider.deviceId == null || idProvider.sessionId == null) {
+      // Ensure IDs are set if provider supports them
+      if ((idProvider.deviceId == null && _deviceIdNeeded) ||
+          (idProvider.sessionId == null && _sessionIdNeeded)) {
         idProvider.regenerateSessionId();
       }
     }
   }
 
   static Future<void> _initializeIdentificationAsync() async {
-    // Only initialize if IDs are actually used in format
-    if (_idProviderNeeded) {
-      await idProvider.initialize(); // This will now throw if path_provider missing
+    if (_deviceIdNeeded || _sessionIdNeeded) {
+      await idProvider.initialize();
 
-      // Ensure both IDs are set
-      if (idProvider.deviceId == null || idProvider.sessionId == null) {
+      // Ensure IDs are set if provider supports them
+      if ((idProvider.deviceId == null && _deviceIdNeeded) ||
+          (idProvider.sessionId == null && _sessionIdNeeded)) {
         idProvider.regenerateSessionId();
       }
     }
