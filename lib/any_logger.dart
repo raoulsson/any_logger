@@ -13,7 +13,6 @@ export 'src/constants.dart';
 export 'src/id_provider/file_id_provider.dart';
 export 'src/id_provider/id_generator.dart';
 export 'src/id_provider/id_provider.dart';
-export 'src/id_provider/lazy_id_provider.dart';
 export 'src/id_provider/mem_id_provider.dart';
 export 'src/id_provider/null_id_provider.dart';
 export 'src/level.dart';

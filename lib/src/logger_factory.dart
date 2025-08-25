@@ -60,12 +60,12 @@ class LoggerFactory {
       throw StateError('Cannot set ID provider after initialization. '
           'Call setIdProvider() before any init methods.');
     }
-    _idProvider = LazyIdProvider(provider);
+    _idProvider = provider;
   }
 
   /// Get the current ID provider (creates default if needed)
   static IdProvider get idProvider {
-    _idProvider ??= LazyIdProvider(_createDefaultProvider());
+    _idProvider ??= _createDefaultProvider();
     return _idProvider!;
   }
 
