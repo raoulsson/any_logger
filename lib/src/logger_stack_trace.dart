@@ -34,11 +34,11 @@ class LoggerStackTrace {
   final String columnNumber;
 
   /// Input is a single trace from the stacktrace. Should look like:
-  ///
+  /// ```
   /// #3      Client.something (file:///<path-to-project>/<project>/test/logger_stack_trace_test.dart:20:5)
   /// or
   /// #3      AppConfig._loadAppPreferences (package:base_template_project/utils/app_config.dart:55:7)
-  ///
+  /// ```
   /// But could be different, depending on platform. (that's why there is a try catch block).
   static FileInfo _getFileInfoFromFrame(String frame) {
     // root level reached

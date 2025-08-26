@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ## 1.0.5
 
 * Updated README to reference extension packages through links
+* Fixed issues reported by pano
 
 ## 1.0.4
 

@@ -144,8 +144,7 @@ class FileAppender extends Appender {
         _ensurePathExists();
         // Retry the write
         _file.writeAsStringSync(
-            '${LogRecordFormatter.format(logRecord, format,
-                    dateFormat: dateFormat)}\n',
+            '${LogRecordFormatter.format(logRecord, format, dateFormat: dateFormat)}\n',
             mode: FileMode.append);
       } catch (retryError) {
         Logger.getSelfLogger()
