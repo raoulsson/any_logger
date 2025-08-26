@@ -2,6 +2,8 @@
 
 A powerful, flexible, and intuitive logging library for Dart and Flutter applications with automatic device/session tracking and progressive complexity - from one-line setup to enterprise-grade configurations.
 
+Logs can be sent to **console**, **file**, **JSON HTTP endpoints**, **email**, **MySQL databases**, or any custom appender extension you create. Start with simple console logging and progressively add capabilities as your application grows.
+
 ## ✨ Why Any Logger?
 
 - **🚀 Zero Configuration** - Start logging with literally one line of code
@@ -17,7 +19,7 @@ A powerful, flexible, and intuitive logging library for Dart and Flutter applica
 
 ```yaml
 dependencies:
-  any_logger: ^1.0.1
+  any_logger: ^x.y.z // See "Installing"
 ```
 
 That's it! No other dependencies needed to start logging.
@@ -202,7 +204,7 @@ Flutter apps need additional setup for persistent device IDs:
 ```yaml
 # Add to pubspec.yaml
 dependencies:
-  any_logger: ^1.0.1
+  any_logger: ^x.y.z // See "Installing"
   path_provider: ^2.1.5  # Required for %did on Flutter
 ```
 
@@ -300,17 +302,18 @@ The core `any_logger` library is intentionally kept lightweight. Additional appe
 
 | Package | Description | When to Use |
 |---------|-------------|-------------|
-| **`any_logger_json_http`** | JSON over HTTP logging | When sending logs to REST APIs, Logstash, etc. |
-| **`any_logger_email`** | Email notifications | For critical alerts and error notifications |
-| **`any_logger_mysql`** | MySQL database logging | For structured, queryable log storage |
+| [**`any_logger_json_http`**](https://pub.dev/packages/any_logger_json_http) | JSON over HTTP logging | When sending logs to REST APIs, Logstash, centralized logging services |
+| [**`any_logger_email`**](https://pub.dev/packages/any_logger_email) | Email notifications | For critical alerts, error notifications, and daily digests |
+| [**`any_logger_mysql`**](https://pub.dev/packages/any_logger_mysql) | MySQL database logging | For structured, queryable log storage and audit trails |
 
 ### Installation
 
 ```yaml
 dependencies:
-  any_logger: ^1.0.1
-  any_logger_json_http: ^1.0.0  # Only if needed
-  any_logger_email: ^1.0.0      # Only if needed
+  any_logger: ^x.y.z // See "Installing"
+  any_logger_json_http: ^x.y.z  # Only if needed
+  any_logger_email: ^x.y.z      # Only if needed
+  any_logger_mysql: ^x.y.z      # Only if needed
 ```
 
 ### Usage Example
@@ -377,7 +380,7 @@ The logger will show a clear error message with instructions. Either:
 Add and import the required extension package:
 ```yaml
 dependencies:
-  any_logger_json_http: ^1.0.1
+  any_logger_json_http: ^x.y.z
 ```
 
 #### "Permission denied" on Mobile

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## 1.0.5
+
+* Updated README to reference extension packages through links
+
 ## 1.0.4
 
 * Added addAppenderConfig to LoggerBuilder

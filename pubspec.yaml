@@ -3,7 +3,7 @@ description: >-
   A powerful, flexible, and intuitive logging library for Dart and Flutter 
   with progressive complexity - from one-line setup to enterprise configurations.
 
-version: 1.0.4
+version: 1.0.5
 
 homepage: https://github.com/raoulsson/any_logger
 repository: https://github.com/raoulsson/any_logger
