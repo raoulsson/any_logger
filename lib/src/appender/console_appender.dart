@@ -127,7 +127,7 @@ class ConsoleAppender extends Appender {
 
   @override
   String toString() {
-    return '${super} ConsoleAppender(mode: $mode, sequenceNumber: $sequenceNumber, level: $level, format: $format, dateFormat: $dateFormat, created: $created, enabled: $enabled)';
+    return 'ConsoleAppender(mode: $mode, sequenceNumber: $sequenceNumber, level: $level, format: $format, dateFormat: $dateFormat, created: $created, enabled: $enabled)';
   }
 
   @override
