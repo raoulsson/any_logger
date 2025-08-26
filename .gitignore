@@ -4,7 +4,6 @@
 
 # Conventional directory for build outputs
 build/
-pubspec.lock
 
 # Directory created by dartdoc
 doc/api/
@@ -16,4 +15,5 @@ doc/api/
 http_endpoint_credentials.txt
 
 *.log
-.anylogger/pubspec.lock
+.anylogger/
+pubspec.lock
