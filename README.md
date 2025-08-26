@@ -382,6 +382,11 @@ Add and import the required extension package:
 dependencies:
   any_logger_json_http: ^x.y.z
 ```
+and call the corresponding class to register the appender, like e.g.:
+
+```dart
+AnyLoggerJsonHttpExtension.register();
+```
 
 #### "Permission denied" on Mobile
 Use MemoryIdProvider instead of file-based storage:

@@ -75,15 +75,18 @@ class AppenderRegistry {
       if (type == 'JSON_HTTP') {
         throw UnimplementedError("No appender registered for type '$type'. "
             "Please import the JSON_HTTP extension package:\n"
-            "  import 'package:any_logger_json_http/any_logger_json_http.dart';");
+            "  import 'package:any_logger_json_http/any_logger_json_http.dart';\n"
+            "  and call: AnyLoggerJsonHttpExtension.register();");
       } else if (type == 'EMAIL') {
         throw UnimplementedError("No appender registered for type '$type'. "
             "Please import the EMAIL extension package:\n"
-            "  import 'package:any_logger_email/any_logger_email.dart';");
+            "  import 'package:any_logger_email/any_logger_email.dart';\n"
+            "  and call: AnyLoggerEmailExtension.register();");
       } else if (type == 'MYSQL') {
         throw UnimplementedError("No appender registered for type '$type'. "
             "Please import the MYSQL extension package:\n"
-            "  import 'package:any_logger_mysql/any_logger_mysql.dart';");
+            "  import 'package:any_logger_mysql/any_logger_mysql.dart';\n"
+            "  and call: AnyLoggerMySqlExtension.register();");
       } else {
         throw UnimplementedError("No appender registered for type '$type'. "
             "Available types: ${_factories.keys.join(', ')}");
