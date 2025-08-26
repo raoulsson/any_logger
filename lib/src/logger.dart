@@ -26,7 +26,7 @@ class Logger {
     List<Appender> appendersFromConfig, {
     int clientDepthOffset = 0,
     String? name,
-  }) : this.name = name ?? LoggerFactory.ROOT_LOGGER {
+  }) : name = name ?? LoggerFactory.ROOT_LOGGER {
     getSelfLogger()?.logInfo('Creating default logger with name: ${this.name}');
     appenders.addAll(appendersFromConfig);
     this.clientDepthOffset = clientDepthOffset;
@@ -37,7 +37,7 @@ class Logger {
     Logger other, {
     required String name,
     bool consoleOnly = false,
-  })  : this.name = name,
+  })  : name = name,
         clientDepthOffset = other.clientDepthOffset {
     getSelfLogger()?.logInfo(
         'Creating new logger named $name from existing logger: ${other.name}');

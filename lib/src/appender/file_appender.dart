@@ -95,40 +95,18 @@ class FileAppender extends Appender {
 
     switch (rotationCycle) {
       case RotationCycle.NEVER:
-        return finalPath + filePattern! + '.' + fileExtension;
+        return '$finalPath${filePattern!}.$fileExtension';
       case RotationCycle.DAY:
         // Use SimpleDateFormat instead of intl's DateFormat
-        return finalPath +
-            filePattern! +
-            '_' +
-            SimpleDateFormat('yyyy-MM-dd').format(created) +
-            '.' +
-            fileExtension;
+        return '$finalPath${filePattern!}_${SimpleDateFormat('yyyy-MM-dd').format(created)}.$fileExtension';
       case RotationCycle.WEEK:
-        return finalPath +
-            filePattern! +
-            '_' +
-            created.year.toString() +
-            '-CW' +
-            Utils.getCalendarWeek(created).toString() +
-            '.' +
-            fileExtension;
+        return '$finalPath${filePattern!}_${created.year}-CW${Utils.getCalendarWeek(created)}.$fileExtension';
       case RotationCycle.MONTH:
         // Use SimpleDateFormat instead of intl's DateFormat
-        return finalPath +
-            filePattern! +
-            '_' +
-            SimpleDateFormat('yyyy-MM').format(created) +
-            '.' +
-            fileExtension;
+        return '$finalPath${filePattern!}_${SimpleDateFormat('yyyy-MM').format(created)}.$fileExtension';
       case RotationCycle.YEAR:
         // Use SimpleDateFormat instead of intl's DateFormat
-        return finalPath +
-            filePattern! +
-            '_' +
-            SimpleDateFormat('yyyy').format(created) +
-            '.' +
-            fileExtension;
+        return '$finalPath${filePattern!}_${SimpleDateFormat('yyyy').format(created)}.$fileExtension';
     }
   }
 
@@ -152,12 +130,11 @@ class FileAppender extends Appender {
 
     try {
       _file.writeAsStringSync(
-          LogRecordFormatter.format(logRecord, format, dateFormat: dateFormat) +
-              '\n',
+          '${LogRecordFormatter.format(logRecord, format, dateFormat: dateFormat)}\n',
           mode: FileMode.append);
 
       if (logRecord.stackTrace != null) {
-        _file.writeAsStringSync(logRecord.stackTrace.toString() + '\n',
+        _file.writeAsStringSync('${logRecord.stackTrace}\n',
             mode: FileMode.append);
       }
     } catch (e) {
@@ -167,9 +144,8 @@ class FileAppender extends Appender {
         _ensurePathExists();
         // Retry the write
         _file.writeAsStringSync(
-            LogRecordFormatter.format(logRecord, format,
-                    dateFormat: dateFormat) +
-                '\n',
+            '${LogRecordFormatter.format(logRecord, format,
+                    dateFormat: dateFormat)}\n',
             mode: FileMode.append);
       } catch (retryError) {
         Logger.getSelfLogger()

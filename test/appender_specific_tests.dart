@@ -37,7 +37,7 @@ void main() {
   });
 
   group('FileAppender Rotation', () {
-    final testDir = 'test_rotation_logs';
+    const testDir = 'test_rotation_logs';
 
     setUp(() async {
       final dir = Directory(testDir);

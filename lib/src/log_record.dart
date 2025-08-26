@@ -85,7 +85,7 @@ class LogRecord {
     // Add method name if available
     if (_methodName != null && _methodName!.isNotEmpty) {
       if (parts.isNotEmpty) {
-        parts.add('.${_methodName}');
+        parts.add('.$_methodName');
       } else {
         parts.add(_methodName!);
       }
@@ -93,7 +93,7 @@ class LogRecord {
 
     // Add line number if available
     if (_lineNumber != null && _lineNumber! > 0) {
-      parts.add(':${_lineNumber}');
+      parts.add(':$_lineNumber');
     } else {
       // Fallback to contextInfo.lineNumber if _lineNumber is not set
       String lineStr;

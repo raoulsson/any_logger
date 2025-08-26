@@ -152,14 +152,14 @@ class UserService with AnyLogger {
   Future<void> createUser(String email) async {
     logInfo('Creating user: $email');
     // Simulate user creation
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     logInfo('User created successfully: $email');
   }
 
   Future<void> deleteUser(String email) async {
     logWarn('Deleting user: $email');
     // Simulate user deletion
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     logInfo('User deleted: $email');
   }
 }
@@ -172,7 +172,7 @@ class AuthenticationService with AnyLogger {
     logInfo('Authentication attempt for: $email');
 
     // Simulate authentication
-    await Future.delayed(Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 200));
 
     if (password == 'password123') {
       logInfo('Authentication successful for: $email');

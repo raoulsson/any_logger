@@ -319,7 +319,7 @@ class AuthService with AnyLogger {
 
   Future<void> login(String username) async {
     logInfo('User $username attempting login');
-    await Future.delayed(Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 10));
     logInfo('User $username logged in successfully');
   }
 }
@@ -330,7 +330,7 @@ class DataService with AnyLogger {
 
   Future<void> fetchData() async {
     logDebug('Fetching data from database');
-    await Future.delayed(Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 10));
     logDebug('Data fetched successfully');
   }
 }
@@ -350,27 +350,27 @@ class Application with AnyLogger {
 
   Future<void> initialize() async {
     logInfo('Initializing application');
-    await Future.delayed(Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 10));
   }
 
   Future<void> start() async {
     logInfo('Starting application');
-    await Future.delayed(Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 10));
   }
 
   Future<void> handleUserRequest(String userId) async {
     logDebug('Handling request for user: $userId');
-    await Future.delayed(Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 10));
   }
 
   Future<void> stop() async {
     logInfo('Stopping application');
-    await Future.delayed(Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 10));
   }
 
   Future<void> cleanup() async {
     logInfo('Cleaning up resources');
-    await Future.delayed(Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 10));
   }
 }
 
@@ -381,7 +381,7 @@ Future<void> handleRequest(String userId, String requestId, String endpoint) asy
   LoggerFactory.setMdcValue('endpoint', endpoint);
 
   Logger.info('Processing request');
-  await Future.delayed(Duration(milliseconds: 10));
+  await Future.delayed(const Duration(milliseconds: 10));
   Logger.info('Request completed');
 
   // Clear MDC after request
@@ -394,6 +394,6 @@ Future<void> callDownstreamService(String traceId) async {
   // Simulate calling another service
   LoggerFactory.setMdcValue('service', 'downstream-service');
   Logger.info('Processing in downstream service');
-  await Future.delayed(Duration(milliseconds: 10));
+  await Future.delayed(const Duration(milliseconds: 10));
   LoggerFactory.setMdcValue('service', 'api-gateway');
 }

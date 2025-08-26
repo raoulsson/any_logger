@@ -516,7 +516,7 @@ Future<void> performanceMonitoringExample() async {
   await perfMonitor.measureDatabaseQuery();
   await perfMonitor.measureApiCall();
   await perfMonitor.measureUIRendering();
-  sleep(Duration(milliseconds: 100));
+  sleep(const Duration(milliseconds: 100));
 }
 
 /// Example 16: Using AppenderBuilder for granular control
@@ -551,7 +551,7 @@ Future<void> builderWithAppenderBuilderExample() async {
 class UserService with AnyLogger {
   Future<void> createUser(String email) async {
     logInfo('Creating user: $email');
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     logInfo('User created successfully');
   }
 }
@@ -563,7 +563,7 @@ class AuthService with AnyLogger {
   Future<bool> authenticate(String email, String password) async {
     logInfo('Authentication attempt for: $email');
     logDebug('Validating credentials');
-    await Future.delayed(Duration(milliseconds: 200));
+    await Future.delayed(const Duration(milliseconds: 200));
     logInfo('Authentication successful');
     return true;
   }
@@ -584,7 +584,7 @@ class MyApplication with AnyLogger {
 
   Future<void> initialize() async {
     logInfo('Initializing application');
-    await Future.delayed(Duration(milliseconds: 50));
+    await Future.delayed(const Duration(milliseconds: 50));
     logDebug('Loading configuration');
     logDebug('Setting up database connection');
     logInfo('Application initialized successfully');
@@ -592,27 +592,27 @@ class MyApplication with AnyLogger {
 
   Future<void> start() async {
     logInfo('Starting application');
-    await Future.delayed(Duration(milliseconds: 30));
+    await Future.delayed(const Duration(milliseconds: 30));
     logDebug('Starting background services');
     logInfo('Application started');
   }
 
   Future<void> handleUserAction(String action) async {
     logDebug('User action received: $action');
-    await Future.delayed(Duration(milliseconds: 20));
+    await Future.delayed(const Duration(milliseconds: 20));
     logInfo('Processed user action: $action');
   }
 
   Future<void> stop() async {
     logInfo('Stopping application');
-    await Future.delayed(Duration(milliseconds: 30));
+    await Future.delayed(const Duration(milliseconds: 30));
     logDebug('Stopping background services');
     logInfo('Application stopped');
   }
 
   Future<void> dispose() async {
     logInfo('Disposing application resources');
-    await Future.delayed(Duration(milliseconds: 20));
+    await Future.delayed(const Duration(milliseconds: 20));
     logDebug('Closing database connections');
     logInfo('Application disposed');
   }
@@ -625,14 +625,14 @@ class AuthenticationService with AnyLogger {
   Future<void> login(String email, String password) async {
     logInfo('Login attempt for user: $email');
     logDebug('Validating credentials');
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     logDebug('Credentials validated successfully');
     logInfo('User logged in: $email');
   }
 
   Future<void> refreshToken() async {
     logDebug('Refreshing authentication token');
-    await Future.delayed(Duration(milliseconds: 50));
+    await Future.delayed(const Duration(milliseconds: 50));
     logInfo('Token refreshed successfully');
   }
 }
@@ -643,14 +643,14 @@ class DataService with AnyLogger {
 
   Future<void> fetchUserData(String userId) async {
     logDebug('Fetching data for user: $userId');
-    await Future.delayed(Duration(milliseconds: 80));
+    await Future.delayed(const Duration(milliseconds: 80));
     logInfo('User data retrieved successfully');
   }
 
   Future<void> syncData() async {
     logInfo('Starting data synchronization');
     logDebug('Checking for local changes');
-    await Future.delayed(Duration(milliseconds: 150));
+    await Future.delayed(const Duration(milliseconds: 150));
     logInfo('Data synchronization completed');
   }
 }
@@ -661,13 +661,13 @@ class UIController with AnyLogger {
 
   Future<void> updateDisplay(String message) async {
     logDebug('Updating display with message: $message');
-    await Future.delayed(Duration(milliseconds: 30));
+    await Future.delayed(const Duration(milliseconds: 30));
     logInfo('Display updated');
   }
 
   Future<void> navigateTo(String screen) async {
     logInfo('Navigating to: $screen');
-    await Future.delayed(Duration(milliseconds: 50));
+    await Future.delayed(const Duration(milliseconds: 50));
     logInfo('Navigation completed: $screen');
   }
 }
@@ -688,7 +688,7 @@ class ErrorProneService with AnyLogger {
 
   Future<void> handleNetworkRequest() async {
     try {
-      if (1 == 1) throw SocketException('Connection timeout');
+      if (1 == 1) throw const SocketException('Connection timeout');
       logInfo('Network request successful');
     } catch (e) {
       logError('Network request failed', exception: e);

@@ -219,7 +219,7 @@ void main() {
   });
 
   group('FileAppender', () {
-    final testDir = 'test_logs';
+    const testDir = 'test_logs';
 
     setUp(() async {
       final dir = Directory(testDir);

@@ -95,8 +95,9 @@ class LoggerStackTrace {
       final functionPart = subStr.substring(indexOfFunction);
       final endOfFunctionIndex = functionPart.indexOf(' ');
 
-      if (endOfFunctionIndex < 0)
+      if (endOfFunctionIndex < 0) {
         return functionPart; // No space after function
+      }
 
       return functionPart.substring(0, endOfFunctionIndex);
     } catch (e) {
