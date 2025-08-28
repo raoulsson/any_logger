@@ -1,8 +1,12 @@
 # Changelog
 
+## 1.0.9
+
+* Updated README (No dependencies in core lib)
+
 ## 1.0.8
 
-* * Adding documentation on how to register this extension
+* Adding documentation on how to register this extension
 
 ## 1.0.7
 
