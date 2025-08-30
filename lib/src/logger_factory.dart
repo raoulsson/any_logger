@@ -435,6 +435,7 @@ class LoggerFactory {
     final requirements = IdProviderResolver.analyzeRequirements(config);
     _deviceIdNeeded = requirements.deviceIdNeeded;
     _sessionIdNeeded = requirements.sessionIdNeeded;
+    _fileAppenderNeeded = requirements.fileAppenderNeeded;
 
     if (_selfDebugEnabled) {
       _selfLog(
