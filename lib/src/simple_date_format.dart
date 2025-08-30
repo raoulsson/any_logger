@@ -9,10 +9,8 @@ class SimpleDateFormat {
     String result = pattern;
 
     // Year
-    result =
-        result.replaceAll('yyyy', dateTime.year.toString().padLeft(4, '0'));
-    result = result.replaceAll(
-        'yy', (dateTime.year % 100).toString().padLeft(2, '0'));
+    result = result.replaceAll('yyyy', dateTime.year.toString().padLeft(4, '0'));
+    result = result.replaceAll('yy', (dateTime.year % 100).toString().padLeft(2, '0'));
 
     // Month
     result = result.replaceAll('MM', dateTime.month.toString().padLeft(2, '0'));
@@ -27,25 +25,20 @@ class SimpleDateFormat {
     result = result.replaceAll('H', dateTime.hour.toString());
 
     // Hour (12-hour format)
-    int hour12 = dateTime.hour == 0
-        ? 12
-        : (dateTime.hour > 12 ? dateTime.hour - 12 : dateTime.hour);
+    int hour12 = dateTime.hour == 0 ? 12 : (dateTime.hour > 12 ? dateTime.hour - 12 : dateTime.hour);
     result = result.replaceAll('hh', hour12.toString().padLeft(2, '0'));
     result = result.replaceAll('h', hour12.toString());
 
     // Minute
-    result =
-        result.replaceAll('mm', dateTime.minute.toString().padLeft(2, '0'));
+    result = result.replaceAll('mm', dateTime.minute.toString().padLeft(2, '0'));
     result = result.replaceAll('m', dateTime.minute.toString());
 
     // Second
-    result =
-        result.replaceAll('ss', dateTime.second.toString().padLeft(2, '0'));
+    result = result.replaceAll('ss', dateTime.second.toString().padLeft(2, '0'));
     result = result.replaceAll('s', dateTime.second.toString());
 
     // Millisecond
-    result = result.replaceAll(
-        'SSS', dateTime.millisecond.toString().padLeft(3, '0'));
+    result = result.replaceAll('SSS', dateTime.millisecond.toString().padLeft(3, '0'));
     result = result.replaceAll('S', dateTime.millisecond.toString());
 
     // AM/PM marker
@@ -61,8 +54,7 @@ class SimpleDateFormat {
         // Get local timezone offset
         final offset = dateTime.timeZoneOffset;
         final hours = offset.inHours.abs().toString().padLeft(2, '0');
-        final minutes =
-            (offset.inMinutes.abs() % 60).toString().padLeft(2, '0');
+        final minutes = (offset.inMinutes.abs() % 60).toString().padLeft(2, '0');
         final sign = offset.isNegative ? '-' : '+';
         result = result.replaceAll('Z', '$sign$hours:$minutes');
       }
@@ -76,32 +68,11 @@ class SimpleDateFormat {
     result = result.replaceAll('EEE', weekDays[dateTime.weekday - 1]);
 
     // Week day names (full)
-    const weekDaysFull = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ];
+    const weekDaysFull = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     result = result.replaceAll('EEEE', weekDaysFull[dateTime.weekday - 1]);
 
     // Month names (abbreviated)
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     result = result.replaceAll('MMM', months[dateTime.month - 1]);
 
     // Month names (full)

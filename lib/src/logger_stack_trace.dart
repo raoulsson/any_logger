@@ -14,8 +14,7 @@ class LoggerStackTrace {
     final frames = trace.toString().split('\n');
     //frames.forEach((_) => print(_));
     final functionName = _getFunctionNameFromFrame(frames[callerFrameIndex]);
-    final callerFunctionName =
-        _getFunctionNameFromFrame(frames[callerFrameIndex + 1]);
+    final callerFunctionName = _getFunctionNameFromFrame(frames[callerFrameIndex + 1]);
     final fileInfo = _getFileInfoFromFrame(frames[callerFrameIndex]);
 
     return LoggerStackTrace._(
@@ -52,8 +51,7 @@ class LoggerStackTrace {
       if (indexOfCloseParen < 0) return FileInfo();
 
       // Extract the part between parentheses
-      final fileInfoPart =
-          frame.substring(indexOfFileName + 1, indexOfCloseParen);
+      final fileInfoPart = frame.substring(indexOfFileName + 1, indexOfCloseParen);
 
       // Find the last two colons (for line:column)
       final lastColon = fileInfoPart.lastIndexOf(':');

@@ -40,8 +40,7 @@ import '../../any_logger.dart';
 ///     .withPath('logs/')
 ///     .build();
 /// ```
-FileAppenderBuilder fileAppenderBuilder(String filePattern) =>
-    FileAppenderBuilder(filePattern);
+FileAppenderBuilder fileAppenderBuilder(String filePattern) => FileAppenderBuilder(filePattern);
 
 class FileAppenderBuilder {
   final Map<String, dynamic> _config = {

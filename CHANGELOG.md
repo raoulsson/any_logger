@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.10
+
+* Updated README
+* Improved self logging
+
 ## 1.0.9
 
 * Updated README (No dependencies in core lib)

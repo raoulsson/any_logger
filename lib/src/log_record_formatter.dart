@@ -11,8 +11,7 @@ class LogRecordFormatter {
   // Single compiled regex (created once)
   static final RegExp _mdcPattern = RegExp(r'%X\{([^}]+)\}');
 
-  static String format(LogRecord logRecord, String format,
-      {String? dateFormat = kDefaultDateFormat}) {
+  static String format(LogRecord logRecord, String format, {String? dateFormat = kDefaultDateFormat}) {
     var workingFormat = format;
 
     // IMPORTANT: Handle %did, %sid, and %app BEFORE %d to avoid conflicts
@@ -114,8 +113,7 @@ class LogRecordFormatter {
     return template.apply();
   }
 
-  static String formatJson(LogRecord logRecord,
-      {String? dateFormat = kDefaultDateFormat}) {
+  static String formatJson(LogRecord logRecord, {String? dateFormat = kDefaultDateFormat}) {
     var map = {
       // Use SimpleDateFormat instead of intl's DateFormat
       'time': SimpleDateFormat(dateFormat!).format(logRecord.time),
@@ -142,8 +140,7 @@ class LogRecordFormatter {
     return json.encode(map);
   }
 
-  static String formatEmail(String? template, LogRecord logRecord,
-      {String? dateFormat = kDefaultDateFormat}) {
+  static String formatEmail(String? template, LogRecord logRecord, {String? dateFormat = kDefaultDateFormat}) {
     if (template == null) {
       return formatJson(logRecord, dateFormat: dateFormat);
     }

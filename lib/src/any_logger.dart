@@ -77,8 +77,7 @@ mixin AnyLogger {
   /// This is automatically called by all logging methods, so you typically
   /// don't need to access it directly unless you need the underlying Logger.
   Logger get logger {
-    return _loggerNameCache.putIfAbsent(
-        loggerName, () => LoggerFactory.getLogger(loggerName));
+    return _loggerNameCache.putIfAbsent(loggerName, () => LoggerFactory.getLogger(loggerName));
   }
 
   /// Clears the internal logger cache.
@@ -154,16 +153,11 @@ mixin AnyLogger {
   /// - [exception]: Optional exception object
   /// - [stackTrace]: Optional stack trace
   /// - [object]: Deprecated - for backwards compatibility only
-  void logTrace(String message,
-      {String? tag,
-      Object? exception,
-      StackTrace? stackTrace,
-      Object? object}) {
+  void logTrace(String message, {String? tag, Object? exception, StackTrace? stackTrace, Object? object}) {
     // Early exit check for performance
     if (!isTraceEnabled) return;
 
-    logger.logTrace(message,
-        tag: tag, exception: exception, stackTrace: stackTrace);
+    logger.logTrace(message, tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   /// Logs a DEBUG level message.
@@ -178,16 +172,11 @@ mixin AnyLogger {
   /// - [tag]: Optional tag for categorizing logs
   /// - [exception]: Optional exception object
   /// - [stackTrace]: Optional stack trace
-  void logDebug(String message,
-      {String? tag,
-      Object? exception,
-      StackTrace? stackTrace,
-      Object? object}) {
+  void logDebug(String message, {String? tag, Object? exception, StackTrace? stackTrace, Object? object}) {
     // Early exit check for performance
     if (!isDebugEnabled) return;
 
-    logger.logDebug(message,
-        tag: tag, exception: exception, stackTrace: stackTrace);
+    logger.logDebug(message, tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   /// Logs an INFO level message.
@@ -203,16 +192,11 @@ mixin AnyLogger {
   /// - [tag]: Optional tag for categorizing logs
   /// - [exception]: Optional exception object
   /// - [stackTrace]: Optional stack trace
-  void logInfo(String message,
-      {String? tag,
-      Object? exception,
-      StackTrace? stackTrace,
-      Object? object}) {
+  void logInfo(String message, {String? tag, Object? exception, StackTrace? stackTrace, Object? object}) {
     // Early exit check for performance
     if (!isInfoEnabled) return;
 
-    logger.logInfo(message,
-        tag: tag, exception: exception, stackTrace: stackTrace);
+    logger.logInfo(message, tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   /// Logs a WARN level message.
@@ -228,16 +212,11 @@ mixin AnyLogger {
   /// - [tag]: Optional tag for categorizing logs
   /// - [exception]: Optional exception object
   /// - [stackTrace]: Optional stack trace
-  void logWarn(String message,
-      {String? tag,
-      Object? exception,
-      StackTrace? stackTrace,
-      Object? object}) {
+  void logWarn(String message, {String? tag, Object? exception, StackTrace? stackTrace, Object? object}) {
     // Early exit check for performance
     if (!isWarnEnabled) return;
 
-    logger.logWarn(message,
-        tag: tag, exception: exception, stackTrace: stackTrace);
+    logger.logWarn(message, tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   /// Logs an ERROR level message.
@@ -253,16 +232,11 @@ mixin AnyLogger {
   /// - [tag]: Optional tag for categorizing logs
   /// - [exception]: Optional exception object
   /// - [stackTrace]: Optional stack trace
-  void logError(String message,
-      {String? tag,
-      Object? exception,
-      StackTrace? stackTrace,
-      Object? object}) {
+  void logError(String message, {String? tag, Object? exception, StackTrace? stackTrace, Object? object}) {
     // Early exit check for performance
     if (!isErrorEnabled) return;
 
-    logger.logError(message,
-        tag: tag, exception: exception, stackTrace: stackTrace);
+    logger.logError(message, tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   /// Logs a FATAL level message (most severe).
@@ -278,16 +252,11 @@ mixin AnyLogger {
   /// - [tag]: Optional tag for categorizing logs
   /// - [exception]: Optional exception object
   /// - [stackTrace]: Optional stack trace
-  void logFatal(String message,
-      {String? tag,
-      Object? exception,
-      StackTrace? stackTrace,
-      Object? object}) {
+  void logFatal(String message, {String? tag, Object? exception, StackTrace? stackTrace, Object? object}) {
     // Early exit check for performance
     if (!isFatalEnabled) return;
 
-    logger.logFatal(message,
-        tag: tag, exception: exception, stackTrace: stackTrace);
+    logger.logFatal(message, tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   // Supplier Methods (Lazy Evaluation)
@@ -305,11 +274,9 @@ mixin AnyLogger {
   /// ```dart
   /// logTraceSupplier(() => 'State: ${_captureExpensiveState()}');
   /// ```
-  void logTraceSupplier(String Function() messageSupplier,
-      {String? tag, Object? exception, StackTrace? stackTrace}) {
+  void logTraceSupplier(String Function() messageSupplier, {String? tag, Object? exception, StackTrace? stackTrace}) {
     if (!isTraceEnabled) return;
-    logger.logTrace(messageSupplier(),
-        tag: tag, exception: exception, stackTrace: stackTrace);
+    logger.logTrace(messageSupplier(), tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   /// Logs a DEBUG message using lazy evaluation.
@@ -318,11 +285,9 @@ mixin AnyLogger {
   /// ```dart
   /// logDebugSupplier(() => 'Cache stats: ${_computeCacheStats()}');
   /// ```
-  void logDebugSupplier(String Function() messageSupplier,
-      {String? tag, Object? exception, StackTrace? stackTrace}) {
+  void logDebugSupplier(String Function() messageSupplier, {String? tag, Object? exception, StackTrace? stackTrace}) {
     if (!isDebugEnabled) return;
-    logger.logDebug(messageSupplier(),
-        tag: tag, exception: exception, stackTrace: stackTrace);
+    logger.logDebug(messageSupplier(), tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   /// Logs an INFO message using lazy evaluation.
@@ -331,11 +296,9 @@ mixin AnyLogger {
   /// ```dart
   /// logInfoSupplier(() => 'Processed ${_countRecords()} records');
   /// ```
-  void logInfoSupplier(String Function() messageSupplier,
-      {String? tag, Object? exception, StackTrace? stackTrace}) {
+  void logInfoSupplier(String Function() messageSupplier, {String? tag, Object? exception, StackTrace? stackTrace}) {
     if (!isInfoEnabled) return;
-    logger.logInfo(messageSupplier(),
-        tag: tag, exception: exception, stackTrace: stackTrace);
+    logger.logInfo(messageSupplier(), tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   /// Logs a WARN message using lazy evaluation.
@@ -344,11 +307,9 @@ mixin AnyLogger {
   /// ```dart
   /// logWarnSupplier(() => 'Queue size: ${_getQueueMetrics()}');
   /// ```
-  void logWarnSupplier(String Function() messageSupplier,
-      {String? tag, Object? exception, StackTrace? stackTrace}) {
+  void logWarnSupplier(String Function() messageSupplier, {String? tag, Object? exception, StackTrace? stackTrace}) {
     if (!isWarnEnabled) return;
-    logger.logWarn(messageSupplier(),
-        tag: tag, exception: exception, stackTrace: stackTrace);
+    logger.logWarn(messageSupplier(), tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   /// Logs an ERROR message using lazy evaluation.
@@ -357,11 +318,9 @@ mixin AnyLogger {
   /// ```dart
   /// logErrorSupplier(() => 'Failed after ${_getRetryCount()} retries');
   /// ```
-  void logErrorSupplier(String Function() messageSupplier,
-      {String? tag, Object? exception, StackTrace? stackTrace}) {
+  void logErrorSupplier(String Function() messageSupplier, {String? tag, Object? exception, StackTrace? stackTrace}) {
     if (!isErrorEnabled) return;
-    logger.logError(messageSupplier(),
-        tag: tag, exception: exception, stackTrace: stackTrace);
+    logger.logError(messageSupplier(), tag: tag, exception: exception, stackTrace: stackTrace);
   }
 
   /// Logs a FATAL message using lazy evaluation.
@@ -370,10 +329,8 @@ mixin AnyLogger {
   /// ```dart
   /// logFatalSupplier(() => 'System state: ${_dumpSystemState()}');
   /// ```
-  void logFatalSupplier(String Function() messageSupplier,
-      {String? tag, Object? exception, StackTrace? stackTrace}) {
+  void logFatalSupplier(String Function() messageSupplier, {String? tag, Object? exception, StackTrace? stackTrace}) {
     if (!isFatalEnabled) return;
-    logger.logFatal(messageSupplier(),
-        tag: tag, exception: exception, stackTrace: stackTrace);
+    logger.logFatal(messageSupplier(), tag: tag, exception: exception, stackTrace: stackTrace);
   }
 }

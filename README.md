@@ -35,8 +35,6 @@ That's it! No other dependencies needed to start logging.
 import 'package:any_logger/any_logger.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   await LoggerFactory.initConsole();
 
   Logger.info("Flutter app started!");

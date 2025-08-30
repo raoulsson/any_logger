@@ -3,8 +3,7 @@ import 'dart:io';
 import '../../any_logger.dart';
 
 class IdProviderResolver {
-  static ({bool deviceIdNeeded, bool sessionIdNeeded}) analyzeRequirements(
-      dynamic source) {
+  static ({bool deviceIdNeeded, bool sessionIdNeeded}) analyzeRequirements(dynamic source) {
     bool deviceIdNeeded = false;
     bool sessionIdNeeded = false;
 
@@ -50,8 +49,7 @@ class IdProviderResolver {
         if (getAppDocumentsDirectoryFnc == null) {
           throw StateError(_getPathProviderErrorMessage());
         }
-        FileIdProvider.getAppDocumentsDirectoryFnc =
-            getAppDocumentsDirectoryFnc;
+        FileIdProvider.getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
         return FileIdProvider();
       } else if (sessionIdNeeded) {
         // Only session ID needed on Flutter
@@ -75,16 +73,13 @@ class IdProviderResolver {
     final isFlutter = _isFlutterApp();
     final platform = isFlutter ? "Flutter" : "Dart";
 
-    final ids =
-        [if (deviceIdNeeded) '%did', if (sessionIdNeeded) '%sid'].join('+');
+    final ids = [if (deviceIdNeeded) '%did', if (sessionIdNeeded) '%sid'].join('+');
 
     String providerName;
     if (!deviceIdNeeded && !sessionIdNeeded) {
       providerName = "NullIdProvider";
     } else if (isFlutter && deviceIdNeeded) {
-      providerName = getAppDocumentsDirectoryFnc != null
-          ? "FileIdProvider"
-          : "ERROR-needs-path_provider";
+      providerName = getAppDocumentsDirectoryFnc != null ? "FileIdProvider" : "ERROR-needs-path_provider";
     } else if (isFlutter && sessionIdNeeded) {
       providerName = "MemoryIdProvider";
     } else {

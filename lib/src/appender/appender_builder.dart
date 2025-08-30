@@ -48,8 +48,7 @@ class AppenderBuilder {
   /// Sets the [RotationCycle] for log file rotation.
   AppenderBuilder withRotationCycle(RotationCycle cycle) {
     if (_type != 'FILE') {
-      throw StateError(
-          'withRotationCycle is only applicable for FILE appender');
+      throw StateError('withRotationCycle is only applicable for FILE appender');
     }
     _config['rotationCycle'] = cycle.name;
     return this;
@@ -72,8 +71,7 @@ class AppenderBuilder {
   /// Builds the appender synchronously (only for CONSOLE)
   Appender buildSync() {
     if (_type.toUpperCase() != 'CONSOLE') {
-      throw UnsupportedError(
-          'Synchronous building is only supported for CONSOLE appender. Use build() instead.');
+      throw UnsupportedError('Synchronous building is only supported for CONSOLE appender. Use build() instead.');
     }
     return ConsoleAppender.fromConfigSync(_config);
   }
