@@ -405,26 +405,26 @@ class Logger {
         try {
           // Skip flush for appenders that don't need it
           if (appender.getType() == 'CONSOLE' || appender.getType() == 'FILE') {
-            getSelfLogger()?.logTrace('Skipping flush for ${appender.getType()} appender (not needed)');
+            getSelfLogger()?.logTrace('Logger "$name": Skipping flush for ${appender.getType()} appender (not needed)');
             continue;
           }
 
           await appender.flush();
-          getSelfLogger()?.logTrace('Flushed ${appender.getType()} appender');
+          getSelfLogger()?.logTrace('Logger "$name": Flushed ${appender.getType()} appender');
         } catch (e) {
-          print('[Logger] Error flushing appender ${appender.getType()}: $e');
+          print('Logger "$name":  Error flushing appender ${appender.getType()}: $e');
         }
       }
       for (var appender in customAppenders) {
         try {
           await appender.flush();
-          getSelfLogger()?.logTrace('Flushed custom ${appender.getType()} appender');
+          getSelfLogger()?.logTrace('Logger "$name": Flushed custom ${appender.getType()} appender');
         } catch (e) {
-          print('[Logger] Error flushing custom appender ${appender.getType()}: $e');
+          print('Logger "$name": Error flushing custom appender ${appender.getType()}: $e');
         }
       }
     } catch (e) {
-      print('[Logger] Error in logger flush: $e');
+      print('Logger "$name": Error in logger flush: $e');
     }
   }
 

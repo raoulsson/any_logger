@@ -252,7 +252,7 @@ class FileAppender extends Appender {
 
   @override
   String getShortConfigDesc() {
-    return 'resolvedBasePath: $_resolvedBasePath/$path/';
+    return 'resolvedBasePath: $_resolvedBasePath/$path';
   }
 
   @override
