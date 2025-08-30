@@ -578,7 +578,7 @@ class LoggerFactory {
           logLevel: Level.INFO);
       final config = appender.getConfig();
       config.forEach((key, value) {
-        _selfLog('  $key: $value', logLevel: Level.DEBUG);
+        _selfLog('--- $key: $value', logLevel: Level.DEBUG);
       });
     }
   }
@@ -873,4 +873,95 @@ class LoggerFactory {
 
   /// Get the session ID from the ID provider
   static String? getSessionId() => idProvider.sessionId;
+
+  /// Get the first appender of a specific type
+  static T? getFirstAppender<T extends Appender>() {
+    if (_rootLogger == null) return null;
+
+    // Check regular appenders first
+    for (var appender in _rootLogger!.appenders) {
+      if (appender is T) {
+        return appender;
+      }
+    }
+
+    // Then check custom appenders
+    for (var appender in _rootLogger!.customAppenders) {
+      if (appender is T) {
+        return appender;
+      }
+    }
+
+    return null;
+  }
+
+  /// Get all appenders of a specific type
+  static List<T> getAllAppenders<T extends Appender>() {
+    if (_rootLogger == null) return [];
+
+    final List<T> result = [];
+
+    // Add from regular appenders
+    for (var appender in _rootLogger!.appenders) {
+      if (appender is T) {
+        result.add(appender);
+      }
+    }
+
+    // Add from custom appenders
+    for (var appender in _rootLogger!.customAppenders) {
+      if (appender is T) {
+        result.add(appender);
+      }
+    }
+
+    return result;
+  }
+
+  /// Get the first appender by type name
+  static Appender? getFirstAppenderByType(String type) {
+    if (_rootLogger == null) return null;
+
+    final upperType = type.toUpperCase();
+
+    // Check regular appenders first
+    for (var appender in _rootLogger!.appenders) {
+      if (appender.getType() == upperType) {
+        return appender;
+      }
+    }
+
+    // Then check custom appenders
+    for (var appender in _rootLogger!.customAppenders) {
+      if (appender.getType() == upperType) {
+        return appender;
+      }
+    }
+
+    return null;
+  }
+
+  /// Get all appenders by type name
+  static List<Appender> getAllAppendersByType(String type) {
+    if (_rootLogger == null) return [];
+
+    final upperType = type.toUpperCase();
+    final List<Appender> result = [];
+
+    // Add from regular appenders
+    for (var appender in _rootLogger!.appenders) {
+      if (appender.getType() == upperType) {
+        result.add(appender);
+      }
+    }
+
+    // Add from custom appenders
+    for (var appender in _rootLogger!.customAppenders) {
+      if (appender.getType() == upperType) {
+        result.add(appender);
+      }
+    }
+
+    return result;
+  }
 }

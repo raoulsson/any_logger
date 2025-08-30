@@ -45,9 +45,6 @@ class IdProviderResolver {
     final isFlutter = isFlutterApp();
 
     // Check if Flutter app needs path_provider for FILE appender
-    print('Flutter: $isFlutter');
-    print('FileAppender: $fileAppenderNeeded');
-    print('getAppDocumentsDirectoryFnc: $getAppDocumentsDirectoryFnc');
     if (isFlutter && fileAppenderNeeded && getAppDocumentsDirectoryFnc == null) {
       throw StateError(_getFileAppenderErrorMessage());
     }
@@ -132,13 +129,6 @@ and call:
 before you initialize the logging system:
   LoggerFactory.init(...)
 ════════════════════════════════════════════════════════════════════════════════
-Thus we can use the FileIdProvider for consistent but anonymous device identification
-════════════════════════════════════════════════════════════════════════════════
-Alternatively: 
-Use Memory Provider (IDs won't persist)
-  LoggerFactory.setIdProvider(MemoryIdProvider());
-...or remove %did from your log format
-════════════════════════════════════════════════════════════════════════════════
 ''';
   }
 
@@ -149,16 +139,12 @@ Use Memory Provider (IDs won't persist)
 🚨 ANYLOGGER CONFIG ERROR: You're using a FILE appender on Flutter.
 Flutter apps need proper path access to create log files.
 ════════════════════════════════════════════════════════════════════════════════
-Add to pubspec.yaml:
-  path_provider: ^2.1.0
-
-Then before initializing:
-  import 'package:path_provider/path_provider.dart';
-  
+Add:
+  path_provider: ^x.y.z // in pubspec.yaml
+and call:
   LoggerFactory.setGetAppDocumentsDirectoryFnc(getApplicationDocumentsDirectory);
-  await LoggerFactory.init(...);
-════════════════════════════════════════════════════════════════════════════════
-This allows AnyLogger to create log files in the app's documents directory.
+before you initialize the logging system:
+  LoggerFactory.init(...)
 ════════════════════════════════════════════════════════════════════════════════
 ''';
   }
