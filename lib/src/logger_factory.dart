@@ -407,7 +407,8 @@ class LoggerFactory {
 
     if (selfDebug) {
       _setupSelfLogger();
-      _selfLog('Logger initialized synchronously with ${appendersFromConfig.length} appenders', logLevel: Level.INFO);
+      _logAppenderConfigs(
+          appendersFromConfig, 'Logger initialized synchronously with ${appendersFromConfig.length} appenders');
     }
   }
 
@@ -487,7 +488,7 @@ class LoggerFactory {
 
     if (selfDebug) {
       _setupSelfLogger();
-      _selfLog('Logger initialized with ${appendersFromConfig.length} appenders', logLevel: Level.INFO);
+      _logAppenderConfigs(appendersFromConfig, 'Logger initialized with ${appendersFromConfig.length} appenders');
     }
 
     return true;
@@ -549,12 +550,22 @@ class LoggerFactory {
 
     if (selfDebug) {
       _setupSelfLogger();
-      _selfLog(
-          'Logging system initialized with programmatic LoggerConfig with ${appendersFromConfig.length} active appenders');
-      for (var appender in appendersFromConfig) {
-        _selfLog('Appender: ${appender.getType()}, Level: ${appender.level}, '
-            'Format: ${appender.format}, DateFormat: ${appender.dateFormat}');
-      }
+      _logAppenderConfigs(appendersFromConfig,
+          'Logger initialized with programmatic LoggerConfig with ${appendersFromConfig.length} active appenders');
+    }
+  }
+
+  static void _logAppenderConfigs(List<Appender> appenders, String initMessage) {
+    if (!_selfDebugEnabled) return;
+
+    _selfLog(initMessage, logLevel: Level.INFO);
+
+    for (var appender in appenders) {
+      _selfLog('Appender ${appender.getType()} configuration:', logLevel: Level.INFO);
+      final config = appender.getConfig();
+      config.forEach((key, value) {
+        _selfLog('  $key: $value', logLevel: Level.DEBUG);
+      });
     }
   }
 
