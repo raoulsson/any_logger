@@ -3,6 +3,7 @@
 ## 1.0.11
 
 * Fixed FileAppender which did not work on Flutter platforms
+* Critical bug fix in LogRecordFormatter. Format placeholders in %m now handled properly
 
 ## 1.0.10
 

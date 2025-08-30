@@ -14,33 +14,41 @@ class LogRecordFormatter {
   static String format(LogRecord logRecord, String format, {String? dateFormat = kDefaultDateFormat}) {
     var workingFormat = format;
 
-    // IMPORTANT: Handle %did, %sid, and %app BEFORE %d to avoid conflicts
+    // CRITICAL: First extract and process the message to prevent double-evaluation
+    // We need to handle %m FIRST and store the actual message
+    String actualMessage = eval(logRecord.message);
 
-    // Handle device ID placeholder FIRST
+    // Replace %m with a unique placeholder that won't be confused with other patterns
+    const String messagePlaceholder = '<<__MESSAGE_CONTENT__>>';
+    workingFormat = workingFormat.replaceAll('%m', messagePlaceholder);
+
+    // NOW process all other placeholders (they won't affect the message content)
+
+    // Handle device ID placeholder
     if (workingFormat.contains('%did')) {
       final deviceId = LoggerFactory.idProvider.deviceId ?? 'unknown';
       workingFormat = workingFormat.replaceAll('%did', deviceId);
     }
 
-    // Handle session ID placeholder SECOND
+    // Handle session ID placeholder
     if (workingFormat.contains('%sid')) {
       final sessionId = LoggerFactory.idProvider.sessionId ?? 'unknown';
       workingFormat = workingFormat.replaceAll('%sid', sessionId);
     }
 
-    // Handle app version placeholder THIRD
+    // Handle app version placeholder
     if (workingFormat.contains('%app')) {
       final appVersion = LoggerFactory.appVersion ?? '';
       workingFormat = workingFormat.replaceAll('%app', appVersion);
     }
 
-    // NOW handle timestamp (after %did, %sid, and %app are processed)
+    // Handle timestamp
     if (workingFormat.contains('%d')) {
-      // Use SimpleDateFormat instead of intl's DateFormat
       var date = SimpleDateFormat(dateFormat!).format(logRecord.time);
       workingFormat = workingFormat.replaceAll('%d', date);
     }
 
+    // Handle tag
     if (workingFormat.contains('%t')) {
       if (!isNullOrEmpty(logRecord.tag)) {
         workingFormat = workingFormat.replaceAll('%t', logRecord.tag!);
@@ -49,6 +57,7 @@ class LogRecordFormatter {
       }
     }
 
+    // Handle logger name
     if (workingFormat.contains('%i')) {
       if (isNullOrEmpty(logRecord.loggerName)) {
         workingFormat = workingFormat.replaceAll('%i', '');
@@ -57,21 +66,18 @@ class LogRecordFormatter {
       }
     }
 
+    // Handle level
     if (workingFormat.contains('%l')) {
       workingFormat = workingFormat.replaceAll('%l', logRecord.level.name);
     }
 
-    if (workingFormat.contains('%m')) {
-      workingFormat = workingFormat.replaceAll('%m', eval(logRecord.message));
-    }
-
-    // %c shows Class.method:line format (e.g., "DataService.syncData:338")
+    // Handle class.method:line format
     if (workingFormat.contains('%c')) {
       var classMethodLine = logRecord.functionNameAndLine();
       workingFormat = workingFormat.replaceAll('%c', classMethodLine);
     }
 
-    // %f shows the full file location (e.g., "package:any_logger/example/data_service.dart(338:5)")
+    // Handle file location
     if (workingFormat.contains('%f')) {
       var fileLocation = logRecord.inFileLocation();
       if (fileLocation != null) {
@@ -85,6 +91,10 @@ class LogRecordFormatter {
     if (workingFormat.contains('%X')) {
       workingFormat = _processMdcWithTemplateCache(workingFormat);
     }
+
+    // FINALLY: Replace the message placeholder with the actual message
+    // This ensures the message content is never evaluated for format placeholders
+    workingFormat = workingFormat.replaceAll(messagePlaceholder, actualMessage);
 
     // Clean up any double spaces
     workingFormat = workingFormat.replaceAll('  ', ' ');
