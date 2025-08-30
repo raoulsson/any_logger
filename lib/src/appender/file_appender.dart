@@ -252,7 +252,7 @@ class FileAppender extends Appender {
 
   @override
   String getShortConfigDesc() {
-    return 'resolvedBasePath: $_resolvedBasePath/$path';
+    return 'logPath: $_resolvedBasePath/$path';
   }
 
   @override
@@ -279,22 +279,5 @@ class FileAppender extends Appender {
       'fileAbsolutePath': _file.absolute.path,
     });
     return config;
-  }
-
-  /// Debug method to check path resolution
-  void debugPaths() {
-    print('===== FileAppender Path Debug =====');
-    print('  path (config): $path');
-    print('  _resolvedBasePath: $_resolvedBasePath');
-    print('  filePattern: $filePattern');
-    print('  fileExtension: $fileExtension');
-    print('  rotationCycle: ${rotationCycle.name}');
-    print('  _getFullFilename(): ${_getFullFilename()}');
-    print('  _file.path: ${_file.path}');
-    print('  _file.absolute.path: ${_file.absolute.path}');
-    print('  _file.parent.path: ${_file.parent.path}');
-    print('  _file.parent.existsSync(): ${_file.parent.existsSync()}');
-    print('  _file.existsSync(): ${_file.existsSync()}');
-    print('===================================');
   }
 }
