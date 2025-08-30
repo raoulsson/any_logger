@@ -407,8 +407,7 @@ class LoggerFactory {
 
     if (selfDebug) {
       _setupSelfLogger();
-      _logAppenderConfigs(
-          appendersFromConfig, 'Logger initialized synchronously with ${appendersFromConfig.length} appenders');
+      _logAppenderConfigs(appendersFromConfig, 'Logger initialized sync with ${appendersFromConfig.length} appenders');
     }
   }
 
@@ -488,7 +487,7 @@ class LoggerFactory {
 
     if (selfDebug) {
       _setupSelfLogger();
-      _logAppenderConfigs(appendersFromConfig, 'Logger initialized with ${appendersFromConfig.length} appenders');
+      _logAppenderConfigs(appendersFromConfig, 'Logger initialized async with ${appendersFromConfig.length} appenders');
     }
 
     return true;
@@ -561,7 +560,8 @@ class LoggerFactory {
     _selfLog(initMessage, logLevel: Level.INFO);
 
     for (var appender in appenders) {
-      _selfLog('Appender ${appender.getType()} configuration:', logLevel: Level.INFO);
+      _selfLog('Appender ${appender.getType()}, ${appender.level}, ${appender.getShortConfigDesc()}',
+          logLevel: Level.INFO);
       final config = appender.getConfig();
       config.forEach((key, value) {
         _selfLog('  $key: $value', logLevel: Level.DEBUG);

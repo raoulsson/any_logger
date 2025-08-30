@@ -133,6 +133,11 @@ class ConsoleAppender extends Appender {
   }
 
   @override
+  String getShortConfigDesc() {
+    return 'mode: $mode';
+  }
+
+  @override
   Future<void> dispose() async {
     // No resources to dispose of for ConsoleAppender
   }

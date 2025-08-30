@@ -251,6 +251,11 @@ class FileAppender extends Appender {
   }
 
   @override
+  String getShortConfigDesc() {
+    return 'resolvedBasePath: $_resolvedBasePath/$path/';
+  }
+
+  @override
   Future<void> dispose() async {
     // file ops are atomic already
   }

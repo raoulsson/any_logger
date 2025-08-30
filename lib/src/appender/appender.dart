@@ -29,6 +29,8 @@ abstract class Appender {
 
   void append(LogRecord logRecord);
 
+  String getShortConfigDesc();
+
   /// Creates a deep copy of this appender with all properties
   Appender createDeepCopy() {
     // This should be overridden by each concrete appender class
