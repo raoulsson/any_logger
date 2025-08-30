@@ -8,31 +8,45 @@ class FileAppender extends Appender {
   String path = 'logs/';
   RotationCycle rotationCycle = RotationCycle.NEVER;
   late File _file;
+  String? _resolvedBasePath; // Store the resolved base path for this instance
+
+  // Flutter apps MUST set this for file operations
+  static Future<Directory> Function()? getAppDocumentsDirectoryFnc;
 
   FileAppender() : super();
 
-  FileAppender.fromConfig(Map<String, dynamic> config, {bool test = false, DateTime? date}) : super(customDate: date) {
-    initializeCommonProperties(config, test: test, date: date);
+  static Future<FileAppender> fromConfig(Map<String, dynamic> config, {bool test = false, DateTime? date}) async {
+    final appender = FileAppender()..created = date ?? DateTime.now();
+
+    appender.initializeCommonProperties(config, test: test, date: date);
 
     if (config.containsKey('filePattern')) {
-      filePattern = config['filePattern'];
+      appender.filePattern = config['filePattern'];
     } else {
       throw ArgumentError('Missing file argument for file appender');
     }
 
     if (config.containsKey('fileExtension')) {
-      fileExtension = config['fileExtension'];
+      appender.fileExtension = config['fileExtension'];
     }
 
     if (config.containsKey('rotationCycle')) {
-      rotationCycle = Utils.getRotationCycleFromString(config['rotationCycle']);
+      appender.rotationCycle = Utils.getRotationCycleFromString(config['rotationCycle']);
     }
 
     if (config.containsKey('path')) {
-      path = config['path'];
+      appender.path = config['path'];
     }
 
-    _ensurePathExists();
+    // Resolve the base path once during initialization
+    if (getAppDocumentsDirectoryFnc != null) {
+      final dir = await getAppDocumentsDirectoryFnc!();
+      appender._resolvedBasePath = dir.path;
+    }
+
+    appender._ensurePathExists();
+
+    return appender;
   }
 
   /// Ensures the directory and file exist
@@ -67,41 +81,57 @@ class FileAppender extends Appender {
   @override
   Appender createDeepCopy() {
     FileAppender copy = FileAppender();
-    copyBasePropertiesTo(copy); // Use helper
+    copyBasePropertiesTo(copy);
     copy.filePattern = filePattern;
     copy.fileExtension = fileExtension;
     copy.path = path;
     copy.rotationCycle = rotationCycle;
+    copy._resolvedBasePath = _resolvedBasePath; // Copy the resolved path
     copy._ensurePathExists();
     return copy;
   }
 
   String _getFullFilename() {
-    // Ensure path ends with separator if it's not empty
-    String finalPath = path;
-    if (finalPath.isNotEmpty && !finalPath.endsWith('/') && !finalPath.endsWith('\\')) {
-      // Use forward slash for cross-platform compatibility
-      finalPath += '/';
+    String fullPath;
+
+    // If we have a resolved base path, we're in Flutter mode
+    if (_resolvedBasePath != null) {
+      // Flutter mode - everything goes under app documents
+      String cleanPath = path;
+      // Remove leading slash
+      if (cleanPath.startsWith('/')) {
+        cleanPath = cleanPath.substring(1);
+      }
+      // Replace Windows drive letters (C:/ becomes C_/)
+      if (cleanPath.length > 1 && cleanPath[1] == ':') {
+        cleanPath = cleanPath.replaceFirst(':', '_');
+      }
+
+      fullPath = '$_resolvedBasePath/$cleanPath';
+    } else {
+      // Standard filesystem mode - use path as given (absolute or relative)
+      fullPath = path;
+    }
+
+    // Ensure path ends with separator
+    if (fullPath.isNotEmpty && !fullPath.endsWith('/') && !fullPath.endsWith('\\')) {
+      fullPath += '/';
     }
 
     switch (rotationCycle) {
       case RotationCycle.NEVER:
-        return '$finalPath${filePattern!}.$fileExtension';
+        return '$fullPath${filePattern!}.$fileExtension';
       case RotationCycle.DAY:
-        // Use SimpleDateFormat instead of intl's DateFormat
-        return '$finalPath${filePattern!}_${SimpleDateFormat('yyyy-MM-dd').format(created)}.$fileExtension';
+        return '$fullPath${filePattern!}_${SimpleDateFormat('yyyy-MM-dd').format(created)}.$fileExtension';
       case RotationCycle.WEEK:
-        return '$finalPath${filePattern!}_${created.year}-CW${Utils.getCalendarWeek(created)}.$fileExtension';
+        return '$fullPath${filePattern!}_${created.year}-CW${Utils.getCalendarWeek(created)}.$fileExtension';
       case RotationCycle.MONTH:
-        // Use SimpleDateFormat instead of intl's DateFormat
-        return '$finalPath${filePattern!}_${SimpleDateFormat('yyyy-MM').format(created)}.$fileExtension';
+        return '$fullPath${filePattern!}_${SimpleDateFormat('yyyy-MM').format(created)}.$fileExtension';
       case RotationCycle.YEAR:
-        // Use SimpleDateFormat instead of intl's DateFormat
-        return '$finalPath${filePattern!}_${SimpleDateFormat('yyyy').format(created)}.$fileExtension';
+        return '$fullPath${filePattern!}_${SimpleDateFormat('yyyy').format(created)}.$fileExtension';
     }
   }
 
-  @override
   @override
   void append(LogRecord logRecord) async {
     if (!enabled) return;

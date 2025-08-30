@@ -3,9 +3,10 @@ import 'dart:io';
 import '../../any_logger.dart';
 
 class IdProviderResolver {
-  static ({bool deviceIdNeeded, bool sessionIdNeeded}) analyzeRequirements(dynamic source) {
+  static ({bool deviceIdNeeded, bool sessionIdNeeded, bool fileAppenderNeeded}) analyzeRequirements(dynamic source) {
     bool deviceIdNeeded = false;
     bool sessionIdNeeded = false;
+    bool fileAppenderNeeded = false;
 
     // Handle List<Appender>
     if (source is List<Appender>) {
@@ -13,6 +14,7 @@ class IdProviderResolver {
         final format = appender.format;
         if (format.contains('%did')) deviceIdNeeded = true;
         if (format.contains('%sid')) sessionIdNeeded = true;
+        if (appender.getType() == 'FILE') fileAppenderNeeded = true;
       }
     }
     // Handle Map<String, dynamic> JSON config
@@ -24,25 +26,33 @@ class IdProviderResolver {
             if (format.contains('%did')) deviceIdNeeded = true;
             if (format.contains('%sid')) sessionIdNeeded = true;
           }
+          final type = appender['type'] as String?;
+          if (type?.toUpperCase() == 'FILE') fileAppenderNeeded = true;
         }
       }
     }
 
-    return (deviceIdNeeded: deviceIdNeeded, sessionIdNeeded: sessionIdNeeded);
+    return (deviceIdNeeded: deviceIdNeeded, sessionIdNeeded: sessionIdNeeded, fileAppenderNeeded: fileAppenderNeeded);
   }
 
   /// Determine which provider to use based on requirements
   static IdProvider resolveProvider({
     required bool deviceIdNeeded,
     required bool sessionIdNeeded,
+    required bool fileAppenderNeeded,
     required Future<Directory> Function()? getAppDocumentsDirectoryFnc,
   }) {
+    final isFlutter = isFlutterApp();
+
+    // Check if Flutter app needs path_provider for FILE appender
+    if (isFlutter && fileAppenderNeeded && getAppDocumentsDirectoryFnc == null) {
+      throw StateError(_getFileAppenderErrorMessage());
+    }
+
     // No IDs needed
     if (!deviceIdNeeded && !sessionIdNeeded) {
       return NullIdProvider();
     }
-
-    final isFlutter = _isFlutterApp();
 
     if (isFlutter) {
       if (deviceIdNeeded) {
@@ -68,12 +78,14 @@ class IdProviderResolver {
   static String getDebugSummary({
     required bool deviceIdNeeded,
     required bool sessionIdNeeded,
+    required bool fileAppenderNeeded,
     required Future<Directory> Function()? getAppDocumentsDirectoryFnc,
   }) {
-    final isFlutter = _isFlutterApp();
+    final isFlutter = isFlutterApp();
     final platform = isFlutter ? "Flutter" : "Dart";
 
-    final ids = [if (deviceIdNeeded) '%did', if (sessionIdNeeded) '%sid'].join('+');
+    final features =
+        [if (deviceIdNeeded) '%did', if (sessionIdNeeded) '%sid', if (fileAppenderNeeded) 'FILE'].join('+');
 
     String providerName;
     if (!deviceIdNeeded && !sessionIdNeeded) {
@@ -86,10 +98,20 @@ class IdProviderResolver {
       providerName = "FileIdProvider";
     }
 
-    return 'Platform: $platform | IDs: ${ids.isEmpty ? "none" : ids} | Provider: $providerName';
+    // Add file appender status
+    String fileStatus = "";
+    if (fileAppenderNeeded) {
+      if (isFlutter && getAppDocumentsDirectoryFnc == null) {
+        fileStatus = " | FILE: ERROR-needs-path_provider";
+      } else {
+        fileStatus = " | FILE: OK";
+      }
+    }
+
+    return 'Platform: $platform | Features: ${features.isEmpty ? "none" : features} | Provider: $providerName$fileStatus';
   }
 
-  static bool _isFlutterApp() {
+  static bool isFlutterApp() {
     return const bool.fromEnvironment('dart.library.ui', defaultValue: false);
   }
 
@@ -113,6 +135,27 @@ Alternatively:
 Use Memory Provider (IDs won't persist)
   LoggerFactory.setIdProvider(MemoryIdProvider());
 ...or remove %did from your log format
+════════════════════════════════════════════════════════════════════════════════
+''';
+  }
+
+  static String _getFileAppenderErrorMessage() {
+    return '''
+    
+════════════════════════════════════════════════════════════════════════════════
+🚨 ANYLOGGER CONFIG ERROR: You're using a FILE appender on Flutter.
+Flutter apps need proper path access to create log files.
+════════════════════════════════════════════════════════════════════════════════
+Add to pubspec.yaml:
+  path_provider: ^2.1.0
+
+Then before initializing:
+  import 'package:path_provider/path_provider.dart';
+  
+  LoggerFactory.setGetAppDocumentsDirectoryFnc(getApplicationDocumentsDirectory);
+  await LoggerFactory.init(...);
+════════════════════════════════════════════════════════════════════════════════
+This allows AnyLogger to create log files in the app's documents directory.
 ════════════════════════════════════════════════════════════════════════════════
 ''';
   }

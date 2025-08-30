@@ -34,6 +34,7 @@ class LoggerFactory {
   static IdProvider? _idProvider;
   static bool _deviceIdNeeded = false;
   static bool _sessionIdNeeded = false;
+  static bool _fileAppenderNeeded = false;
 
   // Flutter apps MUST set this or logging will fail
   static Future<Directory> Function()? _getAppDocumentsDirectoryFnc;
@@ -53,6 +54,7 @@ class LoggerFactory {
   static void setGetAppDocumentsDirectoryFnc(Future<Directory> Function() getAppDocumentsDirectoryFnc) {
     _getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
     FileIdProvider.getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
+    FileAppender.getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
   }
 
   /// Set a custom ID provider (must be called before initialization)
@@ -74,6 +76,7 @@ class LoggerFactory {
     return IdProviderResolver.resolveProvider(
       deviceIdNeeded: _deviceIdNeeded,
       sessionIdNeeded: _sessionIdNeeded,
+      fileAppenderNeeded: _fileAppenderNeeded,
       getAppDocumentsDirectoryFnc: _getAppDocumentsDirectoryFnc,
     );
   }
@@ -352,12 +355,14 @@ class LoggerFactory {
     final requirements = IdProviderResolver.analyzeRequirements(config);
     _deviceIdNeeded = requirements.deviceIdNeeded;
     _sessionIdNeeded = requirements.sessionIdNeeded;
+    _fileAppenderNeeded = requirements.fileAppenderNeeded;
 
     if (_selfDebugEnabled) {
       _selfLog(
           IdProviderResolver.getDebugSummary(
             deviceIdNeeded: _deviceIdNeeded,
             sessionIdNeeded: _sessionIdNeeded,
+            fileAppenderNeeded: _fileAppenderNeeded,
             getAppDocumentsDirectoryFnc: _getAppDocumentsDirectoryFnc,
           ),
           logLevel: Level.TRACE);
@@ -432,6 +437,7 @@ class LoggerFactory {
           IdProviderResolver.getDebugSummary(
             deviceIdNeeded: _deviceIdNeeded,
             sessionIdNeeded: _sessionIdNeeded,
+            fileAppenderNeeded: _fileAppenderNeeded,
             getAppDocumentsDirectoryFnc: _getAppDocumentsDirectoryFnc,
           ),
           logLevel: Level.TRACE);
@@ -467,10 +473,6 @@ class LoggerFactory {
 
         Appender appender = await AppenderRegistry.instance.create(appConfig, test: test, date: date);
         appendersFromConfig.add(appender);
-
-        if (selfDebug) {
-          _selfLog('Created ${appender.getType()} appender', logLevel: Level.TRACE);
-        }
       } catch (e) {
         if (selfDebug) {
           _selfLog('Error creating appender: $e', logLevel: Level.ERROR);
@@ -524,6 +526,7 @@ class LoggerFactory {
       _selfLog(IdProviderResolver.getDebugSummary(
         deviceIdNeeded: _deviceIdNeeded,
         sessionIdNeeded: _sessionIdNeeded,
+        fileAppenderNeeded: _fileAppenderNeeded,
         getAppDocumentsDirectoryFnc: _getAppDocumentsDirectoryFnc,
       ));
     }
@@ -797,7 +800,7 @@ class LoggerFactory {
 
     // If self-logger isn't set up yet, use print for early debugging
     if (_selfLogger == null) {
-      print('[ANYLOGGER_STARTUP}] $message');
+      print('[ANYLOGGER_STARTUP] $message');
       return;
     }
 

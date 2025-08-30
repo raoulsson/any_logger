@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.11
+
+* Fixed FileAppender which did not work on Flutter platforms
+
 ## 1.0.10
 
 * Updated README
