@@ -289,7 +289,7 @@ class Logger {
       appender.level = level;
     }
     _minLevelDirty = true;
-    getSelfLogger()?.logInfo('Set all appenders to level $level for logger $name');
+    getSelfLogger()?.logInfo('$name: Set level for all appenders to $level');
   }
 
   void setLogLevel(Level level) {
@@ -301,7 +301,7 @@ class Logger {
     for (var appender in appenders) {
       if (appender.getType() == upperType) {
         appender.level = level;
-        getSelfLogger()?.logInfo('Set $upperType appender to level $level for logger $name');
+        getSelfLogger()?.logInfo('$name: Set level for $upperType appender to $level');
       }
     }
     _minLevelDirty = true;
@@ -311,7 +311,7 @@ class Logger {
     for (var appender in appenders) {
       appender.format = format;
     }
-    getSelfLogger()?.logInfo('Set format for all appenders in logger $name');
+    getSelfLogger()?.logInfo('$name: Set format for all appenders to $format');
   }
 
   void setFormat(String appenderType, String format) {
@@ -319,20 +319,20 @@ class Logger {
     for (var appender in appenders) {
       if (appender.getType() == upperType) {
         appender.format = format;
-        getSelfLogger()?.logInfo('Set format for $upperType appender in logger $name');
+        getSelfLogger()?.logInfo('$name: Set format for appender $upperType to $format');
       }
     }
   }
 
   void resetFormatToInitialConfig() {
-    getSelfLogger()?.logInfo('Resetting format for all appenders to initial config');
+    getSelfLogger()?.logInfo('$name: Resetting format for all appenders to initial config');
     for (var appender in appenders) {
       appender.format = appender.initialFormat;
     }
   }
 
   void setDateTimeFormatAll(String dateTimeFormat) {
-    getSelfLogger()?.logInfo('Setting date format for all appenders to $dateTimeFormat');
+    getSelfLogger()?.logInfo('$name: Setting date format for all appenders to $dateTimeFormat');
     for (var appender in appenders) {
       appender.dateFormat = dateTimeFormat;
     }
@@ -342,21 +342,21 @@ class Logger {
     final upperType = appenderType.toUpperCase();
     for (var appender in appenders) {
       if (appender.getType() == upperType) {
-        getSelfLogger()?.logInfo('Setting date format for appender ${appender.getType()} to $dateTimeFormat');
+        getSelfLogger()?.logInfo('$name: Setting date format for appender $upperType to $dateTimeFormat');
         appender.dateFormat = dateTimeFormat;
       }
     }
   }
 
   void resetDateTimeFormatToInitialConfig() {
-    getSelfLogger()?.logInfo('Resetting date format for all appenders to initial config');
+    getSelfLogger()?.logInfo('$name: Resetting date format for all appenders to initial config');
     for (var appender in appenders) {
       appender.dateFormat = appender.initialDateFormat;
     }
   }
 
   void setClientDepthOffsetAll(int offset) {
-    getSelfLogger()?.logInfo('Setting client depth offset for all appenders to $offset');
+    getSelfLogger()?.logInfo('$name: Setting client depth offset for all appenders to $offset');
     for (var appender in appenders) {
       appender.clientDepthOffset = offset;
     }
@@ -366,7 +366,7 @@ class Logger {
     final upperType = appenderType.toUpperCase();
     for (var appender in appenders) {
       if (appender.getType() == upperType) {
-        getSelfLogger()?.logInfo('Setting client depth offset for appender ${appender.getType()} to $offset');
+        getSelfLogger()?.logInfo('$name: Setting client depth offset for appender $upperType to $offset');
         appender.clientDepthOffset = offset;
       }
     }
@@ -379,13 +379,13 @@ class Logger {
   void addCustomAppender(Appender appender) {
     appenders.add(appender);
     _minLevelDirty = true;
-    getSelfLogger()?.logInfo('Added custom ${appender.getType()} appender to logger $name');
+    getSelfLogger()?.logInfo('$name: Added custom ${appender.getType()} appender');
   }
 
   void registerCustomAppender(Appender appender) {
     customAppenders.add(appender);
     _minLevelDirty = true;
-    getSelfLogger()?.logInfo('Registered custom ${appender.getType()} appender to logger $name');
+    getSelfLogger()?.logInfo('$name: Registered custom ${appender.getType()} appender');
   }
 
   void reset() {
@@ -405,26 +405,26 @@ class Logger {
         try {
           // Skip flush for appenders that don't need it
           if (appender.getType() == 'CONSOLE' || appender.getType() == 'FILE') {
-            getSelfLogger()?.logTrace('Logger "$name": Skipping flush for ${appender.getType()} appender (not needed)');
+            getSelfLogger()?.logTrace('$name: Skipping flush for ${appender.getType()} appender (not needed)');
             continue;
           }
 
           await appender.flush();
-          getSelfLogger()?.logTrace('Logger "$name": Flushed ${appender.getType()} appender');
+          getSelfLogger()?.logTrace('$name: Flushed ${appender.getType()} appender');
         } catch (e) {
-          print('Logger "$name":  Error flushing appender ${appender.getType()}: $e');
+          print('$name:  Error flushing appender ${appender.getType()}: $e');
         }
       }
       for (var appender in customAppenders) {
         try {
           await appender.flush();
-          getSelfLogger()?.logTrace('Logger "$name": Flushed custom ${appender.getType()} appender');
+          getSelfLogger()?.logTrace('$name: Flushed custom ${appender.getType()} appender');
         } catch (e) {
-          print('Logger "$name": Error flushing custom appender ${appender.getType()}: $e');
+          print('$name: Error flushing custom appender ${appender.getType()}: $e');
         }
       }
     } catch (e) {
-      print('Logger "$name": Error in logger flush: $e');
+      print('$name: Error in logger flush: $e');
     }
   }
 
