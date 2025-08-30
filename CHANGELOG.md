@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.12
+
+* Forcing IdProvider creation early to fail fast nicely if config is incorrect for file appender on flutter
+
 ## 1.0.11
 
 * Fixed FileAppender which did not work on Flutter platforms

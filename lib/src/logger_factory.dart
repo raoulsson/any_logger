@@ -368,6 +368,10 @@ class LoggerFactory {
           logLevel: Level.TRACE);
     }
 
+    // FORCE PROVIDER CREATION EARLY - This will trigger validation in resolveProvider()
+    // Even for console-only, we need to validate FILE appender requirements
+    _idProvider = _createDefaultProvider();
+
     if (_deviceIdNeeded || _sessionIdNeeded) {
       _initializeIdentification();
     }
@@ -442,6 +446,10 @@ class LoggerFactory {
           ),
           logLevel: Level.TRACE);
     }
+
+    // FORCE PROVIDER CREATION EARLY - This will trigger validation in resolveProvider()
+    // Even for console-only, we need to validate FILE appender requirements
+    _idProvider = _createDefaultProvider();
 
     if (_deviceIdNeeded || _sessionIdNeeded) {
       await _initializeIdentificationAsync();
@@ -520,6 +528,7 @@ class LoggerFactory {
     final requirements = IdProviderResolver.analyzeRequirements(loggerConfig.appenders);
     _deviceIdNeeded = requirements.deviceIdNeeded;
     _sessionIdNeeded = requirements.sessionIdNeeded;
+    _fileAppenderNeeded = requirements.fileAppenderNeeded;
 
     // Log the one-line summary if debugging
     if (_selfDebugEnabled) {
@@ -530,6 +539,10 @@ class LoggerFactory {
         getAppDocumentsDirectoryFnc: _getAppDocumentsDirectoryFnc,
       ));
     }
+
+    // FORCE PROVIDER CREATION EARLY - This will trigger validation in resolveProvider()
+    // Even for console-only, we need to validate FILE appender requirements
+    _idProvider = _createDefaultProvider();
 
     // Initialize identification if needed
     if (_deviceIdNeeded || _sessionIdNeeded) {
