@@ -45,6 +45,9 @@ class IdProviderResolver {
     final isFlutter = isFlutterApp();
 
     // Check if Flutter app needs path_provider for FILE appender
+    print('Flutter: $isFlutter');
+    print('FileAppender: $fileAppenderNeeded');
+    print('getAppDocumentsDirectoryFnc: $getAppDocumentsDirectoryFnc');
     if (isFlutter && fileAppenderNeeded && getAppDocumentsDirectoryFnc == null) {
       throw StateError(_getFileAppenderErrorMessage());
     }
