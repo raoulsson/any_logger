@@ -54,28 +54,56 @@ class FileAppender extends Appender {
     final fullPath = _getFullFilename();
     final file = File(fullPath);
 
+    // Debug logging
+    Logger.getSelfLogger()?.logTrace('FileAppender._ensurePathExists:');
+    Logger.getSelfLogger()?.logTrace('  Full path: $fullPath');
+    Logger.getSelfLogger()?.logTrace('  File absolute path: ${file.absolute.path}');
+    Logger.getSelfLogger()?.logTrace('  Parent directory: ${file.parent.path}');
+
     final directory = file.parent;
     if (!directory.existsSync()) {
       try {
+        Logger.getSelfLogger()?.logInfo('Creating directory: ${directory.absolute.path}');
         directory.createSync(recursive: true);
-        Logger.getSelfLogger()?.logTrace('Created directory: ${directory.path}');
+        Logger.getSelfLogger()?.logInfo('Successfully created directory: ${directory.absolute.path}');
       } catch (e) {
-        Logger.getSelfLogger()?.logError('Failed to create directory: ${directory.path}: $e');
-        throw Exception('Cannot create log directory: ${directory.path}');
+        Logger.getSelfLogger()?.logError('Failed to create directory: ${directory.absolute.path}: $e');
+        // Try with absolute path
+        try {
+          final absDir = Directory(directory.absolute.path);
+          absDir.createSync(recursive: true);
+          Logger.getSelfLogger()?.logInfo('Created directory using absolute path: ${absDir.path}');
+        } catch (e2) {
+          Logger.getSelfLogger()?.logError('Failed even with absolute path: $e2');
+          throw Exception('Cannot create log directory: ${directory.path}. Error: $e');
+        }
       }
+    } else {
+      Logger.getSelfLogger()?.logTrace('Directory already exists: ${directory.absolute.path}');
     }
 
     if (!file.existsSync()) {
       try {
+        Logger.getSelfLogger()?.logInfo('Creating log file: ${file.absolute.path}');
         file.createSync();
-        Logger.getSelfLogger()?.logTrace('Created log file: $fullPath');
+        Logger.getSelfLogger()?.logInfo('Successfully created log file: ${file.absolute.path}');
       } catch (e) {
-        Logger.getSelfLogger()?.logError('Failed to create log file: $fullPath: $e');
-        throw Exception('Cannot create log file: $fullPath');
+        Logger.getSelfLogger()?.logError('Failed to create log file: ${file.absolute.path}: $e');
+        throw Exception('Cannot create log file: ${file.absolute.path}. Error: $e');
       }
+    } else {
+      Logger.getSelfLogger()?.logTrace('File already exists: ${file.absolute.path}');
     }
 
     _file = file;
+
+    // Final verification
+    if (!_file.existsSync()) {
+      throw Exception('File was not created successfully: ${_file.absolute.path}');
+    }
+    if (!_file.parent.existsSync()) {
+      throw Exception('Directory was not created successfully: ${_file.parent.absolute.path}');
+    }
   }
 
   @override
@@ -230,5 +258,38 @@ class FileAppender extends Appender {
   @override
   Future<void> flush() async {
     // file ops are atomic already
+  }
+
+  @override
+  Map<String, dynamic> getConfig() {
+    final config = super.getConfig();
+    config.addAll({
+      'filePattern': filePattern,
+      'fileExtension': fileExtension,
+      'path': path,
+      'rotationCycle': rotationCycle.name,
+      'resolvedBasePath': _resolvedBasePath,
+      'fullFilePath': _getFullFilename(),
+      'fileExists': _file.existsSync(),
+      'fileAbsolutePath': _file.absolute.path,
+    });
+    return config;
+  }
+
+  /// Debug method to check path resolution
+  void debugPaths() {
+    print('===== FileAppender Path Debug =====');
+    print('  path (config): $path');
+    print('  _resolvedBasePath: $_resolvedBasePath');
+    print('  filePattern: $filePattern');
+    print('  fileExtension: $fileExtension');
+    print('  rotationCycle: ${rotationCycle.name}');
+    print('  _getFullFilename(): ${_getFullFilename()}');
+    print('  _file.path: ${_file.path}');
+    print('  _file.absolute.path: ${_file.absolute.path}');
+    print('  _file.parent.path: ${_file.parent.path}');
+    print('  _file.parent.existsSync(): ${_file.parent.existsSync()}');
+    print('  _file.existsSync(): ${_file.existsSync()}');
+    print('===================================');
   }
 }

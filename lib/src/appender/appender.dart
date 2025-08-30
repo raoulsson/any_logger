@@ -72,4 +72,28 @@ abstract class Appender {
   String toString() {
     return 'Appender(type: ${getType()}, level: $level, format: $format, dateFormat: $dateFormat, created: $created, enabled: $enabled)';
   }
+
+  /// Logs the full configuration of this appender for debugging
+  void logConfig() {
+    final config = getConfig();
+    Logger.getSelfLogger()?.logInfo('===== ${getType()} Appender Config =====');
+    config.forEach((key, value) {
+      Logger.getSelfLogger()?.logInfo('  $key: $value');
+    });
+    Logger.getSelfLogger()?.logInfo('=====================================');
+  }
+
+  /// Returns the full configuration as a Map for debugging
+  Map<String, dynamic> getConfig() {
+    return {
+      'type': getType(),
+      'enabled': enabled,
+      'level': level.name,
+      'format': format,
+      'dateFormat': dateFormat,
+      'created': created.toIso8601String(),
+      'clientDepthOffset': clientDepthOffset,
+      'lineInfo': lineInfo,
+    };
+  }
 }

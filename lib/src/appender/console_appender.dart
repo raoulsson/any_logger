@@ -141,4 +141,14 @@ class ConsoleAppender extends Appender {
   Future<void> flush() async {
     // No resources to flush for ConsoleAppender
   }
+
+  @override
+  Map<String, dynamic> getConfig() {
+    final config = super.getConfig();
+    config.addAll({
+      'mode': mode.toString(),
+      'sequenceNumber': sequenceNumber,
+    });
+    return config;
+  }
 }

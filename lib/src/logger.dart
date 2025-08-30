@@ -403,6 +403,12 @@ class Logger {
     try {
       for (var appender in appenders) {
         try {
+          // Skip flush for appenders that don't need it
+          if (appender.getType() == 'CONSOLE' || appender.getType() == 'FILE') {
+            getSelfLogger()?.logTrace('Skipping flush for ${appender.getType()} appender (not needed)');
+            continue;
+          }
+
           await appender.flush();
           getSelfLogger()?.logTrace('Flushed ${appender.getType()} appender');
         } catch (e) {
