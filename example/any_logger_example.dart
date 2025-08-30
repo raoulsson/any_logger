@@ -191,7 +191,7 @@ Future<void> mixinExample() async {
 /// 20:55:54.243 DEBUG Self-debugging enabled
 Future<void> performanceExample() async {
   await LoggerFactory.dispose();
-  LoggerBuilder().console(level: Level.INFO).withSelfDebug().buildSync();
+  LoggerBuilder().replaceAll().console(level: Level.INFO).withSelfDebug().buildSync();
   final logger = LoggerFactory.getLogger('Performance');
   // This next line will NOT print, because the logger level is INFO
   logger.logDebugSupplier(() => 'This expensive computation is never executed.');
@@ -204,7 +204,7 @@ Future<void> performanceExample() async {
 /// [production][user-456][req-002] INFO: Request started
 Future<void> mdcExample() async {
   await LoggerFactory.dispose();
-  await LoggerBuilder().console(format: '[%X{env}][%X{userId}][%X{requestId}] %l: %m').build();
+  await LoggerBuilder().replaceAll().console(format: '[%X{env}][%X{userId}][%X{requestId}] %l: %m').build();
   LoggerFactory.setMdcValue('env', 'production');
   await handleUserRequest('user-123', 'req-001');
   await handleUserRequest('user-456', 'req-002');
@@ -218,6 +218,7 @@ Future<void> mdcExample() async {
 Future<void> customBuilderExample() async {
   await LoggerFactory.dispose();
   await LoggerBuilder()
+      .replaceAll()
       .console(
         format: '[%did][%sid] %d [%l] %m',
         dateFormat: 'HH:mm:ss.SSS',
@@ -272,7 +273,7 @@ Future<void> appenderBuilderExample() async {
   await LoggerFactory.dispose();
   final fileAppender = await fileAppenderBuilder('app_builder_log').withPath('logs/').build();
   final consoleAppender = consoleAppenderBuilder().withFormat('[%l] %m').buildSync();
-  await LoggerBuilder().addAppender(consoleAppender).addAppender(fileAppender).build();
+  await LoggerBuilder().replaceAll().addAppender(consoleAppender).addAppender(fileAppender).build();
   Logger.info('This info message goes to both console and file.');
   Logger.info('And so does this.');
   Logger.info('And also this one.');
@@ -314,6 +315,7 @@ Future<void> jsonConfigExample() async {
 Future<void> proServiceExample() async {
   await LoggerFactory.dispose();
   await LoggerBuilder()
+      .replaceAll()
       .file(
         filePattern: 'error_prone_service',
         path: 'logs/',
@@ -338,7 +340,7 @@ Future<void> productionExample() async {
       .withFormat('[%d][%did][%sid][%X{env}][%l][%c] %m [%f]')
       .withDateFormat('yyyy-DD-mm HH:mm:ss.SSS')
       .buildSync();
-  await LoggerBuilder().addAppender(consoleAppender).withMdcValue('env', 'production').build();
+  await LoggerBuilder().replaceAll().addAppender(consoleAppender).withMdcValue('env', 'production').build();
   Logger.info('Application started in production mode');
   Logger.info('You got deviceId, sessionId, Logger name, Log level...');
   Logger.info('...and class.method linnumber, and then again actual file with line and column number if available');
@@ -396,6 +398,7 @@ Future<void> runProfessionalExamples() async {
 Future<void> professionalSetupExample() async {
   await LoggerFactory.dispose();
   await LoggerBuilder()
+      .replaceAll()
       .console(
         level: Level.DEBUG,
         format: '[%d][%did][%sid][%i][%l][%c] %m [%f]',
@@ -418,6 +421,7 @@ Future<void> professionalSetupExample() async {
 Future<void> appLifecycleExample() async {
   await LoggerFactory.dispose();
   await LoggerBuilder()
+      .replaceAll()
       .console(
         level: Level.DEBUG,
         format: '[%d][%did][%sid][%X{env}][%i][%l][%c] %m [%f]',
@@ -443,6 +447,7 @@ Future<void> multiServiceExample() async {
   await LoggerFactory.dispose();
   // FIXME: keeps .withSelfDebug() from previous method: appLifecycleExample. All methods should start fresh, atomically, new born
   await LoggerBuilder()
+      .replaceAll()
       .console(
         level: Level.DEBUG,
         format: '[%d][%did][%sid][%X{tenant}][%i][%l][%c] %m [%f]',
@@ -469,6 +474,7 @@ Future<void> multiServiceExample() async {
 Future<void> errorTrackingExample() async {
   await LoggerFactory.dispose();
   await LoggerBuilder()
+      .replaceAll()
       .console(
         level: Level.DEBUG,
         format: '[%d][%did][%sid][%X{build}][%i][%l][%c] %m [%f]',
@@ -490,6 +496,7 @@ Future<void> errorTrackingExample() async {
 Future<void> performanceMonitoringExample() async {
   await LoggerFactory.dispose();
   await LoggerBuilder()
+      .replaceAll()
       .console(
         level: Level.DEBUG,
         format: '[%d][%did][%sid][%X{node}][%i][%l][%c] %m [%f]',
@@ -514,6 +521,7 @@ Future<void> builderWithAppenderBuilderExample() async {
   final fileAppender = await FileAppenderBuilder('granular_log').withLevel(Level.TRACE).withPath('logs/').build();
   final consoleAppender = consoleAppenderBuilder().withLevel(Level.INFO).withFormat('CONSOLE [%i][%l]: %m').buildSync();
   await LoggerBuilder()
+      .replaceAll()
       .withRootLevel(Level.TRACE)
       .addAppender(fileAppender)
       .addAppender(consoleAppender)

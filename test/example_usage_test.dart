@@ -43,6 +43,7 @@ void main() {
     test('Example 4: File logging', () async {
       // Log to both console and file
       await LoggerBuilder()
+          .replaceAll()
           .console(level: Level.INFO)
           .file(filePattern: 'myapp', path: 'logs/', level: Level.DEBUG)
           .build();
@@ -55,7 +56,7 @@ void main() {
 
     test('Example 5: MDC for context tracking', () async {
       // Configure to show MDC values in log format
-      await LoggerBuilder().console(format: '[%X{userId}][%X{requestId}] %l: %m').build();
+      await LoggerBuilder().replaceAll().console(format: '[%X{userId}][%X{requestId}] %l: %m').build();
 
       // Set context for current operation
       LoggerFactory.setMdcValue('userId', 'user123');
@@ -71,6 +72,7 @@ void main() {
 
     test('Example 6: Production setup with all features', () async {
       await LoggerBuilder()
+          .replaceAll()
           // Console for immediate feedback
           .console(level: Level.INFO, format: '[%d][%X{env}][%l] %m')
           // File for detailed debugging
@@ -89,7 +91,7 @@ void main() {
     });
 
     test('Example 7: Performance-aware logging', () async {
-      await LoggerBuilder().console(level: Level.INFO).build();
+      await LoggerBuilder().replaceAll().console(level: Level.INFO).build();
 
       final logger = LoggerFactory.getRootLogger();
 
@@ -104,7 +106,7 @@ void main() {
     });
 
     test('Example 8: Different loggers for different components', () async {
-      await LoggerBuilder().console(format: '[%i] %l: %m').build();
+      await LoggerBuilder().replaceAll().console(format: '[%i] %l: %m').build();
 
       // Each component can have its own logger
       final dbLogger = LoggerFactory.getLogger('Database');
@@ -123,7 +125,7 @@ void main() {
     });
 
     test('Example 9: Handling errors with stack traces', () async {
-      await LoggerBuilder().console().build();
+      await LoggerBuilder().replaceAll().console().build();
 
       try {
         // Some operation that might fail

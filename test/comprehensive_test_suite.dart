@@ -105,7 +105,10 @@ void main() {
     });
 
     test('should build console logger with builder', () async {
-      await LoggerBuilder().console(level: Level.INFO, format: '[%d] %l: %m', dateFormat: 'HH:mm:ss').build();
+      await LoggerBuilder()
+          .replaceAll()
+          .console(level: Level.INFO, format: '[%d] %l: %m', dateFormat: 'HH:mm:ss')
+          .build();
 
       final logger = LoggerFactory.getRootLogger();
       expect(logger.appenders.length, equals(1));
@@ -115,6 +118,7 @@ void main() {
 
     test('should build multiple appenders with builder', () async {
       await LoggerBuilder()
+          .replaceAll()
           .console(level: Level.INFO)
           .file(filePattern: 'test_log', level: Level.DEBUG, path: 'logs/')
           .build();
@@ -126,14 +130,19 @@ void main() {
     });
 
     test('should set MDC values with builder', () async {
-      await LoggerBuilder().console(format: '[%X{env}] %m').withMdcValue('env', 'test').withAppVersion('1.0.0').build();
+      await LoggerBuilder()
+          .replaceAll()
+          .console(format: '[%X{env}] %m')
+          .withMdcValue('env', 'test')
+          .withAppVersion('1.0.0')
+          .build();
 
       expect(LoggerFactory.getMdcValue('env'), equals('test'));
       expect(LoggerFactory.appVersion, equals('1.0.0'));
     });
 
     test('should enable self-debugging with builder', () async {
-      await LoggerBuilder().console().withSelfDebug(Level.INFO).build();
+      await LoggerBuilder().replaceAll().console().withSelfDebug(Level.INFO).build();
 
       expect(LoggerFactory.selfDebugEnabled, isTrue);
     });
@@ -237,7 +246,7 @@ void main() {
     });
 
     test('should create log file in specified directory', () async {
-      await LoggerBuilder().file(filePattern: 'test', path: testDir, level: Level.INFO).build();
+      await LoggerBuilder().replaceAll().file(filePattern: 'test', path: testDir, level: Level.INFO).build();
 
       Logger.info('Test message');
       await LoggerFactory.flushAll();
@@ -257,7 +266,10 @@ void main() {
       final now = DateTime.now();
       final dateStr = SimpleDateFormat('yyyy-MM-dd').format(now);
 
-      await LoggerBuilder().file(filePattern: 'daily', path: testDir, level: Level.INFO, rotationCycle: 'DAY').build();
+      await LoggerBuilder()
+          .replaceAll()
+          .file(filePattern: 'daily', path: testDir, level: Level.INFO, rotationCycle: 'DAY')
+          .build();
 
       Logger.info('Daily rotation test');
       await LoggerFactory.flushAll();
@@ -300,7 +312,7 @@ void main() {
     test('should integrate with LoggerBuilder', () async {
       final customAppender = ConsoleAppenderBuilder().withLevel(Level.ERROR).withFormat('ERROR: %m').buildSync();
 
-      await LoggerBuilder().addAppender(customAppender).build();
+      await LoggerBuilder().replaceAll().addAppender(customAppender).build();
 
       final logger = LoggerFactory.getRootLogger();
       expect(logger.appenders.length, equals(1));

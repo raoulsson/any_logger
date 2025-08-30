@@ -4,6 +4,7 @@
 
 * Forcing IdProvider creation early to fail fast nicely if config is incorrect for file appender on flutter
 * Adding getters for Appenders from LoggerFactory by string or type
+* Changed LoggerBuilder to add Appenders instead of replacing existing ones
 
 ## 1.0.11
 

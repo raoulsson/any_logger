@@ -25,7 +25,7 @@ void main() {
     });
 
     test('should format console output correctly', () async {
-      await LoggerBuilder().console(format: '[%l] %c: %m', level: Level.INFO).build();
+      await LoggerBuilder().replaceAll().console(format: '[%l] %c: %m', level: Level.INFO).build();
 
       // Test different log levels and messages
       Logger.info('Information message');
@@ -64,7 +64,7 @@ void main() {
           .withLevel(Level.INFO)
           .build();
 
-      await LoggerBuilder().addAppender(appender).build();
+      await LoggerBuilder().replaceAll().addAppender(appender).build();
 
       Logger.info('Test daily rotation');
       await LoggerFactory.flushAll();
@@ -84,7 +84,7 @@ void main() {
           .withLevel(Level.INFO)
           .build();
 
-      await LoggerBuilder().addAppender(appender).build();
+      await LoggerBuilder().replaceAll().addAppender(appender).build();
 
       Logger.info('Test weekly rotation');
       await LoggerFactory.flushAll();
@@ -103,7 +103,7 @@ void main() {
           .withLevel(Level.INFO)
           .build();
 
-      await LoggerBuilder().addAppender(appender).build();
+      await LoggerBuilder().replaceAll().addAppender(appender).build();
 
       Logger.info('Test monthly rotation');
       await LoggerFactory.flushAll();
@@ -122,7 +122,7 @@ void main() {
           .withLevel(Level.INFO)
           .build();
 
-      await LoggerBuilder().addAppender(appender).build();
+      await LoggerBuilder().replaceAll().addAppender(appender).build();
 
       Logger.info('Test yearly rotation');
       await LoggerFactory.flushAll();
@@ -138,7 +138,7 @@ void main() {
           .withLevel(Level.INFO)
           .build();
 
-      await LoggerBuilder().addAppender(appender).build();
+      await LoggerBuilder().replaceAll().addAppender(appender).build();
 
       Logger.info('Test no rotation');
       await LoggerFactory.flushAll();
@@ -190,6 +190,7 @@ void main() {
 
     test('should handle selective appender enabling/disabling', () async {
       await LoggerBuilder()
+          .replaceAll()
           .console(level: Level.INFO)
           .file(filePattern: 'test', path: 'mixed_logs/', level: Level.DEBUG)
           .build();

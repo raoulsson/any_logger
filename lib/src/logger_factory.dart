@@ -124,7 +124,7 @@ class LoggerFactory {
       final newLogger = Logger.fromExisting(_rootLogger!, name: name);
 
       if (_selfDebugEnabled) {
-        _selfLog('Created logger: $name', logLevel: Level.INFO);
+        selfLog('Created logger: $name', logLevel: Level.INFO);
       }
 
       return newLogger;
@@ -149,7 +149,7 @@ class LoggerFactory {
     };
 
     initSync(config);
-    _selfLog('Initialized simple console logger with level ${level.name}', logLevel: Level.INFO);
+    selfLog('Initialized simple console logger with level ${level.name}', logLevel: Level.INFO);
   }
 
   /// Initialize with professional console format (includes file location, method info)
@@ -174,7 +174,7 @@ class LoggerFactory {
     };
 
     initSync(config);
-    _selfLog('Initialized professional console logger with level ${level.name}', logLevel: Level.INFO);
+    selfLog('Initialized professional console logger with level ${level.name}', logLevel: Level.INFO);
   }
 
   /// Initialize with custom console format
@@ -197,7 +197,7 @@ class LoggerFactory {
     };
 
     initSync(config);
-    _selfLog('Initialized custom console logger with level ${level.name}', logLevel: Level.INFO);
+    selfLog('Initialized custom console logger with level ${level.name}', logLevel: Level.INFO);
   }
 
   /// Initialize with file logging (and optional console)
@@ -234,7 +234,7 @@ class LoggerFactory {
     }
 
     await init({'appenders': appenders}, appVersion: appVersion);
-    _selfLog('Initialized file logger with pattern $filePattern', logLevel: Level.INFO);
+    selfLog('Initialized file logger with pattern $filePattern', logLevel: Level.INFO);
   }
 
   /// Initialize with professional file logging (and optional console with pro format)
@@ -358,7 +358,7 @@ class LoggerFactory {
     _fileAppenderNeeded = requirements.fileAppenderNeeded;
 
     if (_selfDebugEnabled) {
-      _selfLog(
+      selfLog(
           IdProviderResolver.getDebugSummary(
             deviceIdNeeded: _deviceIdNeeded,
             sessionIdNeeded: _sessionIdNeeded,
@@ -396,11 +396,11 @@ class LoggerFactory {
         appendersFromConfig.add(appender);
 
         if (selfDebug) {
-          _selfLog('Created console appender', logLevel: Level.TRACE);
+          selfLog('Created console appender', logLevel: Level.TRACE);
         }
       } catch (e) {
         if (selfDebug) {
-          _selfLog('Error creating appender: $e', logLevel: Level.ERROR);
+          selfLog('Error creating appender: $e', logLevel: Level.ERROR);
         }
         throw ArgumentError('Failed to create console appender: $e');
       }
@@ -438,7 +438,7 @@ class LoggerFactory {
     _fileAppenderNeeded = requirements.fileAppenderNeeded;
 
     if (_selfDebugEnabled) {
-      _selfLog(
+      selfLog(
           IdProviderResolver.getDebugSummary(
             deviceIdNeeded: _deviceIdNeeded,
             sessionIdNeeded: _sessionIdNeeded,
@@ -484,7 +484,7 @@ class LoggerFactory {
         appendersFromConfig.add(appender);
       } catch (e) {
         if (selfDebug) {
-          _selfLog('Error creating appender: $e', logLevel: Level.ERROR);
+          selfLog('Error creating appender: $e', logLevel: Level.ERROR);
         }
         throw ArgumentError('Failed to create appender: $e');
       }
@@ -533,7 +533,7 @@ class LoggerFactory {
 
     // Log the one-line summary if debugging
     if (_selfDebugEnabled) {
-      _selfLog(IdProviderResolver.getDebugSummary(
+      selfLog(IdProviderResolver.getDebugSummary(
         deviceIdNeeded: _deviceIdNeeded,
         sessionIdNeeded: _sessionIdNeeded,
         fileAppenderNeeded: _fileAppenderNeeded,
@@ -571,14 +571,14 @@ class LoggerFactory {
   static void _logAppenderConfigs(List<Appender> appenders, String initMessage) {
     if (!_selfDebugEnabled) return;
 
-    _selfLog(initMessage, logLevel: Level.INFO);
+    selfLog(initMessage, logLevel: Level.INFO);
 
     for (var appender in appenders) {
-      _selfLog('Appender ${appender.getType()}, ${appender.level}, ${appender.getShortConfigDesc()}',
+      selfLog('Appender ${appender.getType()}, ${appender.level}, ${appender.getShortConfigDesc()}',
           logLevel: Level.INFO);
       final config = appender.getConfig();
       config.forEach((key, value) {
-        _selfLog('--- $key: $value', logLevel: Level.DEBUG);
+        selfLog('--- $key: $value', logLevel: Level.DEBUG);
       });
     }
   }
@@ -625,7 +625,7 @@ class LoggerFactory {
     _mdcContext[key] = value;
 
     if (_selfDebugEnabled) {
-      _selfLog('MDC set: $key = $value', logLevel: Level.INFO);
+      selfLog('MDC set: $key = $value', logLevel: Level.INFO);
     }
   }
 
@@ -649,14 +649,14 @@ class LoggerFactory {
   static void removeMdcValue(String key) {
     if (['did', 'sid', 'app'].contains(key)) {
       if (_selfDebugEnabled) {
-        _selfLog('Cannot remove system key: $key', logLevel: Level.WARN);
+        selfLog('Cannot remove system key: $key', logLevel: Level.WARN);
       }
       return;
     }
 
     _mdcContext.remove(key);
     if (_selfDebugEnabled) {
-      _selfLog('MDC removed: $key', logLevel: Level.INFO);
+      selfLog('MDC removed: $key', logLevel: Level.INFO);
     }
   }
 
@@ -664,7 +664,7 @@ class LoggerFactory {
   static void clearMdc() {
     _mdcContext.clear();
     if (_selfDebugEnabled) {
-      _selfLog('MDC cleared', logLevel: Level.INFO);
+      selfLog('MDC cleared', logLevel: Level.INFO);
     }
   }
 
@@ -688,12 +688,12 @@ class LoggerFactory {
       for (Appender appender in logger.appenders) {
         if (appender.getType() == upperType) {
           appender.setEnabled(true);
-          _selfLog('Enabled $upperType appender for logger ${logger.name}', logLevel: Level.INFO);
+          selfLog('Enabled $upperType appender for logger ${logger.name}', logLevel: Level.INFO);
           return;
         }
       }
     }
-    _selfLog('Appender $upperType not found', logLevel: Level.WARN);
+    selfLog('Appender $upperType not found', logLevel: Level.WARN);
   }
 
   static void disableAppender(String appenderType) {
@@ -702,12 +702,12 @@ class LoggerFactory {
       for (Appender appender in logger.appenders) {
         if (appender.getType() == upperType) {
           appender.setEnabled(false);
-          _selfLog('Disabled $upperType appender for logger ${logger.name}', logLevel: Level.INFO);
+          selfLog('Disabled $upperType appender for logger ${logger.name}', logLevel: Level.INFO);
           return;
         }
       }
     }
-    _selfLog('Appender $upperType not found', logLevel: Level.WARN);
+    selfLog('Appender $upperType not found', logLevel: Level.WARN);
   }
 
   // ============================================================
@@ -716,7 +716,7 @@ class LoggerFactory {
 
   /// Flush all loggers
   static Future<void> flushAll() async {
-    _selfLog('Flushing all loggers', logLevel: Level.INFO);
+    selfLog('Flushing all loggers', logLevel: Level.INFO);
 
     final loggersList = _loggers.values.toList();
 
@@ -725,7 +725,7 @@ class LoggerFactory {
         await logger.flush();
       } catch (e) {
         if (_selfDebugEnabled) {
-          _selfLog('Error flushing logger ${logger.name}: $e', logLevel: Level.ERROR);
+          selfLog('Error flushing logger ${logger.name}: $e', logLevel: Level.ERROR);
         }
       }
     }
@@ -816,11 +816,11 @@ class LoggerFactory {
     _selfLogger = Logger.fromExisting(_rootLogger!, name: ANYLOGGER_SELF_LOGGER_NAME, consoleOnly: true);
     _selfLogger?.setLevelAll(_selfLogLevel);
     _loggers[ANYLOGGER_SELF_LOGGER_NAME] = _selfLogger!;
-    _selfLog('Self-debugging enabled', logLevel: Level.INFO);
+    selfLog('Self-debugging enabled', logLevel: Level.INFO);
   }
 
   /// Log a message using the self logger
-  static void _selfLog(String message, {Level logLevel = Level.DEBUG}) {
+  static void selfLog(String message, {Level logLevel = Level.DEBUG}) {
     if (!_selfDebugEnabled) return;
 
     // If self-logger isn't set up yet, use print for early debugging
@@ -861,7 +861,7 @@ class LoggerFactory {
   static void setAppVersion(String appVersion) {
     _appVersion = appVersion;
     if (_selfDebugEnabled) {
-      _selfLog('App version set: $appVersion', logLevel: Level.INFO);
+      selfLog('App version set: $appVersion', logLevel: Level.INFO);
     }
   }
 

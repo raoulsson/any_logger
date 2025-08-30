@@ -6,7 +6,12 @@ import 'package:test/test.dart';
 void main() {
   group('Test Isolation', () {
     test('should isolate state between tests - test 1', () async {
-      await LoggerBuilder().console(format: '[%X{test}] %m').withMdcValue('test', 'test1').withSelfDebug().build();
+      await LoggerBuilder()
+          .replaceAll()
+          .console(format: '[%X{test}] %m')
+          .withMdcValue('test', 'test1')
+          .withSelfDebug()
+          .build();
 
       final service = ServiceWithLogger();
       service.doWork();
@@ -22,7 +27,7 @@ void main() {
       expect(LoggerFactory.getMdcValue('test'), isNull, reason: 'MDC should be cleared between tests');
 
       // Self-debug should be off
-      await LoggerBuilder().console().build();
+      await LoggerBuilder().replaceAll().console().build();
 
       expect(LoggerFactory.selfDebugEnabled, isFalse, reason: 'Self-debug should not leak from previous test');
 
@@ -33,7 +38,7 @@ void main() {
     });
 
     test('should clear AnyLogger mixin cache between tests', () async {
-      await LoggerBuilder().console().build();
+      await LoggerBuilder().replaceAll().console().build();
 
       final service1 = ServiceWithLogger();
       final logger1 = service1.logger;
@@ -41,7 +46,7 @@ void main() {
       await LoggerFactory.dispose();
 
       // After dispose, the mixin cache should be cleared
-      await LoggerBuilder().console().build();
+      await LoggerBuilder().replaceAll().console().build();
 
       final service2 = ServiceWithLogger();
       final logger2 = service2.logger;
@@ -58,7 +63,7 @@ void main() {
     });
 
     test('should support multiple services with different loggers', () async {
-      await LoggerBuilder().console(level: Level.DEBUG).build();
+      await LoggerBuilder().replaceAll().console(level: Level.DEBUG).build();
 
       final authService = AuthService();
       final dataService = DataService();
@@ -82,7 +87,7 @@ void main() {
     });
 
     test('should maintain logger hierarchy', () async {
-      await LoggerBuilder().console(format: '[%i] %m').build();
+      await LoggerBuilder().replaceAll().console(format: '[%i] %m').build();
 
       final rootLogger = LoggerFactory.getRootLogger();
       final childLogger = LoggerFactory.getLogger('Child');
@@ -105,6 +110,7 @@ void main() {
 
     test('should handle multiple appenders with different levels', () async {
       await LoggerBuilder()
+          .replaceAll()
           .console(level: Level.INFO, format: 'CONSOLE: %m')
           .file(filePattern: 'debug_log', level: Level.DEBUG, path: 'test_logs/', format: 'FILE: [%d] %l: %m')
           .build();
@@ -126,7 +132,7 @@ void main() {
     });
 
     test('should support runtime reconfiguration', () async {
-      await LoggerBuilder().console(level: Level.INFO, format: '[%d] %m', dateFormat: 'HH:mm:ss').build();
+      await LoggerBuilder().replaceAll().console(level: Level.INFO, format: '[%d] %m', dateFormat: 'HH:mm:ss').build();
 
       final logger = LoggerFactory.getRootLogger();
 
@@ -152,7 +158,7 @@ void main() {
     });
 
     test('should support request context tracking', () async {
-      await LoggerBuilder().console(format: '[%X{userId}][%X{requestId}][%X{endpoint}] %m').build();
+      await LoggerBuilder().replaceAll().console(format: '[%X{userId}][%X{requestId}][%X{endpoint}] %m').build();
 
       // Simulate handling multiple requests
       await handleRequest('user123', 'req001', '/api/users');
@@ -167,6 +173,7 @@ void main() {
 
     test('should handle app version and environment', () async {
       await LoggerBuilder()
+          .replaceAll()
           .console(format: '[%app][%X{env}][%X{region}] %m')
           .withAppVersion('2.1.0')
           .withMdcValue('env', 'staging')
@@ -187,7 +194,7 @@ void main() {
     });
 
     test('should handle concurrent logging', () async {
-      await LoggerBuilder().console().build();
+      await LoggerBuilder().replaceAll().console().build();
 
       final futures = <Future>[];
 
@@ -211,6 +218,7 @@ void main() {
     test('should handle application lifecycle', () async {
       // Application startup
       await LoggerBuilder()
+          .replaceAll()
           .console(format: '[%did][%sid][%X{env}] %l: %m')
           .file(filePattern: 'app', path: 'logs/', level: Level.DEBUG)
           .withMdcValue('env', 'production')
@@ -235,6 +243,7 @@ void main() {
 
     test('should support microservice architecture', () async {
       await LoggerBuilder()
+          .replaceAll()
           .console(format: '[%X{service}][%X{traceId}] %m')
           .withMdcValue('service', 'api-gateway')
           .build();
@@ -260,7 +269,7 @@ void main() {
     });
 
     test('should use supplier pattern efficiently', () async {
-      await LoggerBuilder().console(level: Level.WARN).build();
+      await LoggerBuilder().replaceAll().console(level: Level.WARN).build();
 
       final logger = LoggerFactory.getRootLogger();
 
@@ -288,7 +297,7 @@ void main() {
     });
 
     test('should cache logger instances', () async {
-      await LoggerBuilder().console().build();
+      await LoggerBuilder().replaceAll().console().build();
 
       // Request the same logger multiple times
       final logger1 = LoggerFactory.getLogger('TestLogger');

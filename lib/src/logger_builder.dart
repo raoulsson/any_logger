@@ -13,6 +13,21 @@ class LoggerBuilder {
   String? _appVersion;
   Level _rootLevel = Level.INFO;
 
+  // Default to additive mode - adds to existing appenders
+  bool _replaceExisting = false;
+
+  /// Replace all existing appenders with the ones from this builder
+  LoggerBuilder replaceAll() {
+    _replaceExisting = true;
+    return this;
+  }
+
+  /// Add to existing appenders (default behavior)
+  LoggerBuilder addToExisting() {
+    _replaceExisting = false;
+    return this;
+  }
+
   /// Sets the root logging level for the entire configuration.
   /// This acts as a global filter before messages reach individual appenders.
   /// Defaults to INFO.
@@ -75,113 +90,6 @@ class LoggerBuilder {
     return this;
   }
 
-  /// Add a JSON HTTP appender
-  // LoggerBuilder jsonHttp({
-  //   required String url,
-  //   String? username,
-  //   String? password,
-  //   Level level = Level.INFO,
-  //   int bufferSize = 100,
-  //   int flushIntervalSeconds = 60, // 1 minute default
-  //   bool enableCompression = false,
-  //   Map<String, String>? headers,
-  // }) {
-  //   final appender = {
-  //     'type': 'JSON_HTTP',
-  //     'url': url,
-  //     'level': level.name,
-  //     'bufferSize': bufferSize,
-  //     'flushIntervalSeconds': flushIntervalSeconds,
-  //     'enableCompression': enableCompression,
-  //   };
-  //
-  //   if (username != null) appender['username'] = username;
-  //   if (password != null) appender['password'] = password;
-  //   if (headers != null) {
-  //     appender['headers'] =
-  //         headers.entries.map((e) => '${e.key}:${e.value}').toList();
-  //   }
-  //
-  //   _appenderConfigs.add(appender);
-  //   return this;
-  // }
-  //
-  // /// Add an email appender
-  // LoggerBuilder email({
-  //   required String host,
-  //   required List<String> to,
-  //   String? user,
-  //   String? password,
-  //   int? port,
-  //   String? fromMail,
-  //   String? fromName,
-  //   List<String>? toCC,
-  //   List<String>? toBCC,
-  //   bool ssl = false,
-  //   bool html = false,
-  //   Level level = Level.INFO,
-  //   int batchSize = 10,
-  //   int batchIntervalSeconds = 300, // 5 minutes default
-  //   Level minLevelForImmediate = Level.ERROR,
-  //   String? template,
-  //   String? templateFile,
-  // }) {
-  //   final appender = {
-  //     'type': 'EMAIL',
-  //     'host': host,
-  //     'to': to,
-  //     'level': level.name,
-  //     'ssl': ssl,
-  //     'html': html,
-  //     'batchSize': batchSize,
-  //     'batchIntervalSeconds': batchIntervalSeconds,
-  //     'minLevelForImmediate': minLevelForImmediate.name,
-  //   };
-  //
-  //   if (user != null) appender['user'] = user;
-  //   if (password != null) appender['password'] = password;
-  //   if (port != null) appender['port'] = port;
-  //   if (fromMail != null) appender['fromMail'] = fromMail;
-  //   if (fromName != null) appender['fromName'] = fromName;
-  //   if (toCC != null) appender['toCC'] = toCC;
-  //   if (toBCC != null) appender['toBCC'] = toBCC;
-  //   if (template != null) appender['template'] = template;
-  //   if (templateFile != null) appender['templateFile'] = templateFile;
-  //
-  //   _appenderConfigs.add(appender);
-  //   return this;
-  // }
-  //
-  // /// Add a MySQL appender
-  // LoggerBuilder mysql({
-  //   required String host,
-  //   required String database,
-  //   String? user,
-  //   String? password,
-  //   int port = 3306,
-  //   String table = 'logs',
-  //   Level level = Level.INFO,
-  //   int batchSize = 50,
-  //   int batchIntervalSeconds = 10, // 10 seconds default
-  // }) {
-  //   final appender = {
-  //     'type': 'MYSQL',
-  //     'host': host,
-  //     'database': database,
-  //     'port': port,
-  //     'table': table,
-  //     'level': level.name,
-  //     'batchSize': batchSize,
-  //     'batchIntervalSeconds': batchIntervalSeconds,
-  //   };
-  //
-  //   if (user != null) appender['user'] = user;
-  //   if (password != null) appender['password'] = password;
-  //
-  //   _appenderConfigs.add(appender);
-  //   return this;
-  // }
-
   /// Enable self-debugging
   LoggerBuilder withSelfDebug([Level level = Level.DEBUG]) {
     _selfDebug = true;
@@ -202,7 +110,19 @@ class LoggerBuilder {
   }
 
   /// Build and initialize the logger asynchronously
+  /// By default, ADDS to existing appenders. Use replaceAll() to replace them.
   Future<void> build({bool test = false, DateTime? date}) async {
+    if (_replaceExisting) {
+      // Replace mode - original behavior
+      await _buildAndReplace(test: test, date: date);
+    } else {
+      // Additive mode - new default behavior
+      await _addToExistingLogger(test: test, date: date);
+    }
+  }
+
+  /// Build and replace all existing appenders (original behavior)
+  Future<void> _buildAndReplace({bool test = false, DateTime? date}) async {
     // Start with manually added appenders
     final List<Appender> allAppenders = List.from(_appenders);
 
@@ -251,8 +171,91 @@ class LoggerBuilder {
     );
   }
 
-  /// Build synchronously (only works with console appenders)
+  /// Add appenders to existing logger configuration
+  Future<void> _addToExistingLogger({bool test = false, DateTime? date}) async {
+    // Ensure logger is initialized
+    final logger = LoggerFactory.getRootLogger();
+
+    // First, add manually created appenders
+    for (var appender in _appenders) {
+      // Check if this type already exists to warn about duplicates
+      final existing = LoggerFactory.getFirstAppenderByType(appender.getType());
+      if (existing != null && _selfDebug) {
+        LoggerFactory.selfLog('Warning: ${appender.getType()} appender already exists, adding another instance',
+            logLevel: Level.WARN);
+      }
+
+      logger.addCustomAppender(appender);
+
+      if (_selfDebug) {
+        LoggerFactory.selfLog('Added ${appender.getType()} appender via builder (additive mode)', logLevel: Level.INFO);
+        appender.logConfig();
+      }
+    }
+
+    // Then, build and add appenders from configurations
+    for (final config in _appenderConfigs) {
+      try {
+        // Check for duplicates before creating
+        final type = config['type']?.toString().toUpperCase();
+        final existing = LoggerFactory.getFirstAppenderByType(type ?? '');
+        if (existing != null && _selfDebug) {
+          LoggerFactory.selfLog('Warning: $type appender already exists, adding another instance',
+              logLevel: Level.WARN);
+        }
+
+        // Create the appender using the registry
+        final appender = await AppenderRegistry.instance.create(
+          config,
+          test: test,
+          date: date,
+        );
+
+        logger.addCustomAppender(appender);
+
+        if (_selfDebug) {
+          LoggerFactory.selfLog('Added $type appender via builder (additive mode)', logLevel: Level.INFO);
+          appender.logConfig();
+        }
+      } catch (e) {
+        // Provide helpful error message if extension package is missing
+        final type = config['type']?.toString().toUpperCase();
+        if (type == 'JSON_HTTP' || type == 'EMAIL' || type == 'MYSQL') {
+          throw StateError('Failed to create $type appender. '
+              'Make sure you have registered the extension:\n'
+              '  - For JSON_HTTP: AnyLoggerJsonHttpExtension.register();\n'
+              '  - For EMAIL: AnyLoggerEmailExtension.register();\n'
+              '  - For MYSQL: AnyLoggerMySqlExtension.register();\n'
+              'Original error: $e');
+        }
+        rethrow;
+      }
+    }
+
+    // Update app version if provided
+    if (_appVersion != null) {
+      LoggerFactory.setAppVersion(_appVersion!);
+    }
+
+    // Set any custom MDC values
+    _mdcValues.forEach((key, value) {
+      LoggerFactory.setMdcValue(key, value);
+    });
+
+    if (_selfDebug) {
+      LoggerFactory.selfLog(
+          'LoggerBuilder (additive mode) added ${_appenders.length + _appenderConfigs.length} appenders to existing configuration',
+          logLevel: Level.INFO);
+    }
+  }
+
+  /// Build synchronously (only works with console appenders and replace mode)
   void buildSync() {
+    if (!_replaceExisting) {
+      throw StateError('buildSync() only works in replace mode. '
+          'Use replaceAll().buildSync() or use async build() for additive mode.');
+    }
+
     if (_appenders.isNotEmpty) {
       throw StateError(
           'buildSync() cannot be used when appenders have been added manually with addAppender(). Use build() instead.');
