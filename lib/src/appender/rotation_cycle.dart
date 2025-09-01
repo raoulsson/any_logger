@@ -28,7 +28,7 @@ enum RotationCycle {
     // Try exact value match first
     try {
       return RotationCycle.values.firstWhere(
-            (cycle) => cycle.value == normalizedValue,
+        (cycle) => cycle.value == normalizedValue,
       );
     } catch (_) {
       // Not found by exact value, try alternatives
@@ -37,7 +37,7 @@ enum RotationCycle {
     // Try by enum name
     try {
       return RotationCycle.values.firstWhere(
-            (cycle) => cycle.name.toLowerCase() == normalizedValue,
+        (cycle) => cycle.name.toLowerCase() == normalizedValue,
       );
     } catch (_) {
       // Not found by name, try aliases
@@ -45,13 +45,13 @@ enum RotationCycle {
 
     // Handle common aliases and variations
     switch (normalizedValue) {
-    // Never aliases
+      // Never aliases
       case 'none':
       case 'off':
       case 'disabled':
         return NEVER;
 
-    // 10 minutes aliases
+      // 10 minutes aliases
       case '10m':
       case '10mins':
       case '10minutes':
@@ -59,7 +59,7 @@ enum RotationCycle {
       case 'ten_minutes':
         return TEN_MINUTES;
 
-    // 30 minutes aliases
+      // 30 minutes aliases
       case '30m':
       case '30mins':
       case '30minutes':
@@ -69,7 +69,7 @@ enum RotationCycle {
       case 'half_hour':
         return THIRTY_MINUTES;
 
-    // Hourly aliases
+      // Hourly aliases
       case '1h':
       case '1hour':
       case '60min':
@@ -78,7 +78,7 @@ enum RotationCycle {
       case 'every_hour':
         return HOURLY;
 
-    // 2 hours aliases
+      // 2 hours aliases
       case '2h':
       case '2hrs':
       case '2hours':
@@ -87,7 +87,7 @@ enum RotationCycle {
       case '120min':
         return TWO_HOURS;
 
-    // 3 hours aliases
+      // 3 hours aliases
       case '3h':
       case '3hrs':
       case '3hours':
@@ -95,7 +95,7 @@ enum RotationCycle {
       case 'three_hours':
         return THREE_HOURS;
 
-    // 4 hours aliases
+      // 4 hours aliases
       case '4h':
       case '4hrs':
       case '4hours':
@@ -103,7 +103,7 @@ enum RotationCycle {
       case 'four_hours':
         return FOUR_HOURS;
 
-    // 6 hours aliases
+      // 6 hours aliases
       case '6h':
       case '6hrs':
       case '6hours':
@@ -111,7 +111,7 @@ enum RotationCycle {
       case 'six_hours':
         return SIX_HOURS;
 
-    // 12 hours aliases
+      // 12 hours aliases
       case '12h':
       case '12hrs':
       case '12hours':
@@ -121,7 +121,7 @@ enum RotationCycle {
       case 'half_day':
         return TWELVE_HOURS;
 
-    // Daily aliases
+      // Daily aliases
       case '1d':
       case '1day':
       case '24h':
@@ -130,7 +130,7 @@ enum RotationCycle {
       case 'every_day':
         return DAILY;
 
-    // Weekly aliases
+      // Weekly aliases
       case '1w':
       case '7d':
       case '7days':
@@ -138,7 +138,7 @@ enum RotationCycle {
       case 'every_week':
         return WEEKLY;
 
-    // Monthly aliases
+      // Monthly aliases
       case '1m':
       case '30d':
       case '30days':
@@ -147,12 +147,10 @@ enum RotationCycle {
         return MONTHLY;
 
       default:
-      // Fail fast with descriptive error
-        throw ArgumentError(
-            'Unknown RotationCycle value: "$value". '
-                'Valid values are: ${RotationCycle.values.map((e) => e.value).join(", ")} '
-                'or enum names: ${RotationCycle.values.map((e) => e.name).join(", ")}'
-        );
+        // Fail fast with descriptive error
+        throw ArgumentError('Unknown RotationCycle value: "$value". '
+            'Valid values are: ${RotationCycle.values.map((e) => e.value).join(", ")} '
+            'or enum names: ${RotationCycle.values.map((e) => e.name).join(", ")}');
     }
   }
 

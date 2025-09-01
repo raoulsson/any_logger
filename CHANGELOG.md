@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0
+
+* Changes to get the Email Appender working
+
 ## 1.0.12
 
 * Forcing IdProvider creation early to fail fast nicely if config is incorrect for file appender on flutter
