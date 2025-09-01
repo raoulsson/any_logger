@@ -71,7 +71,8 @@ class ConsoleAppender extends Appender {
   //       }
   //     ]
   //   };
-  ConsoleAppender.fromConfig(Map<String, dynamic> config, {bool test = false, DateTime? date})
+  ConsoleAppender.fromConfig(Map<String, dynamic> config,
+      {bool test = false, DateTime? date})
       : super(customDate: date) {
     initializeCommonProperties(config, test: test, date: date);
 
@@ -109,7 +110,8 @@ class ConsoleAppender extends Appender {
         stackTrace: logRecord.stackTrace,
       );
     } else {
-      print(LogRecordFormatter.format(logRecord, format, dateFormat: dateFormat));
+      print(
+          LogRecordFormatter.format(logRecord, format, dateFormat: dateFormat));
     }
 
     var tabs = '\t';

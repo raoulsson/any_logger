@@ -40,7 +40,8 @@ import '../../any_logger.dart';
 ///     .withPath('logs/')
 ///     .build();
 /// ```
-FileAppenderBuilder fileAppenderBuilder(String filePattern) => FileAppenderBuilder(filePattern);
+FileAppenderBuilder fileAppenderBuilder(String filePattern) =>
+    FileAppenderBuilder(filePattern);
 
 class FileAppenderBuilder {
   final Map<String, dynamic> _config = {
@@ -161,7 +162,7 @@ class FileAppenderBuilder {
   /// - [withMonthlyRotation]
   /// - [withYearlyRotation]
   FileAppenderBuilder withRotationCycle(RotationCycle cycle) {
-    _config['rotationCycle'] = cycle.name;
+    _config['rotationCycle'] = cycle.value;
     return this;
   }
 
@@ -180,7 +181,7 @@ class FileAppenderBuilder {
   /// All logs will be written to a single file:
   /// `{filePattern}.{extension}`
   FileAppenderBuilder withNoRotation() {
-    _config['rotationCycle'] = 'NEVER';
+    _config['rotationCycle'] = RotationCycle.NEVER.value; // 'never'
     return this;
   }
 
@@ -189,7 +190,7 @@ class FileAppenderBuilder {
   /// Creates files like:
   /// `{filePattern}_2024-03-15.{extension}`
   FileAppenderBuilder withDailyRotation() {
-    _config['rotationCycle'] = 'DAY';
+    _config['rotationCycle'] = RotationCycle.DAILY.value; // 'day'
     return this;
   }
 
@@ -199,7 +200,7 @@ class FileAppenderBuilder {
   /// `{filePattern}_2024-CW11.{extension}`
   /// (CW = Calendar Week)
   FileAppenderBuilder withWeeklyRotation() {
-    _config['rotationCycle'] = 'WEEK';
+    _config['rotationCycle'] = RotationCycle.WEEKLY.value; // 'week'
     return this;
   }
 
@@ -208,16 +209,7 @@ class FileAppenderBuilder {
   /// Creates files like:
   /// `{filePattern}_2024-03.{extension}`
   FileAppenderBuilder withMonthlyRotation() {
-    _config['rotationCycle'] = 'MONTH';
-    return this;
-  }
-
-  /// Configures the appender to rotate files yearly.
-  ///
-  /// Creates files like:
-  /// `{filePattern}_2024.{extension}`
-  FileAppenderBuilder withYearlyRotation() {
-    _config['rotationCycle'] = 'YEAR';
+    _config['rotationCycle'] = RotationCycle.MONTHLY.value; // 'month'
     return this;
   }
 
@@ -231,7 +223,7 @@ class FileAppenderBuilder {
   FileAppenderBuilder withSimplePreset() {
     _config['format'] = '%d [%l] %m';
     _config['level'] = Level.INFO.name;
-    _config['rotationCycle'] = 'DAY';
+    _config['rotationCycle'] = RotationCycle.DAILY.value; // 'day'
     return this;
   }
 
@@ -243,7 +235,7 @@ class FileAppenderBuilder {
   FileAppenderBuilder withDebugPreset() {
     _config['format'] = '[%d][%l][%c] %m [%f]';
     _config['level'] = Level.DEBUG.name;
-    _config['rotationCycle'] = 'DAY';
+    _config['rotationCycle'] = RotationCycle.DAILY.value; // 'day'
     return this;
   }
 
@@ -255,7 +247,7 @@ class FileAppenderBuilder {
   FileAppenderBuilder withProductionPreset() {
     _config['format'] = '[%d][%l][%t] %m';
     _config['level'] = Level.INFO.name;
-    _config['rotationCycle'] = 'WEEK';
+    _config['rotationCycle'] = RotationCycle.WEEKLY.value; // 'week'
     return this;
   }
 
@@ -267,7 +259,7 @@ class FileAppenderBuilder {
   FileAppenderBuilder withFullTrackingPreset() {
     _config['format'] = '[%d][%did][%sid][%i][%l][%c] %m [%f]';
     _config['level'] = Level.TRACE.name;
-    _config['rotationCycle'] = 'DAY';
+    _config['rotationCycle'] = RotationCycle.DAILY.value; // 'day'
     return this;
   }
 
@@ -279,7 +271,7 @@ class FileAppenderBuilder {
   FileAppenderBuilder withAuditPreset() {
     _config['format'] = '[AUDIT][%d][%did][%sid][%X{userId}][%l] %m [%f]';
     _config['level'] = Level.INFO.name;
-    _config['rotationCycle'] = 'MONTH';
+    _config['rotationCycle'] = RotationCycle.MONTHLY.value; // 'month'
     return this;
   }
 
@@ -297,7 +289,7 @@ class FileAppenderBuilder {
     // Set defaults if not specified
     _config['dateFormat'] ??= 'yyyy-MM-dd HH:mm:ss.SSS';
     _config['fileExtension'] ??= 'log';
-    _config['rotationCycle'] ??= 'DAY';
+    _config['rotationCycle'] ??= RotationCycle.DAILY.value;
     _config['path'] ??= '';
 
     return FileAppender.fromConfig(_config, test: test, date: date);

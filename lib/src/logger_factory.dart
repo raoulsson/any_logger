@@ -51,7 +51,8 @@ class LoggerFactory {
   // ============================================================
   // ID PROVIDER CONFIGURATION
   // ============================================================
-  static void setGetAppDocumentsDirectoryFnc(Future<Directory> Function() getAppDocumentsDirectoryFnc) {
+  static void setGetAppDocumentsDirectoryFnc(
+      Future<Directory> Function() getAppDocumentsDirectoryFnc) {
     _getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
     FileIdProvider.getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
     FileAppender.getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
@@ -149,7 +150,8 @@ class LoggerFactory {
     };
 
     initSync(config);
-    selfLog('Initialized simple console logger with level ${level.name}', logLevel: Level.INFO);
+    selfLog('Initialized simple console logger with level ${level.name}',
+        logLevel: Level.INFO);
   }
 
   /// Initialize with professional console format (includes file location, method info)
@@ -160,7 +162,9 @@ class LoggerFactory {
   }) {
     _initializeIdentification();
 
-    String format = includeIds ? '[%d][%did][%sid][%i][%l][%c] %m [%f]' : '[%d][%i][%l][%c] %m [%f]';
+    String format = includeIds
+        ? '[%d][%did][%sid][%i][%l][%c] %m [%f]'
+        : '[%d][%i][%l][%c] %m [%f]';
 
     final config = {
       'appenders': [
@@ -174,7 +178,8 @@ class LoggerFactory {
     };
 
     initSync(config);
-    selfLog('Initialized professional console logger with level ${level.name}', logLevel: Level.INFO);
+    selfLog('Initialized professional console logger with level ${level.name}',
+        logLevel: Level.INFO);
   }
 
   /// Initialize with custom console format
@@ -197,7 +202,8 @@ class LoggerFactory {
     };
 
     initSync(config);
-    selfLog('Initialized custom console logger with level ${level.name}', logLevel: Level.INFO);
+    selfLog('Initialized custom console logger with level ${level.name}',
+        logLevel: Level.INFO);
   }
 
   /// Initialize with file logging (and optional console)
@@ -234,7 +240,8 @@ class LoggerFactory {
     }
 
     await init({'appenders': appenders}, appVersion: appVersion);
-    selfLog('Initialized file logger with pattern $filePattern', logLevel: Level.INFO);
+    selfLog('Initialized file logger with pattern $filePattern',
+        logLevel: Level.INFO);
   }
 
   /// Initialize with professional file logging (and optional console with pro format)
@@ -248,9 +255,12 @@ class LoggerFactory {
     await _initializeIdentificationAsync();
 
     // Pro format with or without IDs
-    final String fileFormat = includeIds ? '[%d][%did][%sid][%i][%l][%c] %m [%f]' : '[%d][%i][%l][%c] %m [%f]';
+    final String fileFormat = includeIds
+        ? '[%d][%did][%sid][%i][%l][%c] %m [%f]'
+        : '[%d][%i][%l][%c] %m [%f]';
 
-    final String consoleFormat = includeIds ? '[%d][%did][%sid][%i][%l][%c] %m' : '[%d][%i][%l][%c] %m';
+    final String consoleFormat =
+        includeIds ? '[%d][%did][%sid][%i][%l][%c] %m' : '[%d][%i][%l][%c] %m';
 
     final appenders = <Map<String, dynamic>>[];
 
@@ -327,7 +337,8 @@ class LoggerFactory {
     bool isDebugMode = true,
     String? appVersion,
   }) async {
-    final preset = isDebugMode ? LoggerPresets.development : LoggerPresets.production;
+    final preset =
+        isDebugMode ? LoggerPresets.development : LoggerPresets.production;
 
     await initWithPreset(preset, appVersion: appVersion);
   }
@@ -406,12 +417,14 @@ class LoggerFactory {
       }
     }
 
-    _rootLogger = Logger.defaultLogger(appendersFromConfig, clientDepthOffset: clientProxyCallDepthOffset);
+    _rootLogger = Logger.defaultLogger(appendersFromConfig,
+        clientDepthOffset: clientProxyCallDepthOffset);
     _loggers[ROOT_LOGGER] = _rootLogger!;
 
     if (selfDebug) {
       _setupSelfLogger();
-      _logAppenderConfigs(appendersFromConfig, 'Logger initialized sync with ${appendersFromConfig.length} appenders');
+      _logAppenderConfigs(appendersFromConfig,
+          'Logger initialized sync with ${appendersFromConfig.length} appenders');
     }
   }
 
@@ -480,7 +493,8 @@ class LoggerFactory {
       try {
         final appConfig = Map<String, dynamic>.from(app);
 
-        Appender appender = await AppenderRegistry.instance.create(appConfig, test: test, date: date);
+        Appender appender = await AppenderRegistry.instance
+            .create(appConfig, test: test, date: date);
         appendersFromConfig.add(appender);
       } catch (e) {
         if (selfDebug) {
@@ -490,20 +504,23 @@ class LoggerFactory {
       }
     }
 
-    _rootLogger = Logger.defaultLogger(appendersFromConfig, clientDepthOffset: clientProxyCallDepthOffset);
+    _rootLogger = Logger.defaultLogger(appendersFromConfig,
+        clientDepthOffset: clientProxyCallDepthOffset);
 
     _loggers[ROOT_LOGGER] = _rootLogger!;
 
     if (selfDebug) {
       _setupSelfLogger();
-      _logAppenderConfigs(appendersFromConfig, 'Logger initialized async with ${appendersFromConfig.length} appenders');
+      _logAppenderConfigs(appendersFromConfig,
+          'Logger initialized async with ${appendersFromConfig.length} appenders');
     }
 
     return true;
   }
 
   /// Initialize from a configuration file
-  static Future<bool> initFromFile(String fileName, {bool selfDebug = false, String? appVersion}) async {
+  static Future<bool> initFromFile(String fileName,
+      {bool selfDebug = false, String? appVersion}) async {
     if (selfDebug) {
       print('[SELF_DEBUG] Loading config from file: $fileName');
     }
@@ -526,7 +543,8 @@ class LoggerFactory {
     _selfLogLevel = selfLogLevel;
 
     // Use the resolver to analyze requirements
-    final requirements = IdProviderResolver.analyzeRequirements(loggerConfig.appenders);
+    final requirements =
+        IdProviderResolver.analyzeRequirements(loggerConfig.appenders);
     _deviceIdNeeded = requirements.deviceIdNeeded;
     _sessionIdNeeded = requirements.sessionIdNeeded;
     _fileAppenderNeeded = requirements.fileAppenderNeeded;
@@ -556,7 +574,8 @@ class LoggerFactory {
     // Use the provided appenders
     var appendersFromConfig = loggerConfig.appenders;
 
-    _rootLogger = Logger.defaultLogger(appendersFromConfig, clientDepthOffset: clientProxyCallDepthOffset);
+    _rootLogger = Logger.defaultLogger(appendersFromConfig,
+        clientDepthOffset: clientProxyCallDepthOffset);
 
     // Add the root logger to the map
     _loggers[ROOT_LOGGER] = _rootLogger!;
@@ -568,13 +587,15 @@ class LoggerFactory {
     }
   }
 
-  static void _logAppenderConfigs(List<Appender> appenders, String initMessage) {
+  static void _logAppenderConfigs(
+      List<Appender> appenders, String initMessage) {
     if (!_selfDebugEnabled) return;
 
     selfLog(initMessage, logLevel: Level.INFO);
 
     for (var appender in appenders) {
-      selfLog('Appender ${appender.getType()}, ${appender.level}, ${appender.getShortConfigDesc()}',
+      selfLog(
+          'Appender ${appender.getType()}, ${appender.level}, ${appender.getShortConfigDesc()}',
           logLevel: Level.INFO);
       final config = appender.getConfig();
       config.forEach((key, value) {
@@ -592,7 +613,8 @@ class LoggerFactory {
       idProvider.initializeSync();
 
       // Ensure IDs are set if provider supports them
-      if ((idProvider.deviceId == null && _deviceIdNeeded) || (idProvider.sessionId == null && _sessionIdNeeded)) {
+      if ((idProvider.deviceId == null && _deviceIdNeeded) ||
+          (idProvider.sessionId == null && _sessionIdNeeded)) {
         idProvider.regenerateSessionId();
       }
     }
@@ -603,7 +625,8 @@ class LoggerFactory {
       await idProvider.initialize();
 
       // Ensure IDs are set if provider supports them
-      if ((idProvider.deviceId == null && _deviceIdNeeded) || (idProvider.sessionId == null && _sessionIdNeeded)) {
+      if ((idProvider.deviceId == null && _deviceIdNeeded) ||
+          (idProvider.sessionId == null && _sessionIdNeeded)) {
         idProvider.regenerateSessionId();
       }
     }
@@ -688,7 +711,8 @@ class LoggerFactory {
       for (Appender appender in logger.appenders) {
         if (appender.getType() == upperType) {
           appender.setEnabled(true);
-          selfLog('Enabled $upperType appender for logger ${logger.name}', logLevel: Level.INFO);
+          selfLog('Enabled $upperType appender for logger ${logger.name}',
+              logLevel: Level.INFO);
           return;
         }
       }
@@ -702,7 +726,8 @@ class LoggerFactory {
       for (Appender appender in logger.appenders) {
         if (appender.getType() == upperType) {
           appender.setEnabled(false);
-          selfLog('Disabled $upperType appender for logger ${logger.name}', logLevel: Level.INFO);
+          selfLog('Disabled $upperType appender for logger ${logger.name}',
+              logLevel: Level.INFO);
           return;
         }
       }
@@ -725,7 +750,8 @@ class LoggerFactory {
         await logger.flush();
       } catch (e) {
         if (_selfDebugEnabled) {
-          selfLog('Error flushing logger ${logger.name}: $e', logLevel: Level.ERROR);
+          selfLog('Error flushing logger ${logger.name}: $e',
+              logLevel: Level.ERROR);
         }
       }
     }
@@ -813,7 +839,8 @@ class LoggerFactory {
   static void _setupSelfLogger() {
     if (_rootLogger == null) return;
 
-    _selfLogger = Logger.fromExisting(_rootLogger!, name: ANYLOGGER_SELF_LOGGER_NAME, consoleOnly: true);
+    _selfLogger = Logger.fromExisting(_rootLogger!,
+        name: ANYLOGGER_SELF_LOGGER_NAME, consoleOnly: true);
     _selfLogger?.setLevelAll(_selfLogLevel);
     _loggers[ANYLOGGER_SELF_LOGGER_NAME] = _selfLogger!;
     selfLog('Self-debugging enabled', logLevel: Level.INFO);

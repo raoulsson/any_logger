@@ -1,25 +1,22 @@
 import 'appender/rotation_cycle.dart';
 
 class Utils {
-  static RotationCycle getRotationCycleFromString(String? s) {
-    return RotationCycle.values.firstWhere((e) => e.toString().split('.')[1].toLowerCase() == s!.toLowerCase(),
-        orElse: () => RotationCycle.NEVER);
+  static int getCalendarWeek(DateTime date) {
+    final startOfYear = DateTime(date.year, 1, 1);
+    final firstMonday = startOfYear.weekday == 1
+        ? startOfYear
+        : startOfYear.add(Duration(days: 8 - startOfYear.weekday));
+
+    if (date.isBefore(firstMonday)) {
+      return getCalendarWeek(DateTime(date.year - 1, 12, 31));
+    }
+
+    final weekNumber = ((date.difference(firstMonday).inDays) / 7).floor() + 1;
+    return weekNumber;
   }
 
-  static int getCalendarWeek(DateTime date) {
-    // ISO 8601 week number calculation
-    // Find the Thursday of this week (weeks start on Monday in ISO 8601)
-    int dayOfWeek = date.weekday; // 1 = Monday, 7 = Sunday
-    DateTime thursday = date.add(Duration(days: 4 - dayOfWeek));
-
-    // Find the first Thursday of the year
-    DateTime jan1 = DateTime(thursday.year, 1, 1);
-    int jan1DayOfWeek = jan1.weekday;
-    DateTime firstThursday = jan1.add(Duration(days: (11 - jan1DayOfWeek) % 7));
-
-    // Calculate week number
-    int weekNumber = ((thursday.difference(firstThursday).inDays) / 7).floor() + 1;
-
-    return weekNumber;
+  // This method seems unnecessary since RotationCycle.fromString() already exists
+  static RotationCycle getRotationCycleFromString(String? s) {
+    return RotationCycle.fromString(s);
   }
 }

@@ -24,12 +24,14 @@ void main() {
 
     test('should isolate state between tests - test 2', () async {
       // This test should start fresh, with no contamination from test 1
-      expect(LoggerFactory.getMdcValue('test'), isNull, reason: 'MDC should be cleared between tests');
+      expect(LoggerFactory.getMdcValue('test'), isNull,
+          reason: 'MDC should be cleared between tests');
 
       // Self-debug should be off
       await LoggerBuilder().replaceAll().console().build();
 
-      expect(LoggerFactory.selfDebugEnabled, isFalse, reason: 'Self-debug should not leak from previous test');
+      expect(LoggerFactory.selfDebugEnabled, isFalse,
+          reason: 'Self-debug should not leak from previous test');
 
       final service = ServiceWithLogger();
       service.doWork(); // Should get a fresh logger
@@ -51,7 +53,8 @@ void main() {
       final service2 = ServiceWithLogger();
       final logger2 = service2.logger;
 
-      expect(identical(logger1, logger2), isFalse, reason: 'Should have different logger instances after disposal');
+      expect(identical(logger1, logger2), isFalse,
+          reason: 'Should have different logger instances after disposal');
 
       await LoggerFactory.dispose();
     });
@@ -99,7 +102,8 @@ void main() {
 
       // All should share the same appender configuration initially
       expect(childLogger.appenders.length, equals(rootLogger.appenders.length));
-      expect(grandchildLogger.appenders.length, equals(rootLogger.appenders.length));
+      expect(grandchildLogger.appenders.length,
+          equals(rootLogger.appenders.length));
     });
   });
 
@@ -112,7 +116,11 @@ void main() {
       await LoggerBuilder()
           .replaceAll()
           .console(level: Level.INFO, format: 'CONSOLE: %m')
-          .file(filePattern: 'debug_log', level: Level.DEBUG, path: 'test_logs/', format: 'FILE: [%d] %l: %m')
+          .file(
+              filePattern: 'debug_log',
+              level: Level.DEBUG,
+              path: 'test_logs/',
+              format: 'FILE: [%d] %l: %m')
           .build();
 
       final logger = LoggerFactory.getRootLogger();
@@ -132,7 +140,10 @@ void main() {
     });
 
     test('should support runtime reconfiguration', () async {
-      await LoggerBuilder().replaceAll().console(level: Level.INFO, format: '[%d] %m', dateFormat: 'HH:mm:ss').build();
+      await LoggerBuilder()
+          .replaceAll()
+          .console(level: Level.INFO, format: '[%d] %m', dateFormat: 'HH:mm:ss')
+          .build();
 
       final logger = LoggerFactory.getRootLogger();
 
@@ -158,7 +169,10 @@ void main() {
     });
 
     test('should support request context tracking', () async {
-      await LoggerBuilder().replaceAll().console(format: '[%X{userId}][%X{requestId}][%X{endpoint}] %m').build();
+      await LoggerBuilder()
+          .replaceAll()
+          .console(format: '[%X{userId}][%X{requestId}][%X{endpoint}] %m')
+          .build();
 
       // Simulate handling multiple requests
       await handleRequest('user123', 'req001', '/api/users');
@@ -288,12 +302,14 @@ void main() {
       logger.logDebugSupplier(expensiveComputation);
       logger.logInfoSupplier(expensiveComputation);
 
-      expect(callCount, equals(0), reason: 'Expensive computation should not run for disabled levels');
+      expect(callCount, equals(0),
+          reason: 'Expensive computation should not run for disabled levels');
 
       // This SHOULD execute it
       logger.logErrorSupplier(expensiveComputation);
 
-      expect(callCount, equals(1), reason: 'Expensive computation should run for enabled levels');
+      expect(callCount, equals(1),
+          reason: 'Expensive computation should run for enabled levels');
     });
 
     test('should cache logger instances', () async {
@@ -384,7 +400,8 @@ class Application with AnyLogger {
 }
 
 // Helper functions
-Future<void> handleRequest(String userId, String requestId, String endpoint) async {
+Future<void> handleRequest(
+    String userId, String requestId, String endpoint) async {
   LoggerFactory.setMdcValue('userId', userId);
   LoggerFactory.setMdcValue('requestId', requestId);
   LoggerFactory.setMdcValue('endpoint', endpoint);

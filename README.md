@@ -484,7 +484,7 @@ modern features, performance optimizations, automatic ID tracking, and a simplif
 - 🐛 Issues: [GitHub Issues](https://github.com/raoulsson/any_logger/issues)
 - 💬 Discussions: [GitHub Discussions](https://github.com/raoulsson/any_logger/discussions)
 
-## 👏 Funding
+## 💚 Funding
 
 - 🏅 https://github.com/sponsors/raoulsson
 - 🪙 https://www.buymeacoffee.com/raoulsson

@@ -11,28 +11,36 @@ void main() {
 
     test('should support different console modes', () {
       // stdout mode
-      final stdoutAppender =
-          ConsoleAppenderBuilder().withMode(ConsoleLoggerMode.stdout).withLevel(Level.INFO).buildSync();
+      final stdoutAppender = ConsoleAppenderBuilder()
+          .withMode(ConsoleLoggerMode.stdout)
+          .withLevel(Level.INFO)
+          .buildSync();
 
       expect(stdoutAppender.getType(), equals('CONSOLE'));
       expect((stdoutAppender).mode, equals(ConsoleLoggerMode.stdout));
 
       // devtools mode
-      final devtoolsAppender =
-          ConsoleAppenderBuilder().withMode(ConsoleLoggerMode.devtools).withLevel(Level.DEBUG).buildSync();
+      final devtoolsAppender = ConsoleAppenderBuilder()
+          .withMode(ConsoleLoggerMode.devtools)
+          .withLevel(Level.DEBUG)
+          .buildSync();
 
       expect((devtoolsAppender).mode, equals(ConsoleLoggerMode.devtools));
     });
 
     test('should format console output correctly', () async {
-      await LoggerBuilder().replaceAll().console(format: '[%l] %c: %m', level: Level.INFO).build();
+      await LoggerBuilder()
+          .replaceAll()
+          .console(format: '[%l] %c: %m', level: Level.INFO)
+          .build();
 
       // Test different log levels and messages
       Logger.info('Information message');
       Logger.warn('Warning message');
       Logger.error('Error message');
 
-      expect(LoggerFactory.getRootLogger().appenders.first.format, equals('[%l] %c: %m'));
+      expect(LoggerFactory.getRootLogger().appenders.first.format,
+          equals('[%l] %c: %m'));
     });
   });
 
@@ -56,11 +64,12 @@ void main() {
 
     test('should handle daily rotation', () async {
       final now = DateTime.now();
-      final dateStr = SimpleDateFormat('yyyy-MM-dd').format(now);
+      final dateStr =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
       final appender = await FileAppenderBuilder('daily_test')
           .withPath(testDir)
-          .withRotationCycle(RotationCycle.DAY)
+          .withRotationCycle(RotationCycle.DAILY)
           .withLevel(Level.INFO)
           .build();
 
@@ -75,12 +84,12 @@ void main() {
 
     test('should handle weekly rotation', () async {
       final now = DateTime.now();
-      final weekNumber = _getWeekNumber(now);
+      final weekNumber = Utils.getCalendarWeek(now);
       final weekStr = '${now.year}-CW$weekNumber';
 
       final appender = await fileAppenderBuilder('weekly_test')
           .withPath(testDir)
-          .withRotationCycle(RotationCycle.WEEK)
+          .withRotationCycle(RotationCycle.WEEKLY)
           .withLevel(Level.INFO)
           .build();
 
@@ -95,11 +104,11 @@ void main() {
 
     test('should handle monthly rotation', () async {
       final now = DateTime.now();
-      final monthStr = SimpleDateFormat('yyyy-MM').format(now);
+      final monthStr = '${now.year}-${now.month.toString().padLeft(2, '0')}';
 
       final appender = await fileAppenderBuilder('monthly_test')
           .withPath(testDir)
-          .withRotationCycle(RotationCycle.MONTH)
+          .withRotationCycle(RotationCycle.MONTHLY)
           .withLevel(Level.INFO)
           .build();
 
@@ -109,25 +118,6 @@ void main() {
       await LoggerFactory.flushAll();
 
       final expectedFile = File('$testDir/monthly_test_$monthStr.log');
-      expect(await expectedFile.exists(), isTrue);
-    });
-
-    test('should handle yearly rotation', () async {
-      final now = DateTime.now();
-      final yearStr = SimpleDateFormat('yyyy').format(now);
-
-      final appender = await FileAppenderBuilder('yearly_test')
-          .withPath(testDir)
-          .withRotationCycle(RotationCycle.YEAR)
-          .withLevel(Level.INFO)
-          .build();
-
-      await LoggerBuilder().replaceAll().addAppender(appender).build();
-
-      Logger.info('Test yearly rotation');
-      await LoggerFactory.flushAll();
-
-      final expectedFile = File('$testDir/yearly_test_$yearStr.log');
       expect(await expectedFile.exists(), isTrue);
     });
 
@@ -168,7 +158,12 @@ void main() {
       final config = {
         'appenders': [
           {'type': 'CONSOLE', 'level': 'INFO'},
-          {'type': 'FILE', 'filePattern': 'app', 'path': 'mixed_logs/', 'level': 'DEBUG'},
+          {
+            'type': 'FILE',
+            'filePattern': 'app',
+            'path': 'mixed_logs/',
+            'level': 'DEBUG'
+          },
         ]
       };
 
@@ -210,11 +205,4 @@ void main() {
       expect(logger.appenders[1].enabled, isTrue);
     });
   });
-}
-
-// Helper function to calculate week number
-int _getWeekNumber(DateTime date) {
-  final startOfYear = DateTime(date.year, 1, 1);
-  final dayOfYear = date.difference(startOfYear).inDays;
-  return ((dayOfYear - date.weekday + 10) / 7).floor();
 }

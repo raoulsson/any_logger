@@ -32,7 +32,8 @@ void main() {
 
       expect(logger1.name, equals('TestLogger1'));
       expect(logger2.name, equals('TestLogger2'));
-      expect(identical(logger1, logger1Again), isTrue, reason: 'Should return the same instance for the same name');
+      expect(identical(logger1, logger1Again), isTrue,
+          reason: 'Should return the same instance for the same name');
     });
 
     test('should properly dispose and reset state', () async {
@@ -43,7 +44,8 @@ void main() {
 
       // After disposal, should auto-initialize again
       final newLogger = LoggerFactory.getLogger('TestLogger');
-      expect(identical(logger, newLogger), isFalse, reason: 'Should be a new instance after disposal');
+      expect(identical(logger, newLogger), isFalse,
+          reason: 'Should be a new instance after disposal');
     });
 
     test('should handle configuration from JSON', () async {
@@ -107,7 +109,8 @@ void main() {
     test('should build console logger with builder', () async {
       await LoggerBuilder()
           .replaceAll()
-          .console(level: Level.INFO, format: '[%d] %l: %m', dateFormat: 'HH:mm:ss')
+          .console(
+              level: Level.INFO, format: '[%d] %l: %m', dateFormat: 'HH:mm:ss')
           .build();
 
       final logger = LoggerFactory.getRootLogger();
@@ -142,7 +145,11 @@ void main() {
     });
 
     test('should enable self-debugging with builder', () async {
-      await LoggerBuilder().replaceAll().console().withSelfDebug(Level.INFO).build();
+      await LoggerBuilder()
+          .replaceAll()
+          .console()
+          .withSelfDebug(Level.INFO)
+          .build();
 
       expect(LoggerFactory.selfDebugEnabled, isTrue);
     });
@@ -174,7 +181,8 @@ void main() {
       final service1 = TestServiceCustom();
       final service2 = TestServiceCustom();
 
-      expect(identical(service1.logger, service2.logger), isTrue, reason: 'Should reuse cached logger for same name');
+      expect(identical(service1.logger, service2.logger), isTrue,
+          reason: 'Should reuse cached logger for same name');
     });
 
     test('should clear cache on disposal', () async {
@@ -188,7 +196,8 @@ void main() {
       final service2 = TestServiceCustom();
       final logger2 = service2.logger;
 
-      expect(identical(logger1, logger2), isFalse, reason: 'Should have new logger after disposal');
+      expect(identical(logger1, logger2), isFalse,
+          reason: 'Should have new logger after disposal');
     });
   });
 
@@ -200,7 +209,11 @@ void main() {
     test('should set and get MDC values', () async {
       await LoggerFactory.init({
         'appenders': [
-          {'type': 'CONSOLE', 'format': '[%X{userId}][%X{requestId}] %m', 'level': 'INFO'}
+          {
+            'type': 'CONSOLE',
+            'format': '[%X{userId}][%X{requestId}] %m',
+            'level': 'INFO'
+          }
         ]
       });
 
@@ -246,7 +259,10 @@ void main() {
     });
 
     test('should create log file in specified directory', () async {
-      await LoggerBuilder().replaceAll().file(filePattern: 'test', path: testDir, level: Level.INFO).build();
+      await LoggerBuilder()
+          .replaceAll()
+          .file(filePattern: 'test', path: testDir, level: Level.INFO)
+          .build();
 
       Logger.info('Test message');
       await LoggerFactory.flushAll();
@@ -268,7 +284,11 @@ void main() {
 
       await LoggerBuilder()
           .replaceAll()
-          .file(filePattern: 'daily', path: testDir, level: Level.INFO, rotationCycle: 'DAY')
+          .file(
+              filePattern: 'daily',
+              path: testDir,
+              level: Level.INFO,
+              rotationCycle: 'DAY')
           .build();
 
       Logger.info('Daily rotation test');
@@ -285,8 +305,11 @@ void main() {
     });
 
     test('should build console appender', () {
-      final appender =
-          ConsoleAppenderBuilder().withLevel(Level.WARN).withFormat('[%l] %m').withDateFormat('HH:mm:ss').buildSync();
+      final appender = ConsoleAppenderBuilder()
+          .withLevel(Level.WARN)
+          .withFormat('[%l] %m')
+          .withDateFormat('HH:mm:ss')
+          .buildSync();
 
       expect(appender.getType(), equals('CONSOLE'));
       expect(appender.level, equals(Level.WARN));
@@ -298,7 +321,7 @@ void main() {
       final appender = await FileAppenderBuilder('test_file')
           .withLevel(Level.DEBUG)
           .withPath('logs/')
-          .withRotationCycle(RotationCycle.MONTH)
+          .withRotationCycle(RotationCycle.MONTHLY)
           .build(test: true); // test mode to avoid actual file creation
 
       final fileAppender = appender;
@@ -306,11 +329,14 @@ void main() {
       expect(fileAppender.level, equals(Level.DEBUG));
       expect(fileAppender.filePattern, equals('test_file'));
       expect(fileAppender.path, equals('logs/'));
-      expect(fileAppender.rotationCycle, equals(RotationCycle.MONTH));
+      expect(fileAppender.rotationCycle, equals(RotationCycle.MONTHLY));
     });
 
     test('should integrate with LoggerBuilder', () async {
-      final customAppender = ConsoleAppenderBuilder().withLevel(Level.ERROR).withFormat('ERROR: %m').buildSync();
+      final customAppender = ConsoleAppenderBuilder()
+          .withLevel(Level.ERROR)
+          .withFormat('ERROR: %m')
+          .buildSync();
 
       await LoggerBuilder().replaceAll().addAppender(customAppender).build();
 
@@ -324,7 +350,9 @@ void main() {
   group('LogRecord Formatter', () {
     test('should format basic placeholders', () {
       final contextInfo = LoggerStackTrace.from(StackTrace.current);
-      final record = LogRecord(Level.INFO, 'Test message', 'TestTag', contextInfo, loggerName: 'TestLogger');
+      final record = LogRecord(
+          Level.INFO, 'Test message', 'TestTag', contextInfo,
+          loggerName: 'TestLogger');
 
       final formatted = LogRecordFormatter.format(
         record,
@@ -336,12 +364,14 @@ void main() {
 
     test('should format with date', () {
       final contextInfo = LoggerStackTrace.from(StackTrace.current);
-      final record = LogRecord(Level.ERROR, 'Error occurred', null, contextInfo, loggerName: 'ErrorLogger');
+      final record = LogRecord(Level.ERROR, 'Error occurred', null, contextInfo,
+          loggerName: 'ErrorLogger');
 
       final now = DateTime.now();
       record.time = now;
 
-      final formatted = LogRecordFormatter.format(record, '%d - %l: %m', dateFormat: 'HH:mm:ss');
+      final formatted = LogRecordFormatter.format(record, '%d - %l: %m',
+          dateFormat: 'HH:mm:ss');
 
       final expectedTime = SimpleDateFormat('HH:mm:ss').format(now);
       expect(formatted, equals('$expectedTime - ERROR: Error occurred'));
@@ -350,7 +380,11 @@ void main() {
     test('should handle MDC placeholders', () async {
       await LoggerFactory.init({
         'appenders': [
-          {'type': 'CONSOLE', 'format': '[%X{env}][%X{version}] %m', 'level': 'INFO'}
+          {
+            'type': 'CONSOLE',
+            'format': '[%X{env}][%X{version}] %m',
+            'level': 'INFO'
+          }
         ]
       });
 
@@ -365,7 +399,8 @@ void main() {
         contextInfo,
       );
 
-      final formatted = LogRecordFormatter.format(record, '[%X{env}][%X{version}] %m');
+      final formatted =
+          LogRecordFormatter.format(record, '[%X{env}][%X{version}] %m');
 
       expect(formatted, equals('[production][1.2.3] App started'));
     });
@@ -445,12 +480,14 @@ void main() {
       logger.logDebugSupplier(expensiveOperation);
 
       expect(expensiveOperationCalled, isFalse,
-          reason: 'Expensive operation should not be called when debug is disabled');
+          reason:
+              'Expensive operation should not be called when debug is disabled');
 
       // This should call it
       logger.logErrorSupplier(expensiveOperation);
 
-      expect(expensiveOperationCalled, isTrue, reason: 'Expensive operation should be called when error is enabled');
+      expect(expensiveOperationCalled, isTrue,
+          reason: 'Expensive operation should be called when error is enabled');
     });
   });
 
@@ -473,7 +510,8 @@ void main() {
       final logger = LoggerFactory.getRootLogger();
       expect(logger.appenders.length, greaterThan(0));
       // Production preset typically has higher log level
-      expect(logger.appenders.first.level.index, greaterThanOrEqualTo(Level.INFO.index));
+      expect(logger.appenders.first.level.index,
+          greaterThanOrEqualTo(Level.INFO.index));
     });
   });
 }

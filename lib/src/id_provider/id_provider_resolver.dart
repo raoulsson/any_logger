@@ -3,7 +3,8 @@ import 'dart:io';
 import '../../any_logger.dart';
 
 class IdProviderResolver {
-  static ({bool deviceIdNeeded, bool sessionIdNeeded, bool fileAppenderNeeded}) analyzeRequirements(dynamic source) {
+  static ({bool deviceIdNeeded, bool sessionIdNeeded, bool fileAppenderNeeded})
+      analyzeRequirements(dynamic source) {
     bool deviceIdNeeded = false;
     bool sessionIdNeeded = false;
     bool fileAppenderNeeded = false;
@@ -15,6 +16,7 @@ class IdProviderResolver {
         if (format.contains('%did')) deviceIdNeeded = true;
         if (format.contains('%sid')) sessionIdNeeded = true;
         if (appender.getType() == 'FILE') fileAppenderNeeded = true;
+        if (appender.getType() == 'EMAIL') fileAppenderNeeded = true;
       }
     }
     // Handle Map<String, dynamic> JSON config
@@ -28,11 +30,16 @@ class IdProviderResolver {
           }
           final type = appender['type'] as String?;
           if (type?.toUpperCase() == 'FILE') fileAppenderNeeded = true;
+          if (type?.toUpperCase() == 'EMAIL') fileAppenderNeeded = true;
         }
       }
     }
 
-    return (deviceIdNeeded: deviceIdNeeded, sessionIdNeeded: sessionIdNeeded, fileAppenderNeeded: fileAppenderNeeded);
+    return (
+      deviceIdNeeded: deviceIdNeeded,
+      sessionIdNeeded: sessionIdNeeded,
+      fileAppenderNeeded: fileAppenderNeeded
+    );
   }
 
   /// Determine which provider to use based on requirements
@@ -45,8 +52,10 @@ class IdProviderResolver {
     final isFlutter = isFlutterApp();
 
     // Check if Flutter app needs path_provider for FILE appender
-    if (isFlutter && fileAppenderNeeded && getAppDocumentsDirectoryFnc == null) {
-      throw StateError(_getFileAppenderErrorMessage());
+    if (isFlutter &&
+        fileAppenderNeeded &&
+        getAppDocumentsDirectoryFnc == null) {
+      throw StateError(getFileOrEmailAppenderErrorMessage());
     }
 
     // No IDs needed
@@ -59,7 +68,8 @@ class IdProviderResolver {
         if (getAppDocumentsDirectoryFnc == null) {
           throw StateError(_getPathProviderErrorMessage());
         }
-        FileIdProvider.getAppDocumentsDirectoryFnc = getAppDocumentsDirectoryFnc;
+        FileIdProvider.getAppDocumentsDirectoryFnc =
+            getAppDocumentsDirectoryFnc;
         return FileIdProvider();
       } else if (sessionIdNeeded) {
         // Only session ID needed on Flutter
@@ -84,14 +94,20 @@ class IdProviderResolver {
     final isFlutter = isFlutterApp();
     final platform = isFlutter ? "Flutter" : "Dart";
 
-    final features =
-        [if (deviceIdNeeded) '%did', if (sessionIdNeeded) '%sid', if (fileAppenderNeeded) 'FILE'].join('+');
+    final features = [
+      if (deviceIdNeeded) '%did',
+      if (sessionIdNeeded) '%sid',
+      if (fileAppenderNeeded) 'FILE',
+      if (fileAppenderNeeded) 'EMAIL'
+    ].join('+');
 
     String providerName;
     if (!deviceIdNeeded && !sessionIdNeeded) {
       providerName = "NullIdProvider";
     } else if (isFlutter && deviceIdNeeded) {
-      providerName = getAppDocumentsDirectoryFnc != null ? "FileIdProvider" : "ERROR-needs-path_provider";
+      providerName = getAppDocumentsDirectoryFnc != null
+          ? "FileIdProvider"
+          : "ERROR-needs-path_provider";
     } else if (isFlutter && sessionIdNeeded) {
       providerName = "MemoryIdProvider";
     } else {
@@ -132,11 +148,11 @@ before you initialize the logging system:
 ''';
   }
 
-  static String _getFileAppenderErrorMessage() {
+  static String getFileOrEmailAppenderErrorMessage() {
     return '''
     
 ════════════════════════════════════════════════════════════════════════════════
-🚨 ANYLOGGER CONFIG ERROR: You're using a FILE appender on Flutter.
+🚨 ANYLOGGER CONFIG ERROR: You're using a FILE or EMAIL appender on Flutter.
 Flutter apps need proper path access to create log files.
 ════════════════════════════════════════════════════════════════════════════════
 Add:

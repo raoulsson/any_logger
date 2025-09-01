@@ -9,7 +9,8 @@ class LogRecord {
   DateTime time;
   final String? tag;
   final Level level;
-  final Object message; // Changed from String to Object to support lazy evaluation
+  final Object
+      message; // Changed from String to Object to support lazy evaluation
   final Object? error;
   final StackTrace? stackTrace;
   final LoggerStackTrace contextInfo;
@@ -67,7 +68,8 @@ class LogRecord {
 
   String getFormattedTime() {
     // Use SimpleDateFormat instead of intl's DateFormat
-    return SimpleDateFormat(dateFormat ?? 'yyyy-MM-dd HH:mm:ss.SSS').format(time);
+    return SimpleDateFormat(dateFormat ?? 'yyyy-MM-dd HH:mm:ss.SSS')
+        .format(time);
   }
 
   /// Returns formatted function name and line for %c placeholder
@@ -147,7 +149,8 @@ class LogRecord {
       // Windows fix: Handle drive letters properly
       // file:///C:/ becomes C:/
       // But on Unix, file:///home becomes /home
-      if (filePath.length > 1 && filePath[0].toUpperCase() == filePath[0].toLowerCase()) {
+      if (filePath.length > 1 &&
+          filePath[0].toUpperCase() == filePath[0].toLowerCase()) {
         // Not a letter, so prepend the slash back for Unix paths
         if (!filePath.startsWith('/')) {
           filePath = '/$filePath';

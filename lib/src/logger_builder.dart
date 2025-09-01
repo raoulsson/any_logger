@@ -112,6 +112,8 @@ class LoggerBuilder {
   /// Build and initialize the logger asynchronously
   /// By default, ADDS to existing appenders. Use replaceAll() to replace them.
   Future<void> build({bool test = false, DateTime? date}) async {
+    _checkIfSetupIsCorrect();
+
     if (_replaceExisting) {
       // Replace mode - original behavior
       await _buildAndReplace(test: test, date: date);
@@ -171,24 +173,62 @@ class LoggerBuilder {
     );
   }
 
+  void _checkIfSetupIsCorrect() {
+    // FAIL FAST: Check requirements BEFORE trying to create appenders
+    // Analyze what we're about to add
+    final pendingAppenders = <Map<String, dynamic>>[];
+
+    // Convert manual appenders to config format for analysis
+    for (var appender in _appenders) {
+      pendingAppenders.add({
+        'type': appender.getType(),
+        'format': appender.format,
+      });
+    }
+
+    // Add config appenders
+    pendingAppenders.addAll(_appenderConfigs);
+
+    // Use IdProviderResolver to analyze requirements
+    final requirements = IdProviderResolver.analyzeRequirements({
+      'appenders': pendingAppenders,
+    });
+
+    // Check if we need path_provider for FILE/EMAIL appenders on Flutter
+    if (IdProviderResolver.isFlutterApp()) {
+      if (requirements.fileAppenderNeeded) {
+        // Check if path_provider is configured
+        final getAppDocsFn = FileAppender.getAppDocumentsDirectoryFnc;
+        if (getAppDocsFn == null) {
+          // Fail fast with clear error message
+          throw IdProviderResolver.getFileOrEmailAppenderErrorMessage();
+        }
+      }
+    }
+  }
+
   /// Add appenders to existing logger configuration
   Future<void> _addToExistingLogger({bool test = false, DateTime? date}) async {
     // Ensure logger is initialized
     final logger = LoggerFactory.getRootLogger();
 
+    // NOW proceed with adding appenders (existing code continues...)
     // First, add manually created appenders
     for (var appender in _appenders) {
       // Check if this type already exists to warn about duplicates
       final existing = LoggerFactory.getFirstAppenderByType(appender.getType());
       if (existing != null && _selfDebug) {
-        LoggerFactory.selfLog('Warning: ${appender.getType()} appender already exists, adding another instance',
+        LoggerFactory.selfLog(
+            'Warning: ${appender.getType()} appender already exists, adding another instance',
             logLevel: Level.WARN);
       }
 
       logger.addCustomAppender(appender);
 
       if (_selfDebug) {
-        LoggerFactory.selfLog('Added ${appender.getType()} appender via builder (additive mode)', logLevel: Level.INFO);
+        LoggerFactory.selfLog(
+            'Added ${appender.getType()} appender via builder (additive mode)',
+            logLevel: Level.INFO);
         appender.logConfig();
       }
     }
@@ -200,7 +240,8 @@ class LoggerBuilder {
         final type = config['type']?.toString().toUpperCase();
         final existing = LoggerFactory.getFirstAppenderByType(type ?? '');
         if (existing != null && _selfDebug) {
-          LoggerFactory.selfLog('Warning: $type appender already exists, adding another instance',
+          LoggerFactory.selfLog(
+              'Warning: $type appender already exists, adding another instance',
               logLevel: Level.WARN);
         }
 
@@ -214,7 +255,9 @@ class LoggerBuilder {
         logger.addCustomAppender(appender);
 
         if (_selfDebug) {
-          LoggerFactory.selfLog('Added $type appender via builder (additive mode)', logLevel: Level.INFO);
+          LoggerFactory.selfLog(
+              'Added $type appender via builder (additive mode)',
+              logLevel: Level.INFO);
           appender.logConfig();
         }
       } catch (e) {

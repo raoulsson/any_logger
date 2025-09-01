@@ -20,7 +20,10 @@ void main() {
 
     test('Example 2: Basic configuration', () async {
       // Configure with builder pattern
-      await LoggerBuilder().console(level: Level.DEBUG, format: '[%d] %l: %m', dateFormat: 'HH:mm:ss').build();
+      await LoggerBuilder()
+          .console(
+              level: Level.DEBUG, format: '[%d] %l: %m', dateFormat: 'HH:mm:ss')
+          .build();
 
       // Now you can log at different levels
       Logger.debug('Debug information');
@@ -56,7 +59,10 @@ void main() {
 
     test('Example 5: MDC for context tracking', () async {
       // Configure to show MDC values in log format
-      await LoggerBuilder().replaceAll().console(format: '[%X{userId}][%X{requestId}] %l: %m').build();
+      await LoggerBuilder()
+          .replaceAll()
+          .console(format: '[%X{userId}][%X{requestId}] %l: %m')
+          .build();
 
       // Set context for current operation
       LoggerFactory.setMdcValue('userId', 'user123');
