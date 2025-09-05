@@ -141,7 +141,7 @@ class IdProviderResolver {
 
   static String _getPathProviderErrorMessage() {
     return '''
-    
+
 ════════════════════════════════════════════════════════════════════════════════
 🚨 ANYLOGGER CONFIG ERROR: At least one of your appenders format strings contains
 '%did' for device hash tracking. Running on Flutter, you need to:
@@ -158,7 +158,7 @@ before you initialize the logging system:
 
   static String getFileOrEmailAppenderErrorMessage() {
     return '''
-    
+
 ════════════════════════════════════════════════════════════════════════════════
 🚨 ANYLOGGER CONFIG ERROR: You're using a FILE or EMAIL appender on Flutter.
 Flutter apps need proper path access to create log files.

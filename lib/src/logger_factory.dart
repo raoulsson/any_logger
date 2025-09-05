@@ -133,26 +133,26 @@ class LoggerFactory {
   }
 
   /// Register a custom logger for retrieval via getLogger()
-  /// 
+  ///
   /// This method is used internally by Logger.defaultLogger to auto-register
   /// named loggers, but can also be called directly if needed.
   static void registerCustomLogger(Logger logger) {
     if (!_initialized) {
       initSimpleConsole();
     }
-    
+
     _loggers[logger.name] = logger;
-    
+
     if (_selfDebugEnabled) {
       selfLog('Registered custom logger: ${logger.name}', logLevel: Level.INFO);
     }
   }
 
   /// Create a custom logger with specific appenders that can be retrieved later by name
-  /// 
+  ///
   /// This is the recommended way to create loggers with custom appenders that need to
   /// be accessible via LoggerFactory.getLogger(name).
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// final appender = await FileAppender.fromConfig({'filePattern': 'my-log'});
@@ -167,19 +167,20 @@ class LoggerFactory {
     if (!_initialized) {
       initSimpleConsole();
     }
-    
+
     final logger = Logger.defaultLogger(
       appenders,
       name: name,
       clientDepthOffset: clientDepthOffset,
     );
-    
+
     _loggers[name] = logger;
-    
+
     if (_selfDebugEnabled) {
-      selfLog('Created and registered custom logger: $name', logLevel: Level.INFO);
+      selfLog('Created and registered custom logger: $name',
+          logLevel: Level.INFO);
     }
-    
+
     return logger;
   }
 

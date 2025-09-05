@@ -79,7 +79,8 @@ Future<void> exampleAutoRegistration() async {
 
   // OLD WAY (that didn't work): Logger would be created but not retrievable
   // NEW WAY: Logger.defaultLogger now auto-registers named loggers!
-  final auditLogger = Logger.defaultLogger([auditAppender], name: 'AUDIT-LOGGER');
+  final auditLogger =
+      Logger.defaultLogger([auditAppender], name: 'AUDIT-LOGGER');
 
   // Test immediate usage
   auditLogger.logInfo('USER_LOGIN user=john.doe session=abc123');
@@ -89,10 +90,12 @@ Future<void> exampleAutoRegistration() async {
 
   // This now works! Previously this would create a different logger
   final retrievedAuditLogger = LoggerFactory.getLogger('AUDIT-LOGGER');
-  retrievedAuditLogger.logInfo('AUDIT_TRAIL_ACCESS user=admin action=view_logs');
+  retrievedAuditLogger
+      .logInfo('AUDIT_TRAIL_ACCESS user=admin action=view_logs');
 
   // Verify they are the same instance
-  print('✅ Same logger instance: ${identical(auditLogger, retrievedAuditLogger)}');
+  print(
+      '✅ Same logger instance: ${identical(auditLogger, retrievedAuditLogger)}');
   print('✅ Logger name: ${retrievedAuditLogger.name}');
   print('✅ Appender count: ${retrievedAuditLogger.appenders.length}');
 }
@@ -118,7 +121,8 @@ Future<void> exampleFactoryMethod() async {
   });
 
   // RECOMMENDED WAY: Use the new factory method
-  final debugLogger = LoggerFactory.createCustomLogger('DEBUG-TRACER', [debugAppender]);
+  final debugLogger =
+      LoggerFactory.createCustomLogger('DEBUG-TRACER', [debugAppender]);
 
   // Test immediate usage
   debugLogger.logTrace('Function entry: calculatePayment()');
@@ -133,7 +137,8 @@ Future<void> exampleFactoryMethod() async {
   retrievedDebugLogger.logTrace('Cache hit for key: user_preferences_123');
 
   // Verify same instance
-  print('✅ Same logger instance: ${identical(debugLogger, retrievedDebugLogger)}');
+  print(
+      '✅ Same logger instance: ${identical(debugLogger, retrievedDebugLogger)}');
   print('✅ Trace level enabled: ${retrievedDebugLogger.isTraceEnabled}');
 }
 
@@ -174,7 +179,8 @@ Future<void> exampleAiLogging() async {
   clientAiLogger.logDebug('Batch size: 50 requests');
   clientAiLogger.logInfo('Client side: Batch processing complete');
 
-  print('✅ Your use case now works! aiLogger == clientAiLogger: ${identical(aiLogger, clientAiLogger)}');
+  print(
+      '✅ Your use case now works! aiLogger == clientAiLogger: ${identical(aiLogger, clientAiLogger)}');
 }
 
 /// Example 4: Multiple specialized loggers working together
@@ -216,9 +222,11 @@ Future<void> exampleMultipleSpecializedLoggers() async {
   });
 
   // Create multiple loggers using different approaches
-  final securityLogger = LoggerFactory.createCustomLogger('SECURITY', [securityAppender]);
+  final securityLogger =
+      LoggerFactory.createCustomLogger('SECURITY', [securityAppender]);
   final perfLogger = Logger.defaultLogger([perfAppender], name: 'PERFORMANCE');
-  final businessLogger = LoggerFactory.createCustomLogger('BUSINESS-LOGIC', [businessAppender]);
+  final businessLogger =
+      LoggerFactory.createCustomLogger('BUSINESS-LOGIC', [businessAppender]);
 
   // Test all loggers
   securityLogger.logWarn('Failed login attempt from IP: 192.168.1.100');
@@ -238,9 +246,12 @@ Future<void> exampleMultipleSpecializedLoggers() async {
   retrievedBusiness.logInfo('Monthly report generated for 1,250 users');
 
   // Verify they are the same instances
-  print('✅ Security logger same instance: ${identical(securityLogger, retrievedSecurity)}');
-  print('✅ Performance logger same instance: ${identical(perfLogger, retrievedPerf)}');
-  print('✅ Business logger same instance: ${identical(businessLogger, retrievedBusiness)}');
+  print(
+      '✅ Security logger same instance: ${identical(securityLogger, retrievedSecurity)}');
+  print(
+      '✅ Performance logger same instance: ${identical(perfLogger, retrievedPerf)}');
+  print(
+      '✅ Business logger same instance: ${identical(businessLogger, retrievedBusiness)}');
 
   print('\n📊 Summary: All specialized loggers working independently!');
   print('   - Security logs: logs/security_*.log');

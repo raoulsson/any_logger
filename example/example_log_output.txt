@@ -5,57 +5,57 @@
 ╔══════════════════════════════════════════════════╗
 ║  Example 1: Zero Config - Just Start Logging!    ║
 ╚══════════════════════════════════════════════════╝
-01:24:25.545 [INFO] Application started
-01:24:25.545 INFO Application started
-01:24:25.548 [WARN] Warning: Low memory
-01:24:25.548 WARN Warning: Low memory
-01:24:25.548 [ERROR] Failed to connect to server
-01:24:25.548 ERROR Failed to connect to server
+21:00:57.161 [INFO] Application started
+21:00:57.161 INFO Application started
+21:00:57.163 [WARN] Warning: Low memory
+21:00:57.163 WARN Warning: Low memory
+21:00:57.163 [ERROR] Failed to connect to server
+21:00:57.163 ERROR Failed to connect to server
 
 
 ╔══════════════════════════════════════════════════╗
 ║  Example 2: One-Liner Configurations             ║
 ╚══════════════════════════════════════════════════╝
-01:24:25.549 DEBUG Now debug messages are visible
-01:24:25.549 [INFO] Custom format with emoji!
+21:00:57.164 DEBUG Now debug messages are visible
+21:00:57.164 [INFO] Custom format with emoji!
 🚀 INFO: Custom format with emoji!
-01:24:25.549 [WARN] Warning with style
+21:00:57.164 [WARN] Warning with style
 🚀 WARN: Warning with style
-01:24:25.551 [WARN] This goes to both file and console
-01:24:25.551 WARN This goes to both file and console
+21:00:57.166 [WARN] This goes to both file and console
+21:00:57.166 WARN This goes to both file and console
 
 
 ╔══════════════════════════════════════════════════╗
 ║  Example 3: Pro Console Configurations           ║
 ╚══════════════════════════════════════════════════╝
-01:24:25.554 [INFO] Info message with method and line number
-[01:24:25.554][ROOT_LOGGER][INFO][proConsoleExamples:149] Info message with method and line number [package:any_logger/example/any_logger_example.dart(149:10)]
-01:24:25.554 [ERROR] Error with complete file location
-[01:24:25.554][ROOT_LOGGER][ERROR][proConsoleExamples:150] Error with complete file location [package:any_logger/example/any_logger_example.dart(150:10)]
-01:24:25.554 [INFO] Includes auto-generated device and session IDs
-[01:24:25.554][ROOT_LOGGER][INFO][proConsoleExamples:151] Includes auto-generated device and session IDs [package:any_logger/example/any_logger_example.dart(151:10)]
+21:00:57.170 [INFO] Info message with method and line number
+[21:00:57.170][ROOT_LOGGER][INFO][proConsoleExamples:152] Info message with method and line number [package:any_logger/example/any_logger_example.dart(152:10)]
+21:00:57.170 [ERROR] Error with complete file location
+[21:00:57.170][ROOT_LOGGER][ERROR][proConsoleExamples:153] Error with complete file location [package:any_logger/example/any_logger_example.dart(153:10)]
+21:00:57.170 [INFO] Includes auto-generated device and session IDs
+[21:00:57.170][ROOT_LOGGER][INFO][proConsoleExamples:154] Includes auto-generated device and session IDs [package:any_logger/example/any_logger_example.dart(154:10)]
 
 
 ╔══════════════════════════════════════════════════╗
 ║  Example 4: Built-in Presets                     ║
 ╚══════════════════════════════════════════════════╝
-[01:24:25.559][4mg3ebYN][9mbi4sra][ROOT_LOGGER][DEBUG][presetExamples:162] developmentPro mode [package:any_logger/example/any_logger_example.dart(162:10)]
-[01:24:25][mx86ew4l][INFO] productionPro mode
-[01:24:25.560][4mg3ebYN][pivdpv3v][INFO][presetExamples:170] mobileDevelopment mode
+[21:00:57.174][4mg3ebYN][i9arvoeb][ROOT_LOGGER][DEBUG][presetExamples:165] developmentPro mode [package:any_logger/example/any_logger_example.dart(165:10)]
+[21:00:57][0y8vhhj5][INFO] productionPro mode
+[21:00:57.175][4mg3ebYN][nrmobl73][INFO][presetExamples:173] mobileDevelopment mode
 
 
 ╔══════════════════════════════════════════════════╗
 ║  Example 5: AnyLogger Mixin for Classes          ║
 ╚══════════════════════════════════════════════════╝
-01:24:25.561 [INFO] Creating user: alice@example.com
-01:24:25.561 INFO Creating user: alice@example.com
-01:24:25.664 [INFO] User created successfully
-01:24:25.664 INFO User created successfully
-01:24:25.665 [INFO] Authentication attempt for: alice@example.com
-01:24:25.665 INFO Authentication attempt for: alice@example.com
-01:24:25.665 DEBUG Validating credentials
-01:24:25.867 [INFO] Authentication successful
-01:24:25.867 INFO Authentication successful
+21:00:57.176 [INFO] Creating user: alice@example.com
+21:00:57.176 INFO Creating user: alice@example.com
+21:00:57.279 [INFO] User created successfully
+21:00:57.279 INFO User created successfully
+21:00:57.280 [INFO] Authentication attempt for: alice@example.com
+21:00:57.280 INFO Authentication attempt for: alice@example.com
+21:00:57.280 DEBUG Validating credentials
+21:00:57.483 [INFO] Authentication successful
+21:00:57.483 INFO Authentication successful
 
 
 ╔══════════════════════════════════════════════════╗
@@ -63,22 +63,22 @@
 ╚══════════════════════════════════════════════════╝
 [ANYLOGGER_STARTUP] Platform: Dart | Features: none | Provider: NullIdProvider
 [ANYLOGGER_STARTUP] Created console appender
-01:24:25.869 INFO ANYLOGGER_SELF_LOGGER: Set level for all appenders to DEBUG
-01:24:25.869 INFO Self-debugging enabled
-01:24:25.869 INFO Logger initialized sync with 1 appenders
-01:24:25.870 INFO Appender CONSOLE, INFO, mode: ConsoleLoggerMode.stdout
-01:24:25.871 DEBUG --- type: CONSOLE
-01:24:25.871 DEBUG --- enabled: true
-01:24:25.871 DEBUG --- level: INFO
-01:24:25.871 DEBUG --- format: %d %l %m
-01:24:25.871 DEBUG --- dateFormat: HH:mm:ss.SSS
-01:24:25.872 DEBUG --- created: 2025-08-31T01:24:25.869264
-01:24:25.872 DEBUG --- clientDepthOffset: null
-01:24:25.872 DEBUG --- lineInfo: null
-01:24:25.872 DEBUG --- mode: ConsoleLoggerMode.stdout
-01:24:25.872 DEBUG --- sequenceNumber: 1
-01:24:25.872 INFO Creating new logger named Performance from existing logger: ROOT_LOGGER
-01:24:25.872 INFO Created logger: Performance
+21:00:57.489 INFO ANYLOGGER_SELF_LOGGER: Set level for all appenders to DEBUG
+21:00:57.490 INFO Self-debugging enabled
+21:00:57.491 INFO Logger initialized sync with 1 appenders
+21:00:57.492 INFO Appender CONSOLE, INFO, mode: ConsoleLoggerMode.stdout
+21:00:57.494 DEBUG --- type: CONSOLE
+21:00:57.495 DEBUG --- enabled: true
+21:00:57.495 DEBUG --- level: INFO
+21:00:57.495 DEBUG --- format: %d %l %m
+21:00:57.495 DEBUG --- dateFormat: HH:mm:ss.SSS
+21:00:57.496 DEBUG --- created: 2025-09-05T21:00:57.488341
+21:00:57.496 DEBUG --- clientDepthOffset: null
+21:00:57.496 DEBUG --- lineInfo: null
+21:00:57.496 DEBUG --- mode: ConsoleLoggerMode.stdout
+21:00:57.496 DEBUG --- sequenceNumber: 1
+21:00:57.496 INFO Creating new logger named Performance from existing logger: ROOT_LOGGER
+21:00:57.496 INFO Created logger: Performance
 
 
 ╔══════════════════════════════════════════════════╗
@@ -93,49 +93,50 @@
 ╔══════════════════════════════════════════════════╗
 ║  Example 8: Custom Builder Configuration         ║
 ╚══════════════════════════════════════════════════╝
-[ANYLOGGER_STARTUP] Platform: Dart | Features: %did+%sid+FILE | Provider: FileIdProvider | FILE: OK
-[4mg3ebYN][mkazttxn] 01:24:25.876 [INFO] ANYLOGGER_SELF_LOGGER: Set level for all appenders to DEBUG
-[4mg3ebYN][mkazttxn] 01:24:25.876 [INFO] Self-debugging enabled
-[4mg3ebYN][mkazttxn] 01:24:25.876 [INFO] Logger initialized with programmatic LoggerConfig with 2 active appenders
-[4mg3ebYN][mkazttxn] 01:24:25.876 [INFO] Appender CONSOLE, INFO, mode: ConsoleLoggerMode.stdout
-[4mg3ebYN][mkazttxn] 01:24:25.876 [DEBUG] --- type: CONSOLE
-[4mg3ebYN][mkazttxn] 01:24:25.877 [DEBUG] --- enabled: true
-[4mg3ebYN][mkazttxn] 01:24:25.877 [DEBUG] --- level: INFO
-[4mg3ebYN][mkazttxn] 01:24:25.877 [DEBUG] --- format: [%did][%sid] %d [%l] %m
-[4mg3ebYN][mkazttxn] 01:24:25.877 [DEBUG] --- dateFormat: HH:mm:ss.SSS
-[4mg3ebYN][mkazttxn] 01:24:25.877 [DEBUG] --- created: 2025-08-31T01:24:25.875466
-[4mg3ebYN][mkazttxn] 01:24:25.877 [DEBUG] --- clientDepthOffset: null
-[4mg3ebYN][mkazttxn] 01:24:25.877 [DEBUG] --- lineInfo: null
-[4mg3ebYN][mkazttxn] 01:24:25.877 [DEBUG] --- mode: ConsoleLoggerMode.stdout
-[4mg3ebYN][mkazttxn] 01:24:25.877 [DEBUG] --- sequenceNumber: 1
-[4mg3ebYN][mkazttxn] 01:24:25.877 [INFO] Appender FILE, DEBUG, logPath: null/logs/
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- type: FILE
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- enabled: true
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- level: DEBUG
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- format: [%did][%sid][%X{env}] %d [%l][%c] %m [%f]
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- dateFormat: yyyy-MM-dd HH:mm:ss.SSS
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- created: 2025-08-31T01:24:25.875480
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- clientDepthOffset: null
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- lineInfo: null
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- filePattern: app
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- fileExtension: log
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- path: logs/
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- rotationCycle: DAY
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- resolvedBasePath: null
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- fullFilePath: logs/app_2025-08-31.log
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- fileExists: true
-[4mg3ebYN][mkazttxn] 01:24:25.878 [DEBUG] --- fileAbsolutePath: /Users/dev/any_logger/logs/app_2025-08-31.log
-[4mg3ebYN][mkazttxn] 01:24:25.878 [INFO] Info - goes to console and file
-[4mg3ebYN][mkazttxn] 01:24:25.878 [INFO] Same here
-[4mg3ebYN][mkazttxn] 01:24:25.879 [INFO] ...and here
+[ANYLOGGER_STARTUP] Platform: Dart | Features: %did+%sid+FILE+EMAIL | Provider: FileIdProvider | FILE: OK
+[4mg3ebYN][pkwf8ljk] 21:00:57.504 [INFO] ANYLOGGER_SELF_LOGGER: Set level for all appenders to DEBUG
+[4mg3ebYN][pkwf8ljk] 21:00:57.505 [INFO] Self-debugging enabled
+[4mg3ebYN][pkwf8ljk] 21:00:57.505 [INFO] Logger initialized with programmatic LoggerConfig with 2 active appenders
+[4mg3ebYN][pkwf8ljk] 21:00:57.505 [INFO] Appender CONSOLE, INFO, mode: ConsoleLoggerMode.stdout
+[4mg3ebYN][pkwf8ljk] 21:00:57.505 [DEBUG] --- type: CONSOLE
+[4mg3ebYN][pkwf8ljk] 21:00:57.505 [DEBUG] --- enabled: true
+[4mg3ebYN][pkwf8ljk] 21:00:57.505 [DEBUG] --- level: INFO
+[4mg3ebYN][pkwf8ljk] 21:00:57.505 [DEBUG] --- format: [%did][%sid] %d [%l] %m
+[4mg3ebYN][pkwf8ljk] 21:00:57.506 [DEBUG] --- dateFormat: HH:mm:ss.SSS
+[4mg3ebYN][pkwf8ljk] 21:00:57.506 [DEBUG] --- created: 2025-09-05T21:00:57.502526
+[4mg3ebYN][pkwf8ljk] 21:00:57.506 [DEBUG] --- clientDepthOffset: null
+[4mg3ebYN][pkwf8ljk] 21:00:57.506 [DEBUG] --- lineInfo: null
+[4mg3ebYN][pkwf8ljk] 21:00:57.506 [DEBUG] --- mode: ConsoleLoggerMode.stdout
+[4mg3ebYN][pkwf8ljk] 21:00:57.506 [DEBUG] --- sequenceNumber: 1
+[4mg3ebYN][pkwf8ljk] 21:00:57.506 [INFO] Appender FILE, DEBUG, logPath: logs/, rotation: DAILY
+[4mg3ebYN][pkwf8ljk] 21:00:57.508 [DEBUG] --- type: FILE
+[4mg3ebYN][pkwf8ljk] 21:00:57.508 [DEBUG] --- enabled: true
+[4mg3ebYN][pkwf8ljk] 21:00:57.508 [DEBUG] --- level: DEBUG
+[4mg3ebYN][pkwf8ljk] 21:00:57.508 [DEBUG] --- format: [%did][%sid][%X{env}] %d [%l][%c] %m [%f]
+[4mg3ebYN][pkwf8ljk] 21:00:57.508 [DEBUG] --- dateFormat: yyyy-MM-dd HH:mm:ss.SSS
+[4mg3ebYN][pkwf8ljk] 21:00:57.508 [DEBUG] --- created: 2025-09-05T21:00:57.502550
+[4mg3ebYN][pkwf8ljk] 21:00:57.508 [DEBUG] --- clientDepthOffset: null
+[4mg3ebYN][pkwf8ljk] 21:00:57.509 [DEBUG] --- lineInfo: null
+[4mg3ebYN][pkwf8ljk] 21:00:57.509 [DEBUG] --- filePattern: app
+[4mg3ebYN][pkwf8ljk] 21:00:57.509 [DEBUG] --- fileExtension: log
+[4mg3ebYN][pkwf8ljk] 21:00:57.509 [DEBUG] --- path: logs/
+[4mg3ebYN][pkwf8ljk] 21:00:57.509 [DEBUG] --- rotationCycle: DAILY
+[4mg3ebYN][pkwf8ljk] 21:00:57.509 [DEBUG] --- clearOnStartup: false
+[4mg3ebYN][pkwf8ljk] 21:00:57.509 [DEBUG] --- resolvedBasePath: null
+[4mg3ebYN][pkwf8ljk] 21:00:57.510 [DEBUG] --- fullFilePath: logs/app_2025-09-05.log
+[4mg3ebYN][pkwf8ljk] 21:00:57.510 [DEBUG] --- fileExists: true
+[4mg3ebYN][pkwf8ljk] 21:00:57.510 [DEBUG] --- fileAbsolutePath: /Users/raoulsson/dev/any_logger/logs/app_2025-09-05.log
+[4mg3ebYN][pkwf8ljk] 21:00:57.510 [INFO] Info - goes to console and file
+[4mg3ebYN][pkwf8ljk] 21:00:57.510 [INFO] Same here
+[4mg3ebYN][pkwf8ljk] 21:00:57.511 [INFO] ...and here
 
 
 ╔══════════════════════════════════════════════════╗
 ║  Example 9: Custom device / session id provider ║
 ╚══════════════════════════════════════════════════╝
-[4mg3ebYN][0w9wvbsc] Using custom ID provider
-[4mg3ebYN][0w9wvbsc] Device ID: 4mg3ebYN
-[4mg3ebYN][0w9wvbsc] Session ID: 0w9wvbsc
+[4mg3ebYN][yi6zkyuu] Using custom ID provider
+[4mg3ebYN][yi6zkyuu] Device ID: 4mg3ebYN
+[4mg3ebYN][yi6zkyuu] Session ID: yi6zkyuu
 
 
 ╔══════════════════════════════════════════════════╗
@@ -151,121 +152,123 @@
 ╚══════════════════════════════════════════════════╝
 [SELF_DEBUG] Loading config from file: logger_config.json
 [ANYLOGGER_STARTUP] Platform: Dart | Features: %did+%sid | Provider: FileIdProvider
-[01:24:25.887][4mg3ebYN][v43tdg73][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:817] ANYLOGGER_SELF_LOGGER: Set level for all appenders to INFO
-[01:24:25.887][4mg3ebYN][v43tdg73][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:819] Self-debugging enabled
-[01:24:25.887][4mg3ebYN][v43tdg73][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:574] Logger initialized async with 1 appenders
-[01:24:25.887][4mg3ebYN][v43tdg73][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:577] Appender CONSOLE, INFO, mode: ConsoleLoggerMode.stdout
-[01:24:25.887][4mg3ebYN][v43tdg73][ROOT_LOGGER][INFO][jsonConfigExample:301] Logger configured from JSON with automatic IDs
-[01:24:25.888][4mg3ebYN][v43tdg73][ROOT_LOGGER][INFO][jsonConfigExample:305] Line two
-[01:24:25.888][4mg3ebYN][v43tdg73][ROOT_LOGGER][INFO][jsonConfigExample:306] Line three
+[21:00:57.522][4mg3ebYN][3iv993sv][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:895] ANYLOGGER_SELF_LOGGER: Set level for all appenders to INFO
+[21:00:57.522][4mg3ebYN][3iv993sv][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:897] Self-debugging enabled
+[21:00:57.523][4mg3ebYN][3iv993sv][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:645] Logger initialized async with 1 appenders
+[21:00:57.523][4mg3ebYN][3iv993sv][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:648] Appender CONSOLE, INFO, mode: ConsoleLoggerMode.stdout
+[21:00:57.523][4mg3ebYN][3iv993sv][ROOT_LOGGER][INFO][jsonConfigExample:318] Logger configured from JSON with automatic IDs
+[21:00:57.523][4mg3ebYN][3iv993sv][ROOT_LOGGER][INFO][jsonConfigExample:322] Line two
+[21:00:57.523][4mg3ebYN][3iv993sv][ROOT_LOGGER][INFO][jsonConfigExample:323] Line three
 
 
 ╔══════════════════════════════════════════════════╗
 ║  Example 12: Pro Service with Self Tracking      ║
 ╚══════════════════════════════════════════════════╝
-[ANYLOGGER_STARTUP] Platform: Dart | Features: %sid+FILE | Provider: FileIdProvider | FILE: OK
-[01:24:25.888][d1ug3acm][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:817] ANYLOGGER_SELF_LOGGER: Set level for all appenders to DEBUG
-[01:24:25.888][d1ug3acm][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:819] Self-debugging enabled
-[01:24:25.888][d1ug3acm][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:574] Logger initialized with programmatic LoggerConfig with 2 active appenders
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:577] Appender FILE, DEBUG, logPath: null/logs/
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- type: FILE
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- enabled: true
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- level: DEBUG
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- format: %d [%l][%t] %c - %m [%f]
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- dateFormat: yyyy-MM-dd HH:mm:ss.SSS
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- created: 2025-08-31T01:24:25.888386
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- clientDepthOffset: null
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- lineInfo: null
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- filePattern: error_prone_service
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- fileExtension: log
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- path: logs/
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- rotationCycle: DAY
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- resolvedBasePath: null
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- fullFilePath: logs/error_prone_service_2025-08-31.log
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- fileExists: true
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- fileAbsolutePath: /Users/dev/any_logger/logs/error_prone_service_2025-08-31.log
-[01:24:25.889][d1ug3acm][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:577] Appender CONSOLE, INFO, mode: ConsoleLoggerMode.stdout
-[01:24:25.890][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- type: CONSOLE
-[01:24:25.890][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- enabled: true
-[01:24:25.890][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- level: INFO
-[01:24:25.890][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- format: [%d][%sid][%i][%l][%c] %m
-[01:24:25.890][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- dateFormat: HH:mm:ss.SSS
-[01:24:25.890][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- created: 2025-08-31T01:24:25.888533
-[01:24:25.890][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- clientDepthOffset: null
-[01:24:25.890][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- lineInfo: null
-[01:24:25.890][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- mode: ConsoleLoggerMode.stdout
-[01:24:25.890][d1ug3acm][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- sequenceNumber: 1
-[01:24:25.891][d1ug3acm][ANYLOGGER_SELF_LOGGER][INFO][getLogger.<anonymous:124] Creating new logger named ErrorProneService from existing logger: ROOT_LOGGER
-[01:24:25.891][d1ug3acm][ANYLOGGER_SELF_LOGGER][INFO][getLogger.<anonymous:127] Created logger: ErrorProneService
-[01:24:25.891][d1ug3acm][ErrorProneService][ERROR][ErrorProneService.handleNetworkRequest:674] Network request failed
+[ANYLOGGER_STARTUP] Platform: Dart | Features: %sid+FILE+EMAIL | Provider: FileIdProvider | FILE: OK
+[21:00:57.524][rgiuf6v7][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:895] ANYLOGGER_SELF_LOGGER: Set level for all appenders to DEBUG
+[21:00:57.524][rgiuf6v7][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:897] Self-debugging enabled
+[21:00:57.525][rgiuf6v7][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:645] Logger initialized with programmatic LoggerConfig with 2 active appenders
+[21:00:57.525][rgiuf6v7][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:648] Appender FILE, DEBUG, logPath: logs/, rotation: DAILY
+[21:00:57.525][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- type: FILE
+[21:00:57.525][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- enabled: true
+[21:00:57.525][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- level: DEBUG
+[21:00:57.525][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- format: %d [%l][%t] %c - %m [%f]
+[21:00:57.525][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- dateFormat: yyyy-MM-dd HH:mm:ss.SSS
+[21:00:57.525][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- created: 2025-09-05T21:00:57.524011
+[21:00:57.525][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- clientDepthOffset: null
+[21:00:57.525][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- lineInfo: null
+[21:00:57.525][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- filePattern: error_prone_service
+[21:00:57.526][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- fileExtension: log
+[21:00:57.526][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- path: logs/
+[21:00:57.526][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- rotationCycle: DAILY
+[21:00:57.526][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- clearOnStartup: false
+[21:00:57.526][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- resolvedBasePath: null
+[21:00:57.526][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- fullFilePath: logs/error_prone_service_2025-09-05.log
+[21:00:57.526][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- fileExists: true
+[21:00:57.526][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- fileAbsolutePath: /Users/raoulsson/dev/any_logger/logs/error_prone_service_2025-09-05.log
+[21:00:57.526][rgiuf6v7][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:648] Appender CONSOLE, INFO, mode: ConsoleLoggerMode.stdout
+[21:00:57.527][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- type: CONSOLE
+[21:00:57.527][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- enabled: true
+[21:00:57.527][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- level: INFO
+[21:00:57.527][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- format: [%d][%sid][%i][%l][%c] %m
+[21:00:57.527][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- dateFormat: HH:mm:ss.SSS
+[21:00:57.527][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- created: 2025-09-05T21:00:57.524280
+[21:00:57.527][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- clientDepthOffset: null
+[21:00:57.527][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- lineInfo: null
+[21:00:57.528][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- mode: ConsoleLoggerMode.stdout
+[21:00:57.528][rgiuf6v7][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- sequenceNumber: 1
+[21:00:57.528][rgiuf6v7][ANYLOGGER_SELF_LOGGER][INFO][getLogger.<anonymous:125] Creating new logger named ErrorProneService from existing logger: ROOT_LOGGER
+[21:00:57.528][rgiuf6v7][ANYLOGGER_SELF_LOGGER][INFO][getLogger.<anonymous:128] Created logger: ErrorProneService
+[21:00:57.529][rgiuf6v7][ErrorProneService][ERROR][ErrorProneService.handleNetworkRequest:709] Network request failed
 	SocketException: Connection timeout
-[01:24:25.891][d1ug3acm][ErrorProneService][INFO][ErrorProneService.processUserInput:682] Valid input processed: invalid@data
-[01:24:25.891][d1ug3acm][ROOT_LOGGER][INFO][proServiceExample:328] The end.
+[21:00:57.529][rgiuf6v7][ErrorProneService][INFO][ErrorProneService.processUserInput:717] Valid input processed: invalid@data
+[21:00:57.529][rgiuf6v7][ROOT_LOGGER][INFO][proServiceExample:346] The end.
 
 
 ╔══════════════════════════════════════════════════╗
 ║  Example 13: Production-Ready Setup              ║
 ╚══════════════════════════════════════════════════╝
-[2025-DD-24 01:24:25.892][4mg3ebYN][lwo5runt][production][INFO][productionExample:343] Application started in production mode [package:any_logger/example/any_logger_example.dart(343:10)]
-[2025-DD-24 01:24:25.892][4mg3ebYN][lwo5runt][production][INFO][productionExample:344] You got deviceId, sessionId, Logger name, Log level... [package:any_logger/example/any_logger_example.dart(344:10)]
-[2025-DD-24 01:24:25.892][4mg3ebYN][lwo5runt][production][INFO][productionExample:345] ...and class.method linnumber, and then again actual file with line and column number if available [package:any_logger/example/any_logger_example.dart(345:10)]
+[2025-DD-00 21:00:57.530][4mg3ebYN][r4nytm2l][production][INFO][productionExample:365] Application started in production mode [package:any_logger/example/any_logger_example.dart(365:10)]
+[2025-DD-00 21:00:57.530][4mg3ebYN][r4nytm2l][production][INFO][productionExample:366] You got deviceId, sessionId, Logger name, Log level... [package:any_logger/example/any_logger_example.dart(366:10)]
+[2025-DD-00 21:00:57.530][4mg3ebYN][r4nytm2l][production][INFO][productionExample:367] ...and class.method linnumber, and then again actual file with line and column number if available [package:any_logger/example/any_logger_example.dart(367:10)]
 
 
 ╔══════════════════════════════════════════════════╗
 ║  Example 14: Professional Production Format      ║
 ╚══════════════════════════════════════════════════╝
 [ANYLOGGER_STARTUP] Platform: Dart | Features: %did+%sid | Provider: FileIdProvider
-[01:24:25.892][4mg3ebYN][zifjoo4b][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:817] ANYLOGGER_SELF_LOGGER: Set level for all appenders to INFO [package:any_logger/src/logger_factory.dart(817:18)]
-[01:24:25.893][4mg3ebYN][zifjoo4b][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:819] Self-debugging enabled [package:any_logger/src/logger_factory.dart(819:5)]
-[01:24:25.893][4mg3ebYN][zifjoo4b][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:574] Logger initialized with programmatic LoggerConfig with 1 active appenders [package:any_logger/src/logger_factory.dart(574:5)]
-[01:24:25.893][4mg3ebYN][zifjoo4b][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:577] Appender CONSOLE, DEBUG, mode: ConsoleLoggerMode.stdout [package:any_logger/src/logger_factory.dart(577:7)]
-[01:24:25.893][4mg3ebYN][zifjoo4b][ROOT_LOGGER][INFO][professionalSetupExample:407] Application initialized with automatic ID tracking [package:any_logger/example/any_logger_example.dart(407:10)]
-[01:24:25.893][4mg3ebYN][zifjoo4b][ROOT_LOGGER][DEBUG][professionalSetupExample:408] Device ID persists across app restarts [package:any_logger/example/any_logger_example.dart(408:10)]
-[01:24:25.893][4mg3ebYN][zifjoo4b][ANYLOGGER_SELF_LOGGER][INFO][getLogger.<anonymous:124] Creating new logger named AudioController from existing logger: ROOT_LOGGER [package:any_logger/src/logger_factory.dart(124:32)]
-[01:24:25.893][4mg3ebYN][zifjoo4b][ANYLOGGER_SELF_LOGGER][INFO][getLogger.<anonymous:127] Created logger: AudioController [package:any_logger/src/logger_factory.dart(127:9)]
-[01:24:25.893][4mg3ebYN][zifjoo4b][AudioController][DEBUG][unknown] Audio system initialized [file:///]
-[01:24:25.893][4mg3ebYN][zifjoo4b][AudioController][INFO][unknown] Playing background music [file:///]
+[21:00:57.531][4mg3ebYN][5pd9rvx9][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:895] ANYLOGGER_SELF_LOGGER: Set level for all appenders to INFO [package:any_logger/src/logger_factory.dart(895:18)]
+[21:00:57.531][4mg3ebYN][5pd9rvx9][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:897] Self-debugging enabled [package:any_logger/src/logger_factory.dart(897:5)]
+[21:00:57.531][4mg3ebYN][5pd9rvx9][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:645] Logger initialized with programmatic LoggerConfig with 1 active appenders [package:any_logger/src/logger_factory.dart(645:5)]
+[21:00:57.531][4mg3ebYN][5pd9rvx9][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:648] Appender CONSOLE, DEBUG, mode: ConsoleLoggerMode.stdout [package:any_logger/src/logger_factory.dart(648:7)]
+[21:00:57.532][4mg3ebYN][5pd9rvx9][ROOT_LOGGER][INFO][professionalSetupExample:431] Application initialized with automatic ID tracking [package:any_logger/example/any_logger_example.dart(431:10)]
+[21:00:57.532][4mg3ebYN][5pd9rvx9][ROOT_LOGGER][DEBUG][professionalSetupExample:432] Device ID persists across app restarts [package:any_logger/example/any_logger_example.dart(432:10)]
+[21:00:57.532][4mg3ebYN][5pd9rvx9][ANYLOGGER_SELF_LOGGER][INFO][getLogger.<anonymous:125] Creating new logger named AudioController from existing logger: ROOT_LOGGER [package:any_logger/src/logger_factory.dart(125:32)]
+[21:00:57.532][4mg3ebYN][5pd9rvx9][ANYLOGGER_SELF_LOGGER][INFO][getLogger.<anonymous:128] Created logger: AudioController [package:any_logger/src/logger_factory.dart(128:9)]
+[21:00:57.532][4mg3ebYN][5pd9rvx9][AudioController][DEBUG][unknown] Audio system initialized [file:///]
+[21:00:57.532][4mg3ebYN][5pd9rvx9][AudioController][INFO][unknown] Playing background music [file:///]
 
 
 ╔══════════════════════════════════════════════════╗
 ║  Example 15: Performance Monitoring              ║
 ╚══════════════════════════════════════════════════╝
-[01:24:25.958][4mg3ebYN][6qvckcbe][node-03][PerfMonitor][INFO][PerformanceMonitor.measureDatabaseQuery:699] Database query completed: 64ms [package:any_logger/example/any_logger_example.dart(699:7)]
-[01:24:26.143][4mg3ebYN][6qvckcbe][node-03][PerfMonitor][INFO][PerformanceMonitor.measureApiCall:711] API call completed: 185ms [package:any_logger/example/any_logger_example.dart(711:7)]
-[01:24:26.167][4mg3ebYN][6qvckcbe][node-03][PerfMonitor][WARN][PerformanceMonitor.measureUIRendering:721] UI rendering exceeded frame budget: 22ms [package:any_logger/example/any_logger_example.dart(721:7)]
+[21:00:57.625][4mg3ebYN][cwdl5me9][node-03][PerfMonitor][INFO][PerformanceMonitor.measureDatabaseQuery:734] Database query completed: 92ms [package:any_logger/example/any_logger_example.dart(734:7)]
+[21:00:57.790][4mg3ebYN][cwdl5me9][node-03][PerfMonitor][INFO][PerformanceMonitor.measureApiCall:746] API call completed: 164ms [package:any_logger/example/any_logger_example.dart(746:7)]
+[21:00:57.831][4mg3ebYN][cwdl5me9][node-03][PerfMonitor][WARN][PerformanceMonitor.measureUIRendering:756] UI rendering exceeded frame budget: 40ms [package:any_logger/example/any_logger_example.dart(756:7)]
 
 
 ╔══════════════════════════════════════════════════╗
 ║ Example 16: AppenderBuilder Granular Control     ║
 ╚══════════════════════════════════════════════════╝
-[ANYLOGGER_STARTUP] Platform: Dart | Features: FILE | Provider: NullIdProvider | FILE: OK
+[ANYLOGGER_STARTUP] Platform: Dart | Features: FILE+EMAIL | Provider: NullIdProvider | FILE: OK
 CONSOLE [ANYLOGGER_SELF_LOGGER][INFO]: ANYLOGGER_SELF_LOGGER: Set level for all appenders to DEBUG
 CONSOLE [ANYLOGGER_SELF_LOGGER][INFO]: Self-debugging enabled
 CONSOLE [ANYLOGGER_SELF_LOGGER][INFO]: Logger initialized with programmatic LoggerConfig with 2 active appenders
-CONSOLE [ANYLOGGER_SELF_LOGGER][INFO]: Appender FILE, TRACE, logPath: null/logs/
+CONSOLE [ANYLOGGER_SELF_LOGGER][INFO]: Appender FILE, TRACE, logPath: logs/, rotation: DAILY
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- type: FILE
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- enabled: true
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- level: TRACE
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- format: %d %t %l %m %f
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- dateFormat: yyyy-MM-dd HH:mm:ss.SSS
-CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- created: 2025-08-31T01:24:26.272534
+CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- created: 2025-09-05T21:00:57.937397
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- clientDepthOffset: null
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- lineInfo: null
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- filePattern: granular_log
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- fileExtension: log
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- path: logs/
-CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- rotationCycle: DAY
+CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- rotationCycle: DAILY
+CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- clearOnStartup: false
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- resolvedBasePath: null
-CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- fullFilePath: logs/granular_log_2025-08-31.log
+CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- fullFilePath: logs/granular_log_2025-09-05.log
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- fileExists: true
-CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- fileAbsolutePath: /Users/dev/any_logger/logs/granular_log_2025-08-31.log
+CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- fileAbsolutePath: /Users/raoulsson/dev/any_logger/logs/granular_log_2025-09-05.log
 CONSOLE [ANYLOGGER_SELF_LOGGER][INFO]: Appender CONSOLE, INFO, mode: ConsoleLoggerMode.stdout
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- type: CONSOLE
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- enabled: true
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- level: INFO
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- format: CONSOLE [%i][%l]: %m
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- dateFormat: yyyy-MM-dd HH:mm:ss.SSS
-CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- created: 2025-08-31T01:24:26.272990
+CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- created: 2025-09-05T21:00:57.937807
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- clientDepthOffset: null
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- lineInfo: null
 CONSOLE [ANYLOGGER_SELF_LOGGER][DEBUG]: --- mode: ConsoleLoggerMode.stdout
@@ -278,76 +281,76 @@ CONSOLE [ROOT_LOGGER][INFO]: And i am here because three lines look better...
 ╔══════════════════════════════════════════════════╗
 ║  Example 17: Error Tracking & Debugging          ║
 ╚══════════════════════════════════════════════════╝
-[01:24:26.277][4mg3ebYN][2zh66xkr][b2025.08.24][ErrorProneService][INFO][ErrorProneService.performRiskyOperation:660] Starting risky operation [package:any_logger/example/any_logger_example.dart(660:5)]
-[01:24:26.277][4mg3ebYN][2zh66xkr][b2025.08.24][ErrorProneService][ERROR][ErrorProneService.performRiskyOperation:665] Risky operation failed [package:any_logger/example/any_logger_example.dart(665:7)]
+[21:00:57.941][4mg3ebYN][9v7hivn5][b2025.08.24][ErrorProneService][INFO][ErrorProneService.performRiskyOperation:695] Starting risky operation [package:any_logger/example/any_logger_example.dart(695:5)]
+[21:00:57.942][4mg3ebYN][9v7hivn5][b2025.08.24][ErrorProneService][ERROR][ErrorProneService.performRiskyOperation:700] Risky operation failed [package:any_logger/example/any_logger_example.dart(700:7)]
 	Exception: Random processing failure
-		#0      ErrorProneService.performRiskyOperation (file:///Users/dev/any_logger/example/any_logger_example.dart:662:19)
-#1      errorTrackingExample (file:///Users/dev/any_logger/example/any_logger_example.dart:481:22)
+		#0      ErrorProneService.performRiskyOperation (file:///Users/raoulsson/dev/any_logger/example/any_logger_example.dart:697:19)
+#1      errorTrackingExample (file:///Users/raoulsson/dev/any_logger/example/any_logger_example.dart:508:22)
 <asynchronous suspension>
-#2      runProfessionalExamples (file:///Users/dev/any_logger/example/any_logger_example.dart:375:3)
+#2      runProfessionalExamples (file:///Users/raoulsson/dev/any_logger/example/any_logger_example.dart:398:3)
 <asynchronous suspension>
-#3      main (file:///Users/dev/any_logger/example/any_logger_example.dart:15:3)
+#3      main (file:///Users/raoulsson/dev/any_logger/example/any_logger_example.dart:15:3)
 <asynchronous suspension>
 
-[01:24:26.278][4mg3ebYN][2zh66xkr][b2025.08.24][ErrorProneService][ERROR][ErrorProneService.handleNetworkRequest:674] Network request failed [package:any_logger/example/any_logger_example.dart(674:7)]
+[21:00:57.942][4mg3ebYN][9v7hivn5][b2025.08.24][ErrorProneService][ERROR][ErrorProneService.handleNetworkRequest:709] Network request failed [package:any_logger/example/any_logger_example.dart(709:7)]
 	SocketException: Connection timeout
-[01:24:26.278][4mg3ebYN][2zh66xkr][b2025.08.24][ErrorProneService][INFO][ErrorProneService.processUserInput:682] Valid input processed: invalid@data [package:any_logger/example/any_logger_example.dart(682:7)]
+[21:00:57.942][4mg3ebYN][9v7hivn5][b2025.08.24][ErrorProneService][INFO][ErrorProneService.processUserInput:717] Valid input processed: invalid@data [package:any_logger/example/any_logger_example.dart(717:7)]
 
 
 ╔══════════════════════════════════════════════════╗
 ║  Example 18: App Lifecycle with Self Tracking    ║
 ╚══════════════════════════════════════════════════╝
 [ANYLOGGER_STARTUP] Platform: Dart | Features: %did+%sid | Provider: FileIdProvider
-[01:24:26.279][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:817] ANYLOGGER_SELF_LOGGER: Set level for all appenders to DEBUG [package:any_logger/src/logger_factory.dart(817:18)]
-[01:24:26.279][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:819] Self-debugging enabled [package:any_logger/src/logger_factory.dart(819:5)]
-[01:24:26.279][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:574] Logger initialized with programmatic LoggerConfig with 1 active appenders [package:any_logger/src/logger_factory.dart(574:5)]
-[01:24:26.279][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:577] Appender CONSOLE, DEBUG, mode: ConsoleLoggerMode.stdout [package:any_logger/src/logger_factory.dart(577:7)]
-[01:24:26.279][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- type: CONSOLE [package:any_logger/src/logger_factory.dart(581:9)]
-[01:24:26.279][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- enabled: true [package:any_logger/src/logger_factory.dart(581:9)]
-[01:24:26.279][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- level: DEBUG [package:any_logger/src/logger_factory.dart(581:9)]
-[01:24:26.279][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- format: [%d][%did][%sid][%X{env}][%i][%l][%c] %m [%f] [package:any_logger/src/logger_factory.dart(581:9)]
-[01:24:26.279][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- dateFormat: HH:mm:ss.SSS [package:any_logger/src/logger_factory.dart(581:9)]
-[01:24:26.279][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- created: 2025-08-31T01:24:26.278494 [package:any_logger/src/logger_factory.dart(581:9)]
-[01:24:26.280][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- clientDepthOffset: null [package:any_logger/src/logger_factory.dart(581:9)]
-[01:24:26.280][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- lineInfo: null [package:any_logger/src/logger_factory.dart(581:9)]
-[01:24:26.280][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- mode: ConsoleLoggerMode.stdout [package:any_logger/src/logger_factory.dart(581:9)]
-[01:24:26.280][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:581] --- sequenceNumber: 1 [package:any_logger/src/logger_factory.dart(581:9)]
-[01:24:26.280][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][INFO][getLogger.<anonymous:124] Creating new logger named MyApplication from existing logger: ROOT_LOGGER [package:any_logger/src/logger_factory.dart(124:32)]
-[01:24:26.280][4mg3ebYN][pvusldxn][staging][ANYLOGGER_SELF_LOGGER][INFO][getLogger.<anonymous:127] Created logger: MyApplication [package:any_logger/src/logger_factory.dart(127:9)]
-[01:24:26.281][4mg3ebYN][pvusldxn][staging][MyApplication][INFO][MyApplication.initialize:566] Initializing application [package:any_logger/example/any_logger_example.dart(566:5)]
-[01:24:26.333][4mg3ebYN][pvusldxn][staging][MyApplication][DEBUG][MyApplication.initialize:568] Loading configuration [package:any_logger/example/any_logger_example.dart(568:5)]
-[01:24:26.333][4mg3ebYN][pvusldxn][staging][MyApplication][DEBUG][MyApplication.initialize:569] Setting up database connection [package:any_logger/example/any_logger_example.dart(569:5)]
-[01:24:26.333][4mg3ebYN][pvusldxn][staging][MyApplication][INFO][MyApplication.initialize:570] Application initialized successfully [package:any_logger/example/any_logger_example.dart(570:5)]
-[01:24:26.334][4mg3ebYN][pvusldxn][staging][MyApplication][INFO][MyApplication.start:574] Starting application [package:any_logger/example/any_logger_example.dart(574:5)]
-[01:24:26.365][4mg3ebYN][pvusldxn][staging][MyApplication][DEBUG][MyApplication.start:576] Starting background services [package:any_logger/example/any_logger_example.dart(576:5)]
-[01:24:26.365][4mg3ebYN][pvusldxn][staging][MyApplication][INFO][MyApplication.start:577] Application started [package:any_logger/example/any_logger_example.dart(577:5)]
-[01:24:26.366][4mg3ebYN][pvusldxn][staging][MyApplication][DEBUG][MyApplication.handleUserAction:581] User action received: button_click [package:any_logger/example/any_logger_example.dart(581:5)]
-[01:24:26.388][4mg3ebYN][pvusldxn][staging][MyApplication][INFO][MyApplication.handleUserAction:583] Processed user action: button_click [package:any_logger/example/any_logger_example.dart(583:5)]
-[01:24:26.388][4mg3ebYN][pvusldxn][staging][MyApplication][INFO][MyApplication.stop:587] Stopping application [package:any_logger/example/any_logger_example.dart(587:5)]
-[01:24:26.421][4mg3ebYN][pvusldxn][staging][MyApplication][DEBUG][MyApplication.stop:589] Stopping background services [package:any_logger/example/any_logger_example.dart(589:5)]
-[01:24:26.421][4mg3ebYN][pvusldxn][staging][MyApplication][INFO][MyApplication.stop:590] Application stopped [package:any_logger/example/any_logger_example.dart(590:5)]
-[01:24:26.421][4mg3ebYN][pvusldxn][staging][MyApplication][INFO][MyApplication.dispose:594] Disposing application resources [package:any_logger/example/any_logger_example.dart(594:5)]
-[01:24:26.444][4mg3ebYN][pvusldxn][staging][MyApplication][DEBUG][MyApplication.dispose:596] Closing database connections [package:any_logger/example/any_logger_example.dart(596:5)]
-[01:24:26.444][4mg3ebYN][pvusldxn][staging][MyApplication][INFO][MyApplication.dispose:597] Application disposed [package:any_logger/example/any_logger_example.dart(597:5)]
+[21:00:57.942][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:895] ANYLOGGER_SELF_LOGGER: Set level for all appenders to DEBUG [package:any_logger/src/logger_factory.dart(895:18)]
+[21:00:57.943][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._setupSelfLogger:897] Self-debugging enabled [package:any_logger/src/logger_factory.dart(897:5)]
+[21:00:57.943][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:645] Logger initialized with programmatic LoggerConfig with 1 active appenders [package:any_logger/src/logger_factory.dart(645:5)]
+[21:00:57.943][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][INFO][LoggerFactory._logAppenderConfigs:648] Appender CONSOLE, DEBUG, mode: ConsoleLoggerMode.stdout [package:any_logger/src/logger_factory.dart(648:7)]
+[21:00:57.943][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- type: CONSOLE [package:any_logger/src/logger_factory.dart(653:9)]
+[21:00:57.943][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- enabled: true [package:any_logger/src/logger_factory.dart(653:9)]
+[21:00:57.943][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- level: DEBUG [package:any_logger/src/logger_factory.dart(653:9)]
+[21:00:57.943][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- format: [%d][%did][%sid][%X{env}][%i][%l][%c] %m [%f] [package:any_logger/src/logger_factory.dart(653:9)]
+[21:00:57.943][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- dateFormat: HH:mm:ss.SSS [package:any_logger/src/logger_factory.dart(653:9)]
+[21:00:57.943][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- created: 2025-09-05T21:00:57.942525 [package:any_logger/src/logger_factory.dart(653:9)]
+[21:00:57.943][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- clientDepthOffset: null [package:any_logger/src/logger_factory.dart(653:9)]
+[21:00:57.943][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- lineInfo: null [package:any_logger/src/logger_factory.dart(653:9)]
+[21:00:57.943][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- mode: ConsoleLoggerMode.stdout [package:any_logger/src/logger_factory.dart(653:9)]
+[21:00:57.944][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][DEBUG][_logAppenderConfigs.<anonymous:653] --- sequenceNumber: 1 [package:any_logger/src/logger_factory.dart(653:9)]
+[21:00:57.944][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][INFO][getLogger.<anonymous:125] Creating new logger named MyApplication from existing logger: ROOT_LOGGER [package:any_logger/src/logger_factory.dart(125:32)]
+[21:00:57.944][4mg3ebYN][25qxwj6u][staging][ANYLOGGER_SELF_LOGGER][INFO][getLogger.<anonymous:128] Created logger: MyApplication [package:any_logger/src/logger_factory.dart(128:9)]
+[21:00:57.944][4mg3ebYN][25qxwj6u][staging][MyApplication][INFO][MyApplication.initialize:601] Initializing application [package:any_logger/example/any_logger_example.dart(601:5)]
+[21:00:57.996][4mg3ebYN][25qxwj6u][staging][MyApplication][DEBUG][MyApplication.initialize:603] Loading configuration [package:any_logger/example/any_logger_example.dart(603:5)]
+[21:00:57.996][4mg3ebYN][25qxwj6u][staging][MyApplication][DEBUG][MyApplication.initialize:604] Setting up database connection [package:any_logger/example/any_logger_example.dart(604:5)]
+[21:00:57.996][4mg3ebYN][25qxwj6u][staging][MyApplication][INFO][MyApplication.initialize:605] Application initialized successfully [package:any_logger/example/any_logger_example.dart(605:5)]
+[21:00:57.996][4mg3ebYN][25qxwj6u][staging][MyApplication][INFO][MyApplication.start:609] Starting application [package:any_logger/example/any_logger_example.dart(609:5)]
+[21:00:58.028][4mg3ebYN][25qxwj6u][staging][MyApplication][DEBUG][MyApplication.start:611] Starting background services [package:any_logger/example/any_logger_example.dart(611:5)]
+[21:00:58.029][4mg3ebYN][25qxwj6u][staging][MyApplication][INFO][MyApplication.start:612] Application started [package:any_logger/example/any_logger_example.dart(612:5)]
+[21:00:58.029][4mg3ebYN][25qxwj6u][staging][MyApplication][DEBUG][MyApplication.handleUserAction:616] User action received: button_click [package:any_logger/example/any_logger_example.dart(616:5)]
+[21:00:58.051][4mg3ebYN][25qxwj6u][staging][MyApplication][INFO][MyApplication.handleUserAction:618] Processed user action: button_click [package:any_logger/example/any_logger_example.dart(618:5)]
+[21:00:58.052][4mg3ebYN][25qxwj6u][staging][MyApplication][INFO][MyApplication.stop:622] Stopping application [package:any_logger/example/any_logger_example.dart(622:5)]
+[21:00:58.084][4mg3ebYN][25qxwj6u][staging][MyApplication][DEBUG][MyApplication.stop:624] Stopping background services [package:any_logger/example/any_logger_example.dart(624:5)]
+[21:00:58.084][4mg3ebYN][25qxwj6u][staging][MyApplication][INFO][MyApplication.stop:625] Application stopped [package:any_logger/example/any_logger_example.dart(625:5)]
+[21:00:58.085][4mg3ebYN][25qxwj6u][staging][MyApplication][INFO][MyApplication.dispose:629] Disposing application resources [package:any_logger/example/any_logger_example.dart(629:5)]
+[21:00:58.107][4mg3ebYN][25qxwj6u][staging][MyApplication][DEBUG][MyApplication.dispose:631] Closing database connections [package:any_logger/example/any_logger_example.dart(631:5)]
+[21:00:58.107][4mg3ebYN][25qxwj6u][staging][MyApplication][INFO][MyApplication.dispose:632] Application disposed [package:any_logger/example/any_logger_example.dart(632:5)]
 
 
 ╔══════════════════════════════════════════════════╗
 ║  Example 19: Multi-Service Architecture          ║
 ╚══════════════════════════════════════════════════╝
-[2025-08-31T01:24:26.447][4mg3ebYN][4fsy075g][enterprise][AuthService][INFO][AuthenticationService.login:606] Login attempt for user: user@example.com [package:any_logger/example/any_logger_example.dart(606:5)]
-[2025-08-31T01:24:26.447][4mg3ebYN][4fsy075g][enterprise][AuthService][DEBUG][AuthenticationService.login:607] Validating credentials [package:any_logger/example/any_logger_example.dart(607:5)]
-[2025-08-31T01:24:26.550][4mg3ebYN][4fsy075g][enterprise][AuthService][DEBUG][AuthenticationService.login:609] Credentials validated successfully [package:any_logger/example/any_logger_example.dart(609:5)]
-[2025-08-31T01:24:26.550][4mg3ebYN][4fsy075g][enterprise][AuthService][INFO][AuthenticationService.login:610] User logged in: user@example.com [package:any_logger/example/any_logger_example.dart(610:5)]
-[2025-08-31T01:24:26.552][4mg3ebYN][4fsy075g][enterprise][DataService][DEBUG][DataService.fetchUserData:625] Fetching data for user: user-123 [package:any_logger/example/any_logger_example.dart(625:5)]
-[2025-08-31T01:24:26.635][4mg3ebYN][4fsy075g][enterprise][DataService][INFO][DataService.fetchUserData:627] User data retrieved successfully [package:any_logger/example/any_logger_example.dart(627:5)]
-[2025-08-31T01:24:26.635][4mg3ebYN][4fsy075g][enterprise][UIController][DEBUG][UIController.updateDisplay:643] Updating display with message: Welcome back! [package:any_logger/example/any_logger_example.dart(643:5)]
-[2025-08-31T01:24:26.667][4mg3ebYN][4fsy075g][enterprise][UIController][INFO][UIController.updateDisplay:645] Display updated [package:any_logger/example/any_logger_example.dart(645:5)]
-[2025-08-31T01:24:26.668][4mg3ebYN][4fsy075g][enterprise][UIController][INFO][UIController.navigateTo:649] Navigating to: HomeScreen [package:any_logger/example/any_logger_example.dart(649:5)]
-[2025-08-31T01:24:26.720][4mg3ebYN][4fsy075g][enterprise][UIController][INFO][UIController.navigateTo:651] Navigation completed: HomeScreen [package:any_logger/example/any_logger_example.dart(651:5)]
-[2025-08-31T01:24:26.720][4mg3ebYN][4fsy075g][enterprise][DataService][INFO][DataService.syncData:631] Starting data synchronization [package:any_logger/example/any_logger_example.dart(631:5)]
-[2025-08-31T01:24:26.720][4mg3ebYN][4fsy075g][enterprise][DataService][DEBUG][DataService.syncData:632] Checking for local changes [package:any_logger/example/any_logger_example.dart(632:5)]
-[2025-08-31T01:24:26.872][4mg3ebYN][4fsy075g][enterprise][DataService][INFO][DataService.syncData:634] Data synchronization completed [package:any_logger/example/any_logger_example.dart(634:5)]
-[2025-08-31T01:24:26.873][4mg3ebYN][4fsy075g][enterprise][AuthService][DEBUG][AuthenticationService.refreshToken:614] Refreshing authentication token [package:any_logger/example/any_logger_example.dart(614:5)]
-[2025-08-31T01:24:26.926][4mg3ebYN][4fsy075g][enterprise][AuthService][INFO][AuthenticationService.refreshToken:616] Token refreshed successfully [package:any_logger/example/any_logger_example.dart(616:5)]
+[2025-09-05T21:00:58.108][4mg3ebYN][hy3ceanz][enterprise][AuthService][INFO][AuthenticationService.login:641] Login attempt for user: user@example.com [package:any_logger/example/any_logger_example.dart(641:5)]
+[2025-09-05T21:00:58.109][4mg3ebYN][hy3ceanz][enterprise][AuthService][DEBUG][AuthenticationService.login:642] Validating credentials [package:any_logger/example/any_logger_example.dart(642:5)]
+[2025-09-05T21:00:58.211][4mg3ebYN][hy3ceanz][enterprise][AuthService][DEBUG][AuthenticationService.login:644] Credentials validated successfully [package:any_logger/example/any_logger_example.dart(644:5)]
+[2025-09-05T21:00:58.211][4mg3ebYN][hy3ceanz][enterprise][AuthService][INFO][AuthenticationService.login:645] User logged in: user@example.com [package:any_logger/example/any_logger_example.dart(645:5)]
+[2025-09-05T21:00:58.212][4mg3ebYN][hy3ceanz][enterprise][DataService][DEBUG][DataService.fetchUserData:660] Fetching data for user: user-123 [package:any_logger/example/any_logger_example.dart(660:5)]
+[2025-09-05T21:00:58.294][4mg3ebYN][hy3ceanz][enterprise][DataService][INFO][DataService.fetchUserData:662] User data retrieved successfully [package:any_logger/example/any_logger_example.dart(662:5)]
+[2025-09-05T21:00:58.295][4mg3ebYN][hy3ceanz][enterprise][UIController][DEBUG][UIController.updateDisplay:678] Updating display with message: Welcome back! [package:any_logger/example/any_logger_example.dart(678:5)]
+[2025-09-05T21:00:58.327][4mg3ebYN][hy3ceanz][enterprise][UIController][INFO][UIController.updateDisplay:680] Display updated [package:any_logger/example/any_logger_example.dart(680:5)]
+[2025-09-05T21:00:58.327][4mg3ebYN][hy3ceanz][enterprise][UIController][INFO][UIController.navigateTo:684] Navigating to: HomeScreen [package:any_logger/example/any_logger_example.dart(684:5)]
+[2025-09-05T21:00:58.378][4mg3ebYN][hy3ceanz][enterprise][UIController][INFO][UIController.navigateTo:686] Navigation completed: HomeScreen [package:any_logger/example/any_logger_example.dart(686:5)]
+[2025-09-05T21:00:58.379][4mg3ebYN][hy3ceanz][enterprise][DataService][INFO][DataService.syncData:666] Starting data synchronization [package:any_logger/example/any_logger_example.dart(666:5)]
+[2025-09-05T21:00:58.379][4mg3ebYN][hy3ceanz][enterprise][DataService][DEBUG][DataService.syncData:667] Checking for local changes [package:any_logger/example/any_logger_example.dart(667:5)]
+[2025-09-05T21:00:58.532][4mg3ebYN][hy3ceanz][enterprise][DataService][INFO][DataService.syncData:669] Data synchronization completed [package:any_logger/example/any_logger_example.dart(669:5)]
+[2025-09-05T21:00:58.533][4mg3ebYN][hy3ceanz][enterprise][AuthService][DEBUG][AuthenticationService.refreshToken:649] Refreshing authentication token [package:any_logger/example/any_logger_example.dart(649:5)]
+[2025-09-05T21:00:58.586][4mg3ebYN][hy3ceanz][enterprise][AuthService][INFO][AuthenticationService.refreshToken:651] Token refreshed successfully [package:any_logger/example/any_logger_example.dart(651:5)]
 
 Process finished with exit code 0

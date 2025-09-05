@@ -31,7 +31,7 @@ class Logger {
     appenders.addAll(appendersFromConfig);
     this.clientDepthOffset = clientDepthOffset;
     _minLevelDirty = true;
-    
+
     // Auto-register named loggers (except root logger) for retrieval via LoggerFactory.getLogger()
     if (name != null && name != LoggerFactory.ROOT_LOGGER) {
       LoggerFactory.registerCustomLogger(this);
