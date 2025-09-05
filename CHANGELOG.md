@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.1.3
+
+* **Enhanced Custom Logger Registration** - Fixed and improved named logger retrieval functionality
+  - `Logger.defaultLogger()` now auto-registers named loggers for retrieval via `LoggerFactory.getLogger(name)`
+  - Added new `LoggerFactory.createCustomLogger()` method for cleaner custom logger creation API
+  - Custom loggers with names can now be retrieved from anywhere in the application using the same instance
+  - Perfect for specialized logging (AI quality assessment, compliance auditing, financial exports, R&D analytics)
+* **Improved Documentation for Specialized Loggers**
+  - Clarified that custom loggers are independent instances requiring manual feeding
+  - Added comprehensive example for AI quality assessment logging with export-ready format
+  - Enhanced explanation of custom logger benefits and use cases
+* **New Public API Methods**
+  - `LoggerFactory.createCustomLogger(name, appenders)` - recommended way to create retrievable custom loggers
+  - `LoggerFactory.registerCustomLogger(logger)` - manually register existing logger instances
+* **Comprehensive Test Coverage**
+  - Added full test suite for custom logger registration functionality
+  - Tests cover both auto-registration and factory method approaches
+  - Includes integration tests with file appenders and multiple logger scenarios
+* **Backward Compatibility Maintained**
+  - All existing APIs continue to work unchanged
+  - No breaking changes to current logging configurations or usage patterns
+
 ## 1.1.2
 
 * Formatter jittered README.md formatting. Fixed
