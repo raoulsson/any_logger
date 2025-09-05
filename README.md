@@ -22,7 +22,7 @@ grows.
 
 ```yaml
 dependencies:
-  any_logger: ^x.y.z // See "Installing"
+  any_logger: ^x.y.z # See "Installing"
 ```
 
 That's it! No other dependencies needed to start logging.
@@ -73,17 +73,14 @@ void main() {
 
 ```dart
 // Simple console with custom format
-LoggerFactory.initConsole
-(
-format: '🚀 %l: %m',
-level: Level.DEBUG,
+LoggerFactory.initConsole(
+  format: '🚀 %l: %m',
+  level: Level.DEBUG,
 );
 
 // Professional console with file location
 LoggerFactory.initProConsole(
-level: Level.
-DEBUG
-,
+  level: Level.DEBUG,
 );
 // Output: [10:30:45][ROOT_LOGGER][INFO][main:42] User logged in [lib/main.dart(42:5)]
 ```
@@ -130,38 +127,27 @@ await LoggerFactory.builder()
 | `rotationCycle`  | String   | `'DAY'`             | File rotation: `'NEVER'`, `'DAY'`, `'WEEK'`, `'MONTH'`, `'YEAR'` |
 | `clearOnStartup` | bool     | `false`             | Clear file contents on every app startup      |
 
-```
-
 ### Using Presets
 
 ```dart
 // Development - verbose with full stack traces
-await
-LoggerFactory.initWithPreset
-(
-LoggerPresets.development);
+await LoggerFactory.initWithPreset(LoggerPresets.development);
 
 // Production - optimized with essential info only
-await LoggerFactory.initWithPreset(LoggerPresets.
-production
-);
+await LoggerFactory.initWithPreset(LoggerPresets.production);
 ```
 
 ### Builder Pattern
 
 ```dart
 // Console and file logging
-await
-LoggerFactory.builder
-().console
-(
-level: Level.INFO)
-    .file(
-filePattern: 'app',
-level: Level.DEBUG,
-path: 'logs/',
-)
-    .build();
+await LoggerFactory.builder()
+  .console(level: Level.INFO)
+  .file(
+    filePattern: 'app',
+    level: Level.DEBUG,
+    path: 'logs/')
+  .build();
 ```
 
 ### Using the AnyLogger Mixin
@@ -213,7 +199,6 @@ class PaymentService with AnyLogger {
 // More complete
 '[%d][%did][%sid][%i][%l][%c] %m [%f]'
 // Output: [11:50:43.399][lw8aqkjl][2xny54b4][ROOT_LOGGER][INFO][ServiceFactory.initializeCoreServices:326] Core services initialized successfully [package:my_app/service/service_factory.dart(326:7)]
-
 ```
 
 ## 🔀 Independent Side Loggers
@@ -317,14 +302,8 @@ compromising privacy:
 
 ```dart
 // Just add IDs to your format - works automatically on Dart console/server
-LoggerFactory.initConsole
-(
-format
-:
-'
-[%did][%sid] %l: %m
-'
-,
+LoggerFactory.initConsole(
+  format: '[%did][%sid] %l: %m',
 );
 
 // Output: [a3f5c8d2][e7b9f1a4] INFO: User clicked button
@@ -337,7 +316,7 @@ Flutter apps need additional setup for persistent device IDs:
 ```yaml
 # Add to pubspec.yaml
 dependencies:
-  any_logger: ^x.y.z // See "Installing"
+  any_logger: ^x.y.z # See "Installing"
   path_provider: ^2.1.5  # Required for %did on Flutter
 ```
 
@@ -391,18 +370,12 @@ Track context across all your logs - perfect for request tracking, user sessions
 
 ```dart
 // Set global context
-LoggerFactory.setMdcValue
-('userId
-'
-,
-'
-user-123
-'
-);LoggerFactory.setMdcValue('feature', 'new-checkout');
+LoggerFactory.setMdcValue('userId', 'user-123');
+LoggerFactory.setMdcValue('feature', 'new-checkout');
 
 // Use in format with %X{key}
 LoggerFactory.initConsole(
-format: '[%X{userId}][%X{feature}] %l: %m',
+  format: '[%X{userId}][%X{feature}] %l: %m',
 );
 
 // All logs now include context
@@ -451,7 +424,7 @@ extension packages:
 
 ```yaml
 dependencies:
-  any_logger: ^x.y.z // See "Installing"
+  any_logger: ^x.y.z # See "Installing"
   any_logger_json_http: ^x.y.z  # Only if needed
   any_logger_email: ^x.y.z      # Only if needed
   any_logger_mysql: ^x.y.z      # Only if needed
@@ -463,19 +436,15 @@ dependencies:
 import 'package:any_logger/any_logger.dart';
 import 'package:any_logger_json_http/any_logger_json_http.dart';
 
-await
-LoggerFactory.builder
-().console
-() // Core package
-    .file
-() // Core package
-    .jsonHttp
-( // Extension package
-url: 'https://api.example.com/logs',
-level: Level.ERROR,
-bufferSize: 100,
-)
-    .build();
+await LoggerFactory.builder()
+  .console()  // Core package
+  .file()     // Core package  
+  .jsonHttp(  // Extension package
+    url: 'https://api.example.com/logs',
+    level: Level.ERROR,
+    bufferSize: 100,
+  )
+  .build();
 ```
 
 ## ⚡ Performance Optimization
@@ -484,13 +453,11 @@ bufferSize: 100,
 
 ```dart
 // ❌ Bad - always computes expensive operation
-logger.logDebug
-(
-expensiveComputation());
+logger.logDebug(expensiveComputation());
 
 // ✅ Good - only computes if debug is enabled
 if (logger.isDebugEnabled) {
-logger.logDebug(expensiveComputation());
+  logger.logDebug(expensiveComputation());
 }
 
 // ✅ Better - use supplier for lazy evaluation
@@ -505,16 +472,10 @@ Having issues? Enable self-debugging to see what the logger is doing:
 
 ```dart
 // See internal logger operations
-LoggerFactory.builder
-().console
-(
-level: Level.INFO)
-    .withSelfDebug(Level.DEBUG
-) // Shows platform detection, ID provider selection, etc.
-.
-build
-(
-);
+LoggerFactory.builder()
+  .console(level: Level.INFO)
+  .withSelfDebug(Level.DEBUG) // Shows platform detection, ID provider selection, etc.
+  .build();
 
 // Output:
 // [LoggerFactory.DEBUG] Platform: Dart | IDs: %did+%sid | Provider: FileIdProvider
@@ -544,8 +505,7 @@ dependencies:
 and call the corresponding class to register the appender, like e.g.:
 
 ```dart
-AnyLoggerJsonHttpExtension.register
-();
+AnyLoggerJsonHttpExtension.register();
 ```
 
 #### "Permission denied" on Mobile
@@ -553,12 +513,7 @@ AnyLoggerJsonHttpExtension.register
 Use MemoryIdProvider instead of file-based storage:
 
 ```dart
-LoggerFactory.setIdProvider
-(
-MemoryIdProvider
-(
-)
-);
+LoggerFactory.setIdProvider(MemoryIdProvider());
 ```
 
 ### Performance Tips
