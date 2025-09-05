@@ -3,6 +3,9 @@ import 'dart:io';
 import '../../any_logger.dart';
 
 class IdProviderResolver {
+  static bool isRunningAsUnitTest = false;
+  static bool unitTestIsFlutterResultValue = false;
+
   static ({bool deviceIdNeeded, bool sessionIdNeeded, bool fileAppenderNeeded})
       analyzeRequirements(dynamic source) {
     bool deviceIdNeeded = false;
@@ -17,6 +20,7 @@ class IdProviderResolver {
         if (format.contains('%sid')) sessionIdNeeded = true;
         if (appender.getType() == 'FILE') fileAppenderNeeded = true;
         if (appender.getType() == 'EMAIL') fileAppenderNeeded = true;
+        if (appender.getType() == 'EMAIL') deviceIdNeeded = true;
       }
     }
     // Handle Map<String, dynamic> JSON config
@@ -31,6 +35,7 @@ class IdProviderResolver {
           final type = appender['type'] as String?;
           if (type?.toUpperCase() == 'FILE') fileAppenderNeeded = true;
           if (type?.toUpperCase() == 'EMAIL') fileAppenderNeeded = true;
+          if (type?.toUpperCase() == 'EMAIL') deviceIdNeeded = true;
         }
       }
     }
@@ -128,6 +133,9 @@ class IdProviderResolver {
   }
 
   static bool isFlutterApp() {
+    if (isRunningAsUnitTest) {
+      return unitTestIsFlutterResultValue;
+    }
     return const bool.fromEnvironment('dart.library.ui', defaultValue: false);
   }
 

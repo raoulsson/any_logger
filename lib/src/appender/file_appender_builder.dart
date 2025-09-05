@@ -174,6 +174,18 @@ class FileAppenderBuilder {
     return this;
   }
 
+  /// Sets whether to clear the log file contents on app startup.
+  ///
+  /// When enabled, the log file will be emptied every time the appender
+  /// is initialized (typically on app startup). This is useful for
+  /// applications that want fresh logs for each session.
+  ///
+  /// Default: `false`
+  FileAppenderBuilder withClearOnStartup(bool clearOnStartup) {
+    _config['clearOnStartup'] = clearOnStartup;
+    return this;
+  }
+
   // --- Rotation Convenience Methods ---
 
   /// Configures the appender to never rotate files.

@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.1
+
+* Added `clearOnStartup` configuration option for FileAppender
+  - When enabled, log files are cleared on every app startup for fresh session logs
+  - Available in LoggerBuilder.file(), FileAppender.fromConfig(), and FileAppenderBuilder
+  - Defaults to `false` to maintain backward compatibility
+* Enhanced documentation for creating independent "side loggers"  
+  - Complete guide for creating separate loggers with their own file appenders
+  - Real-world examples including audit logging and payment processing scenarios
+  - Demonstrates how to isolate specific logging from main application logs
+* Updated README with comprehensive FileAppender configuration table
+* Added unit tests for IdProviderResolver
+
 ## 1.1.0
 
 * Changes to get the Email Appender working

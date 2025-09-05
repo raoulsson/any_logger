@@ -76,6 +76,7 @@ class LoggerBuilder {
     String fileExtension = 'log',
     String rotationCycle = 'DAY',
     String path = '',
+    bool clearOnStartup = false,
   }) {
     _appenderConfigs.add({
       'type': 'FILE',
@@ -86,6 +87,7 @@ class LoggerBuilder {
       'fileExtension': fileExtension,
       'rotationCycle': rotationCycle,
       'path': path,
+      'clearOnStartup': clearOnStartup,
     });
     return this;
   }

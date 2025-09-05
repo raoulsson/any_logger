@@ -7,6 +7,7 @@ class FileAppender extends Appender {
   String fileExtension = 'log';
   String path = 'logs/';
   RotationCycle rotationCycle = RotationCycle.NEVER;
+  bool clearOnStartup = false;
   late File _file;
   String? _resolvedBasePath; // Store the resolved base path for this instance
 
@@ -38,6 +39,10 @@ class FileAppender extends Appender {
 
     if (config.containsKey('path')) {
       appender.path = config['path'];
+    }
+
+    if (config.containsKey('clearOnStartup')) {
+      appender.clearOnStartup = config['clearOnStartup'] == true;
     }
 
     // Resolve the base path once during initialization
@@ -74,6 +79,10 @@ class FileAppender extends Appender {
 
     if (config.containsKey('path')) {
       appender.path = config['path'];
+    }
+
+    if (config.containsKey('clearOnStartup')) {
+      appender.clearOnStartup = config['clearOnStartup'] == true;
     }
 
     // Note: Sync version cannot resolve Flutter paths
@@ -130,6 +139,20 @@ class FileAppender extends Appender {
 
     _file = file;
 
+    // Clear file if clearOnStartup is enabled
+    if (clearOnStartup && _file.existsSync()) {
+      try {
+        Logger.getSelfLogger()
+            ?.logInfo('Clearing log file on startup: ${_file.absolute.path}');
+        _file.writeAsStringSync('');
+        Logger.getSelfLogger()
+            ?.logInfo('Successfully cleared log file: ${_file.absolute.path}');
+      } catch (e) {
+        Logger.getSelfLogger()
+            ?.logError('Failed to clear log file: ${_file.absolute.path}: $e');
+      }
+    }
+
     // Final verification
     if (!_file.existsSync()) {
       throw Exception(
@@ -149,6 +172,7 @@ class FileAppender extends Appender {
     copy.fileExtension = fileExtension;
     copy.path = path;
     copy.rotationCycle = rotationCycle;
+    copy.clearOnStartup = clearOnStartup;
     copy._resolvedBasePath = _resolvedBasePath; // Copy the resolved path
     copy.ensurePathExists();
     return copy;
@@ -272,6 +296,7 @@ class FileAppender extends Appender {
       'fileExtension': fileExtension,
       'path': path,
       'rotationCycle': rotationCycle.name,
+      'clearOnStartup': clearOnStartup,
       'resolvedBasePath': _resolvedBasePath,
       'fullFilePath': getFullFilename(),
       'fileExists': _file.existsSync(),
