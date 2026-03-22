@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.4
+
+* **Runtime device/session ID overrides** — `LoggerFactory.setDeviceId(String)` and `LoggerFactory.setSessionId(String)` allow pushing a custom identifier after initialization. Useful when the JSON_HTTP appender starts disabled (causing `NullIdProvider` to be selected at init time) but a user-provided device name becomes available later. The override takes precedence over whatever the `IdProvider` returns.
+
 ## 1.1.3
 
 * **Enhanced Custom Logger Registration** - Fixed and improved named logger retrieval functionality

@@ -330,6 +330,21 @@ void main() async {
 }
 ```
 
+### Runtime Device/Session ID Overrides
+
+If the HTTP appender starts disabled (e.g. gated behind a user preference), the library picks
+`NullIdProvider` at init time. Once the user opts in and provides a name, push it in:
+
+```dart
+// After user enables remote logging and provides a device name:
+LoggerFactory.setDeviceId('raoul-iphone');   // overrides NullIdProvider.deviceId
+LoggerFactory.setSessionId('session-42');    // optional
+
+Logger.info('Now sent with deviceId = raoul-iphone');
+```
+
+The override takes precedence over whatever `IdProvider` returns and persists for the process lifetime.
+
 ### Alternative: Memory-Only IDs (No path_provider needed)
 
 ```dart

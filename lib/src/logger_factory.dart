@@ -36,6 +36,10 @@ class LoggerFactory {
   static bool _sessionIdNeeded = false;
   static bool _fileAppenderNeeded = false;
 
+  // Optional runtime overrides — take precedence over whatever IdProvider returns.
+  static String? _deviceIdOverride;
+  static String? _sessionIdOverride;
+
   // Flutter apps MUST set this or logging will fail
   static Future<Directory> Function()? _getAppDocumentsDirectoryFnc;
 
@@ -947,11 +951,22 @@ class LoggerFactory {
   /// Get the application version
   static String? getAppVersion() => _appVersion;
 
-  /// Get the device ID from the ID provider
-  static String? getDeviceId() => idProvider.deviceId;
+  /// Get the device ID — returns the runtime override if set, otherwise the ID provider value.
+  static String? getDeviceId() => _deviceIdOverride ?? idProvider.deviceId;
 
-  /// Get the session ID from the ID provider
-  static String? getSessionId() => idProvider.sessionId;
+  /// Get the session ID — returns the runtime override if set, otherwise the ID provider value.
+  static String? getSessionId() => _sessionIdOverride ?? idProvider.sessionId;
+
+  /// Override the device ID at runtime. Useful when the JSON_HTTP appender starts disabled
+  /// (so NullIdProvider is chosen at init) but a device identifier becomes available later.
+  static void setDeviceId(String deviceId) {
+    _deviceIdOverride = deviceId;
+  }
+
+  /// Override the session ID at runtime.
+  static void setSessionId(String sessionId) {
+    _sessionIdOverride = sessionId;
+  }
 
   /// Get the first appender of a specific type
   static T? getFirstAppender<T extends Appender>() {
