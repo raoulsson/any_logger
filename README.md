@@ -3,6 +3,8 @@
 A powerful, flexible, and intuitive logging library for Dart and Flutter applications with automatic device/session
 tracking and progressive complexity - from one-line setup to enterprise-grade configurations.
 
+[![Pub Version](https://img.shields.io/pub/v/any_logger?style=flat-square)](https://pub.dev/packages/any_logger)
+
 Logs can be sent to **console**, **file**, **JSON HTTP endpoints**, **email**, **MySQL databases**, or any custom
 appender extension you create. Start with simple console logging and progressively add capabilities as your application
 grows.
